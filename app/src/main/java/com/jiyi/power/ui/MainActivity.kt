@@ -17,21 +17,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         BarUtils.setStatusBarColor(this, ColorUtils.getColor(R.color.colorPrimary))
-
         initNavigationBar()
-        PermissionUtils.permission(*PermissionUtils.getPermissions().toTypedArray())
-            .callback(object : PermissionUtils.FullCallback {
-                override fun onGranted(granted: MutableList<String>) {
 
-                }
-
-                override fun onDenied(
-                    forever: MutableList<String>, denied: MutableList<String>
-                ) {
-
-                }
-
-            }).request()
+        requestPermission()
     }
 
     override fun initData() {
@@ -42,12 +30,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mBinding.bottomNavigation.addTab(
             HomeFragment::class.java, NavigateTabBar.TabParam(
                 R.drawable.tab_car_selected, R.drawable.tab_car_selected, "首页", true
-            ), R.layout.comui_tab_view1
-        )
-
-        mBinding.bottomNavigation.addTab(
-            ProjectFragment::class.java, NavigateTabBar.TabParam(
-                R.drawable.tab_shop_selected, R.drawable.tab_shop_selected, "项目", true
             ), R.layout.comui_tab_view1
         )
 
@@ -64,4 +46,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         })
     }
+
+    private fun requestPermission() {
+        PermissionUtils.permission(*PermissionUtils.getPermissions().toTypedArray())
+            .callback(object : PermissionUtils.FullCallback {
+                override fun onGranted(granted: MutableList<String>) {
+
+                }
+
+                override fun onDenied(
+                    forever: MutableList<String>, denied: MutableList<String>
+                ) {
+
+                }
+
+            }).request()
+    }
+
 }

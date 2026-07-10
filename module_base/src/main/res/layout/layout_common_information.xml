@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.flyco.roundview.RoundFrameLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/layout_child_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp">
+
+            <ImageView
+                    android:id="@+id/iv_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="15dp"
+                    android:src="@mipmap/ic_charging_setting"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            <LinearLayout
+                    android:id="@+id/layout_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="@color/c_333333"
+                            android:textSize="15sp"
+                            tools:text="标题" />
+
+                    <ImageView
+                            android:id="@+id/img_help"
+                            android:layout_width="34dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center_horizontal"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:src="@mipmap/ic_charging_help"
+                            android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                        android:id="@+id/tv_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/c_999999"
+                        android:textSize="11sp"
+                        tools:text="副标题" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/layout_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/iv_oveal"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@mipmap/oveal"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                <TextView
+                        android:id="@+id/tv_right_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textColor="@color/c_999999"
+                        android:textSize="15sp"
+                        tools:text="v2.0.0" />
+
+                <ImageView
+                        android:id="@+id/iv_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/right_arrow_black"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/cb_switch"
+                    android:layout_width="46dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/sb_device_on_off"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            <ImageView
+                    android:id="@+id/cb_check"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/sb_check_on_off"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+        </LinearLayout>
+
+        <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/c_d000000"
+                android:visibility="gone" />
+    </com.flyco.roundview.RoundFrameLayout>
+</LinearLayout>

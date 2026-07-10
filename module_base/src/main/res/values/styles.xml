@@ -43,4 +43,42 @@
         <attr name="tv_unit_color" format="color" />
         <attr name="tv_unit" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="CommonInformationView">
+        <attr name="rv_backgroundColor" format="color" />
+        <attr name="rv_backgroundPressColor" format="color" />
+        <attr name="rv_cornerRadius" format="dimension" />
+        <attr name="rv_cornerRadius_BL" format="dimension" />
+        <attr name="rv_cornerRadius_BR" format="dimension" />
+        <attr name="rv_cornerRadius_TL" format="dimension" />
+        <attr name="rv_cornerRadius_TR" format="dimension" />
+        <attr name="rv_isRadiusHalfHeight" format="boolean" />
+        <attr name="rv_isRippleEnable" format="boolean" />
+        <attr name="rv_isWidthHeightEqual" format="boolean" />
+        <attr name="rv_strokeColor" format="color" />
+        <attr name="rv_strokePressColor" format="color" />
+        <attr name="rv_strokeWidth" format="dimension" />
+        <attr name="rv_textPressColor" format="color" />
+
+        <attr name="rv_arrowRightIcon" format="reference" />
+        <attr name="rv_leftIcon" format="reference" />
+        <attr name="rv_leftIconSize" format="dimension" />
+        <attr name="rv_leftText" format="reference" />
+        <attr name="rv_leftTextTip" format="reference" />
+        <attr name="rv_rightText" format="reference" />
+        <attr name="rv_leftTextColor" format="color" />
+        <attr name="rv_leftTextTipColor" format="color" />
+        <attr name="rv_rightTextColor" format="color" />
+        <attr name="rv_leftTextSize" format="dimension" />
+        <attr name="rv_leftTextTipSize" format="dimension" />
+        <attr name="rv_rightTextSize" format="dimension" />
+        <attr name="rv_isShowArrowRight" format="boolean" />
+        <attr name="rv_isShowLine" format="boolean" />
+        <attr name="rv_isShowHelpIcon" format="boolean" />
+        <attr name="rv_isShowSwitchButton" format="boolean" />
+        <attr name="rv_isShowCheckBox" format="boolean" />
+        <attr name="rv_horizontal_margin" format="dimension" />
+        <attr name="rv_vertical_margin" format="dimension" />
+        <attr name="rv_rightTextMaxWidth" format="dimension" />
+    </declare-styleable>
 </resources>
