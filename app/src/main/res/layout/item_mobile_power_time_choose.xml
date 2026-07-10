@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp90"
+    android:background="@drawable/shape_r16_f2f4f8"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:id="@+id/layout_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tv_time_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_8c9098"
+            android:textSize="@dimen/dp26"
+            tools:text="30" />
+
+        <TextView
+            android:id="@+id/tv_unit_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp5"
+            android:textColor="@color/c_8c9098"
+            android:textSize="@dimen/dp14"
+            tools:text="小时" />
+
+        <TextView
+            android:id="@+id/tv_time_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_8c9098"
+            android:textSize="@dimen/dp26"
+            android:visibility="gone"
+            tools:text="30"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_unit_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp5"
+            android:textColor="@color/c_8c9098"
+            android:textSize="@dimen/dp14"
+            android:visibility="gone"
+            tools:text="分钟"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_add_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_mb_add"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</FrameLayout>

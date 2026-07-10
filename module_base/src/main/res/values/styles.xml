@@ -1,0 +1,46 @@
+<resources>
+
+    <!--NavigateTabBar-->
+    <declare-styleable name="NavigateTabBar">
+        <attr name="navigateTabTextColor" format="color|reference" />
+        <attr name="navigateTabSelectedTextColor" format="color|reference" />
+        <attr name="containerId" format="integer|reference" />
+        <attr name="navigateTabTextSize" format="dimension|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ComToolBar">
+        <attr name="tit_text" format="string" />
+        <attr name="tit_size" format="integer" />
+        <attr name="tit_left_text" format="string" />
+        <attr name="tit_right_text" format="string" />
+        <attr name="left_icon" format="reference" />
+        <attr name="right_icon" format="reference" />
+        <attr name="second_right_icon" format="reference" />
+        <attr name="show_line" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SwitchButtonKotlin">
+        <!-- 背景颜色（未选中） -->
+        <attr name="sb_uncheckedColor" format="color" />
+        <!-- 选中颜色 -->
+        <attr name="sb_checkedColor" format="color" />
+        <!-- Thumb 颜色 -->
+        <attr name="sb_thumbColor" format="color" />
+        <!-- 未选中时Thumb 颜色 -->
+        <attr name="sb_un_thumbColor" format="color" />
+        <!-- 圆角（默认 = 高度一半） -->
+        <attr name="sb_radius" format="dimension" />
+        <!-- 是否开启动画 -->
+        <attr name="sb_enableEffect" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ContentWithUnitTextView">
+        <attr name="tv_content_size" format="dimension" />
+        <attr name="tv_content_color" format="color" />
+        <attr name="tv_content" format="string" />
+        <attr name="tv_unit_size" format="dimension" />
+        <attr name="tv_unit_color" format="color" />
+        <attr name="tv_unit" format="string" />
+    </declare-styleable>
+</resources>

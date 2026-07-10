@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f8f8f8"
+    app:srlFooterTranslationViewId="@+id/rv">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data"
+            android:textColor="@color/c_181a1f"
+            android:textSize="@dimen/dp16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/no_data_pic"
+            app:layout_constraintBottom_toTopOf="@+id/tv_no_data"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <!-- typeC1 -->
+            <RelativeLayout
+                android:id="@+id/rl_type_c1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp140"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_r16_ffffff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_type_c1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp19"
+                    android:layout_marginTop="@dimen/dp19"
+                    android:text="Type-C1"
+                    android:textColor="@color/c_181a1f"
+                    android:textSize="@dimen/dp18" />
+
+                <ImageView
+                    android:id="@+id/iv_charging_icon"
+                    android:layout_width="@dimen/dp6"
+                    android:layout_height="@dimen/dp10"
+                    android:layout_marginStart="@dimen/dp7"
+                    android:layout_marginTop="@dimen/dp26"
+                    android:layout_toEndOf="@+id/tv_type_c1"
+                    android:src="@mipmap/ic_mb_lightning"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_type_c1_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp2"
+                    android:layout_marginTop="@dimen/dp24"
+                    android:layout_toEndOf="@+id/iv_charging_icon"
+                    android:textColor="@color/c_b6b8bf"
+                    android:textSize="@dimen/dp10"
+                    tools:text="PD3.1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_type_c1"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage_unit"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_power_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_electricity"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_current_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_voltage_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+            <!-- typeC1 -->
+            <RelativeLayout
+                android:id="@+id/rl_type_c2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp140"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_r16_ffffff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_type_c2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp19"
+                    android:layout_marginTop="@dimen/dp19"
+                    android:text="Type-C2"
+                    android:textColor="@color/c_181a1f"
+                    android:textSize="@dimen/dp18" />
+
+                <ImageView
+                    android:id="@+id/iv_charging_icon_c2"
+                    android:layout_width="@dimen/dp6"
+                    android:layout_height="@dimen/dp10"
+                    android:layout_marginStart="@dimen/dp7"
+                    android:layout_marginTop="@dimen/dp26"
+                    android:layout_toEndOf="@+id/tv_type_c2"
+                    android:src="@mipmap/ic_mb_lightning"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_type_c2_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp2"
+                    android:layout_marginTop="@dimen/dp24"
+                    android:layout_toEndOf="@+id/iv_charging_icon_c2"
+                    android:textColor="@color/c_b6b8bf"
+                    android:textSize="@dimen/dp10"
+                    tools:text="PD3.1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_type_c2"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage_unit"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_power_c2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_electricity"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_current_c2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_voltage_c2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--电池状态 -->
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp19"
+                android:layout_marginTop="@dimen/dp28"
+                android:text="@string/str_bv_status"
+                android:textColor="@color/c_181a1f"
+                android:textSize="@dimen/dp16"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp120"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_r16_ffffff"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+
+                <!-- 循环-->
+                <TextView
+                    android:id="@+id/tv_circulate_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp23"
+                    android:textColor="@color/c_111113"
+                    android:textSize="@dimen/dp46"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="58" />
+
+                <TextView
+                    android:id="@+id/tv_circulate_util"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp10"
+                    android:text="@string/str_count"
+                    android:textColor="@color/c_6C7B8A"
+                    android:textSize="@dimen/sp9"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_circulate_num"
+                    app:layout_constraintStart_toEndOf="@+id/tv_circulate_num" />
+
+                <TextView
+                    android:id="@+id/tv_circulate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_circle"
+                    android:textColor="@color/c_9F9FA0"
+                    android:textSize="@dimen/sp14"
+                    app:layout_constraintStart_toStartOf="@+id/tv_circulate_num"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_circulate_num"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_circulate_num" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_cell"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_r16_ffffff"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.flyco.roundview.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp36"
+                    android:layout_margin="@dimen/dp10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/str_bv_no"
+                        android:textColor="@color/c_181a20"
+                        android:textSize="@dimen/sp14" />
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:background="@color/c_ffffff" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/str_voltage_v"
+                        android:textColor="@color/c_181a20"
+                        android:textSize="@dimen/sp14" />
+
+                    <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:background="@color/c_ffffff" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/str_electricity_a"
+                        android:textColor="@color/c_181a20"
+                        android:textSize="@dimen/sp14" />
+
+                </com.flyco.roundview.RoundLinearLayout>
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_four"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_five"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+
+                <com.control_center.intelligent.view.widget.CellInformationLayout
+                    android:id="@+id/layout_cell_six"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_repair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp30"
+                android:layout_marginTop="@dimen/dp13"
+                android:layout_marginBottom="@dimen/dp40"
+                android:text="@string/str_repair_tip"
+                android:textColor="@color/c_00d357"
+                android:textSize="@dimen/sp14"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</FrameLayout>

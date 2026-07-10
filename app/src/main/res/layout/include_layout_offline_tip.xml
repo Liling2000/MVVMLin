@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_offline"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp44"
+    android:background="@color/c_FAE5E7"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:ignore="MissingDefaultResource">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_bs_offline" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp10"
+        android:text="@string/nrg_offline"
+        android:textColor="@color/c_fe596a"
+        android:textSize="@dimen/dp14" />
+</LinearLayout>

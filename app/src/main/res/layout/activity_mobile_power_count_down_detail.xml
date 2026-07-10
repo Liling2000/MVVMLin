@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f8f8f8">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c_ffffff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp100"
+        android:layout_margin="@dimen/dp10"
+        android:background="@drawable/shape_r16_ffffff"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp21"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp20">
+
+            <TextView
+                android:id="@+id/tv_h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="@color/c_181a1f"
+                android:textSize="@dimen/dp26" />
+
+            <TextView
+                android:id="@+id/tv_h_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp3"
+                android:text="@string/str_time_hours"
+                android:textColor="@color/c_181a1f"
+                android:textSize="@dimen/dp14" />
+
+            <TextView
+                android:id="@+id/tv_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="@color/c_181a1f"
+                android:textSize="@dimen/dp26" />
+
+            <TextView
+                android:id="@+id/tv_min_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp3"
+                android:text="@string/str_time_minutes"
+                android:textColor="@color/c_181a1f"
+                android:textSize="@dimen/dp14" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_notice_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp20"
+            android:layout_marginTop="@dimen/dp2"
+            android:text="@string/str_bs_shutdown"
+            android:textColor="#ff8d9097"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_h"
+            app:layout_constraintTop_toBottomOf="@+id/tv_h" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp54"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20"
+        android:layout_marginBottom="@dimen/dp29"
+        android:background="@drawable/button_selector"
+        android:gravity="center"
+        android:text="@string/str_cancel"
+        android:textColor="@color/c_181a20"
+        android:textSize="@dimen/dp16"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

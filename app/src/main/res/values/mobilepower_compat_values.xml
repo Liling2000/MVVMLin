@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="c_E8E8E8">#E8E8E8</color>
+    <color name="c_FFFFFF">#FFFFFF</color>
+    <color name="c_181A1F">#181A1F</color>
+    <dimen name="dp0.5">0.5dp</dimen>
+
+    <declare-styleable name="MyInformationView">
+        <attr name="left_text" format="string|reference" />
+        <attr name="right_text_color" format="color|reference" />
+        <attr name="is_show_line" format="boolean" />
+        <attr name="is_show_arrow_right" format="boolean" />
+        <attr name="background" />
+    </declare-styleable>
+</resources>

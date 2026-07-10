@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#00ABFF</color>
+
+    <color name="gary">#808080</color>
+    <color name="device_page_bg">#EFF0F2</color>
+    <color name="device_header_start">#DCE7FF</color>
+    <color name="device_header_end">#EEE8FF</color>
+    <color name="device_text_primary">#1D1D1F</color>
+    <color name="device_text_secondary">#7C828C</color>
+    <color name="device_card_bg">#FFFFFF</color>
+    <color name="device_sub_card_bg">#F6F7F9</color>
+    <color name="device_yellow">#FECC2B</color>
+    <color name="device_yellow_dark">#B98700</color>
+    <color name="device_purple">#8174D9</color>
+    <color name="device_ai_purple">#E8E4FF</color>
+    <color name="device_ai_yellow">#FFF0BC</color>
+    <color name="device_switch_off">#CED3DA</color>
+</resources>
+

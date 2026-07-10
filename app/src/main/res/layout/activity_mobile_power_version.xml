@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/c_f8f8f8"
+    android:orientation="vertical">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+        android:id="@+id/toolbar_mobile_power_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c_ffffff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imagev_mobile_power_version"
+        android:layout_width="@dimen/dp190"
+        android:layout_height="@dimen/dp190"
+        android:layout_marginTop="8dp"
+        android:src="@mipmap/ic_bs_devic_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mobile_power_version" />
+
+<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--        android:id="@+id/infov_mobile_power_bl_version"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/dp49"-->
+<!--        android:layout_marginTop="@dimen/dp10"-->
+<!--        android:layout_marginStart="@dimen/dp10"-->
+<!--        android:layout_marginEnd="@dimen/dp10"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imagev_mobile_power_version" />-->
+
+<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--        android:id="@+id/infov_mobile_power_dc_version"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/dp49"-->
+<!--        android:layout_marginTop="@dimen/dp10"-->
+<!--        android:layout_marginStart="@dimen/dp10"-->
+<!--        android:layout_marginEnd="@dimen/dp10"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/infov_mobile_power_bl_version" />-->
+
+<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--        android:id="@+id/bms_mobile_power_dc_version"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/dp49"-->
+<!--        android:layout_marginStart="@dimen/dp10"-->
+<!--        android:layout_marginTop="@dimen/dp10"-->
+<!--        android:layout_marginEnd="@dimen/dp10"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/infov_mobile_power_dc_version"-->
+<!--        tools:visibility="visible" />-->
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_countdown_shutdown_tip">Countdown shutdown</string>
+    <string name="str_remind">Reminder</string>
+    <string name="str_bs_countdown_close_tips">Close countdown?</string>
+    <string name="str_cannel_tip">Cancel</string>
+    <string name="gesture_setting_fail">Setting failed</string>
+    <string name="str_bs_data">Data</string>
+    <string name="my_setting">Settings</string>
+    <string name="str_setting_success">Setting success</string>
+    <string name="str_theme_tip">Theme</string>
+    <string name="device_error">Device error</string>
+    <string name="nrg_insufficient_charge">Insufficient charge</string>
+    <string name="please_open_ble">Please enable Bluetooth</string>
+    <string name="str_bs_gan_check_offline_reasons">Check offline reason</string>
+    <string name="cancel_restore_tit">Restore factory settings?</string>
+    <string name="str_delete_device">Delete device</string>
+    <string name="str_none">None</string>
+    <string name="str_unbind_device">Unbind device</string>
+</resources>

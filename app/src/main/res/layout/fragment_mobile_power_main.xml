@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/c_ffffff">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/tv_notice_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp21"
+                android:textColor="@color/c_fe596a"
+                android:textSize="@dimen/dp14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/nrg_local_error" />
+
+        <ImageView
+                android:id="@+id/iv_notice_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp3"
+                android:src="@mipmap/icon_device_exception_notice"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_notice_text"
+                app:layout_constraintEnd_toStartOf="@+id/tv_notice_text"
+                app:layout_constraintTop_toTopOf="@+id/tv_notice_text" />
+
+        <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp4"
+                android:src="@drawable/icon_red_right_arrow"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_notice_text"
+                app:layout_constraintStart_toEndOf="@+id/tv_notice_text"
+                app:layout_constraintTop_toTopOf="@+id/tv_notice_text" />
+
+        <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_top_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="tv_notice_text, iv_notice_icon, iv_arrow" />
+
+        <ImageView
+                android:id="@+id/iv_main_pic"
+                android:layout_width="@dimen/dp173"
+                android:layout_height="@dimen/dp194"
+                android:layout_marginTop="@dimen/dp63"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+                android:id="@+id/ll_data_show"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp70"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp65"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_f8fafb_r10"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_main_pic">
+
+            <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                        android:id="@+id/tv_tempture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp28"
+                        android:gravity="center" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_temperature"
+                        android:textColor="@color/c_b6b8c0"
+                        android:textSize="@dimen/dp12" />
+            </LinearLayout>
+
+            <View
+                    android:layout_width="@dimen/dp0.5"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:layout_marginBottom="@dimen/dp20"
+                    android:background="@color/c_e8e8e8" />
+
+            <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dp10"
+                    android:paddingBottom="@dimen/dp10">
+
+                <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                        android:id="@+id/tv_battery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp28"
+                        android:gravity="center" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_bs_battery"
+                        android:textColor="@color/c_b6b8c0"
+                        android:textSize="@dimen/dp12" />
+            </LinearLayout>
+
+            <View
+                    android:layout_width="@dimen/dp0.5"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:layout_marginBottom="@dimen/dp20"
+                    android:background="@color/c_e8e8e8" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dp10"
+                    android:paddingBottom="@dimen/dp10">
+
+                <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp28"
+                        android:layout_centerHorizontal="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                        android:id="@+id/tv_ss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_time"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dp1"
+                        android:text="@string/timing_task_choice_time"
+                        android:textColor="@color/c_b6b8c0"
+                        android:textSize="@dimen/dp12"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+                <ImageView
+                        android:id="@+id/img_charging"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/tv_time"
+                        android:src="@mipmap/ic_charging_greed"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_time"
+                        app:layout_constraintTop_toTopOf="@+id/tv_time" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+                android:id="@+id/rl_type_c1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp100"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_marginEnd="@dimen/dp20"
+                android:background="@drawable/shape_f8fafb_r10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_data_show">
+
+            <TextView
+                    android:id="@+id/tv_type_c1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp19"
+                    android:layout_marginTop="@dimen/dp12"
+                    android:text="Type-C1"
+                    android:textColor="@color/c_181a1f"
+                    android:textSize="@dimen/dp16" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_type_c1"
+                    android:layout_marginTop="@dimen/dp12"
+                    android:orientation="horizontal">
+
+                <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage_unit"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                    <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_power_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_electricity"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                    <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_current_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="@dimen/dp1"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dp9"
+                        android:layout_marginBottom="@dimen/dp9"
+                        android:background="@color/c_e8e8e8" />
+
+                <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp48"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/str_voltage"
+                            android:textColor="@color/c_b6b8bf"
+                            android:textSize="@dimen/dp10" />
+
+                    <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                            android:id="@+id/tv_voltage_c1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp28"
+                            android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:id="@+id/layout_shap"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp150"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@mipmap/ic_shap_bg"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rl_type_c1">
+
+            <LinearLayout
+                    android:id="@+id/ll_theme_and_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp60"
+                    android:layout_marginStart="@dimen/dp20"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp20"
+                    android:orientation="horizontal">
+
+                <FrameLayout
+                        android:id="@+id/layout_theam"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_ffffff_r10">
+
+                    <TextView
+                            android:id="@+id/tv_theme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dp4"
+                            android:drawableStart="@drawable/selector_mobile_theme_icon"
+                            android:drawablePadding="@dimen/dp3"
+                            android:text="@string/str_bs_theme"
+                            android:textColor="@color/color_181a20_b6b8c0"
+                            android:textSize="@dimen/dp15" />
+                </FrameLayout>
+
+                <View
+                        android:layout_width="@dimen/dp10"
+                        android:layout_height="match_parent" />
+
+                <FrameLayout
+                        android:id="@+id/layout_countdown"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_ffffff_r10">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                        <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        <TextView
+                                android:id="@+id/tv_countdown"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp4"
+                                android:drawableStart="@drawable/selector_mobile_countdown_icon"
+                                android:drawablePadding="@dimen/dp3"
+                                android:text="@string/str_bs_timer"
+                                android:textColor="@color/color_181a20_b6b8c0"
+                                android:textSize="@dimen/dp15" />
+                    </LinearLayout>
+
+                    <TextView
+                            android:id="@+id/tv_count_down_tip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="@dimen/dp6"
+                            android:layout_marginEnd="@dimen/dp9"
+                            android:textColor="@color/c_8c9098"
+                            android:textSize="@dimen/dp11"
+                            tools:text="5分钟" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/ll_count_down_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp60"
+                    android:layout_marginStart="@dimen/dp20"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp20"
+                    android:background="@drawable/selector_mb_home_button_bg"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/tv_count_down_to_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/str_bs_countdown_close"
+                        android:textColor="@color/color_181a20_b6b8c0"
+                        android:textSize="@dimen/dp15" />
+
+                <TextView
+                        android:id="@+id/tv_count_down_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/c_8c9098"
+                        android:textSize="@dimen/sp12"
+                        android:visibility="gone" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+                android:id="@+id/rl_low_current_mode"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp70"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginEnd="@dimen/dp20"
+                android:layout_marginBottom="@dimen/dp30"
+                android:background="@drawable/shape_f8fafb_r10"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_shap">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp11"
+                    android:layout_marginEnd="@dimen/dp40"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/tv_anti_wind_noise_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_bs_electricity_mode"
+                        android:textColor="@color/color_181a20_b6b8c0"
+                        android:textSize="@dimen/dp15" />
+
+                <TextView
+                        android:id="@+id/tv_anti_wind_noise_bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp6"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@string/str_bs_aut_power_off"
+                        android:textColor="@color/c_b6b8c0"
+                        android:textSize="@dimen/dp12" />
+
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/sb_anti_wind_noise"
+                    android:layout_width="@dimen/dp38"
+                    android:layout_height="@dimen/dp24"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginEnd="@dimen/dp10"
+                    android:src="@drawable/cbx_recep_on_off" />
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

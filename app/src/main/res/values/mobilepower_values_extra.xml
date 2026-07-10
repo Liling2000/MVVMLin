@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="c_D45234">#D45234</color>
+    <color name="c_EB656E">#EB656E</color>
+    <color name="c_f2f4f8">#f2f4f8</color>
+    <color name="c_F5CE55">#F5CE55</color>
+    <color name="c_F7F7F7">#F7F7F7</color>
+    <color name="c_F8FAFB">#f8fafb</color>
+    <color name="c_FCF150">#FCF150</color>
+    <color name="c_fdcc33">#fdcc33</color>
+    <color name="c_fff000">#fff000</color>
+    <string name="app_feedback">APP feedback</string>
+    <string name="child_lock">Child Lock</string>
+    <string name="restore_factory">Restore factory settings</string>
+    <string name="str_model">Model</string>
+    <string name="str_name">Name</string>
+    <string name="str_version">Version</string>
+    <string name="unbind_device">Unbind Device</string>
+</resources>

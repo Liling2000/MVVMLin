@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f8f8f8"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/layout_offline"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp44"
+        android:background="@color/c_FAE5E7">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@mipmap/ic_bs_offline"
+            android:drawablePadding="@dimen/dp10"
+            android:gravity="center"
+            android:text="@string/nrg_offline"
+            android:textColor="@color/c_EB656E"
+            android:textSize="@dimen/sp14" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp10">
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_mode"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            app:background="@drawable/item_with_top_corner_bg"
+            app:is_show_arrow_right="false"
+            app:is_show_line="true"
+            app:left_text="@string/str_model"
+            app:right_text_color="@color/c_181A1F" />
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            app:background="@drawable/item_with_bottom_corner_bg"
+            app:left_text="@string/str_name" />
+
+        <FrameLayout
+            android:id="@+id/layout_lock"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            android:layout_marginTop="@dimen/dp10"
+            android:background="@drawable/item_with_all_corner_bg"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/text_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dp10"
+                android:text="@string/child_lock"
+                android:textColor="@color/c_181A1F"
+                android:textSize="@dimen/sp14" />
+
+            <ImageView
+                android:id="@+id/img_switch"
+                android:layout_width="@dimen/dp38"
+                android:layout_height="@dimen/dp24"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginEnd="@dimen/dp10"
+                android:src="@drawable/cbx_recep_on_off" />
+        </FrameLayout>
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_version"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            android:layout_marginTop="@dimen/dp10"
+            android:visibility="gone"
+            app:left_text="@string/str_version" />
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_restore"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            android:layout_marginTop="@dimen/dp10"
+            app:left_text="@string/restore_factory" />
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_help"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            android:layout_marginTop="@dimen/dp10"
+            app:left_text="@string/app_feedback" />
+
+        <com.control_center.intelligent.view.widget.MyInformationView
+            android:id="@+id/item_unbind"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp49"
+            android:layout_marginTop="@dimen/dp10"
+            app:left_text="@string/unbind_device" />
+    </LinearLayout>
+</LinearLayout>
