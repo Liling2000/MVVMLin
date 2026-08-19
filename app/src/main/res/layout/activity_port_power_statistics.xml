@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f6f7f9"
+        android:orientation="vertical">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_f6f7f9"
+            app:tit_text="@string/statistics_detail_title" />
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="36dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="22dp"
+                    android:text="@string/statistics_total_output"
+                    android:textColor="@color/color_666a7c"
+                    android:textSize="21sp" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="405dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_statistics_card"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingEnd="24dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="68dp"
+                        android:orientation="horizontal">
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/statistics_peak_power"
+                                android:textColor="@color/color_666a7c"
+                                android:textSize="12sp" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                                android:id="@+id/total_peak"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <View
+                            android:layout_width="1dp"
+                            android:layout_height="54dp"
+                            android:background="@color/color_e8eaf0" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingStart="16dp">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/statistics_average_power"
+                                android:textColor="@color/color_666a7c"
+                                android:textSize="12sp" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                                android:id="@+id/total_average"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/color_e8eaf0" />
+
+                <com.jiyi.power.app.widget.PowerLineChartView
+                        android:id="@+id/total_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="285dp"
+                        android:paddingTop="12dp" />
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="48dp"
+                    android:text="@string/statistics_port_output"
+                    android:textColor="@color/color_666a7c"
+                    android:textSize="21sp" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_statistics_tabs"
+                    android:orientation="horizontal"
+                    android:padding="3dp">
+
+                <TextView
+                        android:id="@+id/tab_c1"
+                        style="@style/StatisticsPortTab"
+                        android:text="@string/statistics_port_c1" />
+
+                <TextView
+                        android:id="@+id/tab_c2"
+                        style="@style/StatisticsPortTab"
+                        android:text="@string/statistics_port_c2" />
+
+                <TextView
+                        android:id="@+id/tab_c3"
+                        style="@style/StatisticsPortTab"
+                        android:text="@string/statistics_port_c3" />
+
+                <TextView
+                        android:id="@+id/tab_a1"
+                        style="@style/StatisticsPortTab"
+                        android:text="@string/statistics_port_a1" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_statistics_card"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingEnd="24dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="68dp"
+                        android:orientation="horizontal">
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/statistics_peak_power"
+                                android:textColor="@color/color_666a7c"
+                                android:textSize="12sp" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                                android:id="@+id/port_peak"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <View
+                            android:layout_width="1dp"
+                            android:layout_height="54dp"
+                            android:background="@color/color_e8eaf0" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingStart="16dp">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/statistics_average_power"
+                                android:textColor="@color/color_666a7c"
+                                android:textSize="12sp" />
+
+                        <com.aleyn.mvvm.widget.ContentWithUnitTextView
+                                android:id="@+id/port_average"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/color_e8eaf0" />
+
+                <com.jiyi.power.app.widget.PowerLineChartView
+                        android:id="@+id/port_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="205dp"
+                        android:paddingTop="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -2,7 +2,6 @@ package com.aleyn.mvvm.widget
 
 import android.content.Context
 import android.graphics.Color
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.LinearLayout
@@ -11,162 +10,133 @@ import androidx.core.view.isVisible
 import com.aleyn.mvvm.R
 import kotlin.math.roundToInt
 
-/**
- * @author lilingke
- * @date 2023/3/27
- * @description 内容+单位控件
- */
-class ContentWithUnitTextView : LinearLayout {
-    private var mContentSize: Float = 0f //正文字体大小
-    private var mUnitSize: Float = 0f //单位字体大小
-    private var mContentColor = 0 //正文字体颜色
-    private var mUnitColor = 0 //单位字体颜色
-    private var mContent = "" //正文内容
-    private var mUnit = "" //单位内容
+/** Displays a value and its unit with independently configurable text styles. */
+class ContentWithUnitTextView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : LinearLayout(context, attrs, defStyleAttr) {
+    private var contentSize = sp(16f)
+    private var unitSize = sp(12f)
+    private var contentColor = Color.parseColor("#111113")
+    private var unitColor = Color.parseColor("#111113")
+    private var content = ""
+    private var unit = ""
+    private var hideUnit = false
+    private var showUnitWhenEmpty = false
 
-    private var tvContent: TextView? = null
-    private var tvUnit: TextView? = null
+    private lateinit var contentView: TextView
+    private lateinit var unitView: TextView
 
-    private var mIsHideUnit = false
-
-    constructor(context: Context?) : this(context, null)
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context, attrs, defStyleAttr
-    ) {
-        if (attrs != null) {
-            initArrrs(attrs)
-        }
+    init {
+        if (attrs != null) readAttributes(attrs)
         initView()
     }
 
-    /**
-     * 初始化自定义属性
-     * @param 属性获取接口
-     */
-    private fun initArrrs(attrs: AttributeSet) {
+    private fun readAttributes(attrs: AttributeSet) {
         context.obtainStyledAttributes(attrs, R.styleable.ContentWithUnitTextView).apply {
-            mContentSize = getDimension(R.styleable.ContentWithUnitTextView_tv_content_size, 16f)
-            mContentColor = getColor(
-                R.styleable.ContentWithUnitTextView_tv_content_color, Color.parseColor("#111113")
+            contentSize = getDimension(R.styleable.ContentWithUnitTextView_tv_content_size, contentSize)
+            contentColor = getColor(R.styleable.ContentWithUnitTextView_tv_content_color, contentColor)
+            content = getString(R.styleable.ContentWithUnitTextView_tv_content).orEmpty()
+            unitSize = getDimension(R.styleable.ContentWithUnitTextView_tv_unit_size, unitSize)
+            unitColor = getColor(R.styleable.ContentWithUnitTextView_tv_unit_color, unitColor)
+            unit = getString(R.styleable.ContentWithUnitTextView_tv_unit).orEmpty()
+            showUnitWhenEmpty = getBoolean(
+                R.styleable.ContentWithUnitTextView_tv_show_unit_when_empty,
+                false,
             )
-            mContent = getString(R.styleable.ContentWithUnitTextView_tv_content).toString()
-            mUnitSize = getDimension(R.styleable.ContentWithUnitTextView_tv_unit_size, 12f)
-            mUnitColor = getColor(
-                R.styleable.ContentWithUnitTextView_tv_unit_color, Color.parseColor("#111113")
-            )
-            mUnit = getString(R.styleable.ContentWithUnitTextView_tv_unit).toString()
-            if (TextUtils.isEmpty(mUnit)) {
-                mUnit = ""
-            }
             recycle()
         }
     }
 
-    /**
-     * 初始化自定义View
-     */
     private fun initView() {
-        val view = inflate(context, R.layout.content_with_unit_view, this)
-        tvContent = view.findViewById(R.id.tv_content)
-        tvUnit = view.findViewById(R.id.tv_unit)
-        setContent()
-        setUnit()
+        inflate(context, R.layout.content_with_unit_view, this)
+        contentView = findViewById(R.id.tv_content)
+        unitView = findViewById(R.id.tv_unit)
+        contentView.setTextSize(TypedValue.COMPLEX_UNIT_PX, contentSize)
+        contentView.setTextColor(contentColor)
+        unitView.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize)
+        unitView.setTextColor(unitColor)
+        unitView.text = unit
+        setTvContent(content.ifEmpty { null })
     }
 
-    /**
-     * 设置内容属性
-     */
-    private fun setContent() {
-        tvContent?.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContentSize)
-        tvContent?.setTextColor(mContentColor)
-        tvContent?.text = mContent
+    /** Null or empty content is rendered as "--". */
+    fun setTvContent(value: String?) {
+        content = value.orEmpty()
+        contentView.text = value?.takeIf(String::isNotEmpty) ?: "--"
+        updateUnitVisibility()
     }
 
-    /**
-     * 设置单位属性
-     */
-    private fun setUnit() {
-        tvUnit?.setTextSize(TypedValue.COMPLEX_UNIT_PX, mUnitSize)
-        tvUnit?.setTextColor(mUnitColor)
-        tvUnit?.text = mUnit
+    fun setTvUnit(value: String) {
+        unit = value
+        unitView.text = value
+        updateUnitVisibility()
     }
 
-    /**
-     * 设置单位显示
-     * @param isVisibility true:显示 false:隐藏
-     */
-    private fun setTvUnitVisibility(isVisibility: Boolean) {
-        tvUnit?.isVisible = isVisibility && !mIsHideUnit
+    fun setContentTextSize(sizeSp: Float) {
+        contentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
     }
 
-    /**
-     * 设置正文内容
-     * @param content 正文内容
-     */
-    fun setTvContent(content: String?) {
-        if (TextUtils.isEmpty(content)) {
-            //内容为空,则内容正文显示"--" 隐藏单位
-            tvContent?.text = "--"
-        } else {
-            //显示正文和单位
-            tvContent?.text = content
-        }
-        setTvUnitVisibility(!TextUtils.isEmpty(content))
+    fun setUnitTextSize(sizeSp: Float) {
+        unitView.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
     }
 
-    /**
-     * 设置内容文本颜色
-     * @param color 色值
-     */
-    fun setTvTextColor(color: Int) {
-        tvContent?.setTextColor(context.getColor(color))
+    fun setContentTextColor(color: Int) = contentView.setTextColor(color)
+
+    fun setUnitTextColor(color: Int) = unitView.setTextColor(color)
+
+    fun setShowUnitWhenEmpty(show: Boolean) {
+        showUnitWhenEmpty = show
+        updateUnitVisibility()
     }
 
-    /**
-     * 设置单位
-     * @param unit 标题
-     */
-    fun setTvUnit(unit: String) {
-        tvUnit?.text = unit
-    }
+    /** Kept for source compatibility; [colorRes] must be a color resource. */
+    fun setTvTextColor(colorRes: Int) = contentView.setTextColor(context.getColor(colorRes))
 
-    /**
-     * 设置内容和单位的颜色
-     */
-    fun setContentColor(color: Int) {
-        tvContent?.setTextColor(context.getColor(color))
-        tvUnit?.setTextColor(context.getColor(color))
+    /** Kept for source compatibility; [colorRes] must be a color resource. */
+    fun setContentColor(colorRes: Int) {
+        val color = context.getColor(colorRes)
+        contentView.setTextColor(color)
+        unitView.setTextColor(color)
     }
 
     fun setIsHideUnit(isHide: Boolean) {
-        mIsHideUnit = isHide
+        hideUnit = isHide
+        updateUnitVisibility()
     }
 
     fun refreshLayout(isOnline: Boolean) {
         if (!isOnline) {
             setTvContent(null)
-            tvContent?.setTextColor(context.getColor(R.color.c_ffb6b8c0))
+            contentView.setTextColor(context.getColor(R.color.color_ffb6b8c0))
         } else {
-            tvContent?.setTextColor(context.getColor(R.color.c_111113))
+            contentView.setTextColor(context.getColor(R.color.color_111113))
         }
     }
+
+    private fun updateUnitVisibility() {
+        unitView.isVisible = !hideUnit && unit.isNotEmpty() &&
+            (content.isNotEmpty() || showUnitWhenEmpty)
+    }
+
+    private fun sp(value: Float): Float = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        value,
+        resources.displayMetrics,
+    )
 }
 
 fun ContentWithUnitTextView.setCelsius(celsius: Float?, type: Boolean) {
     if (celsius == null) {
-        this.setTvContent(null)
+        setTvContent(null)
         return
     }
-
     if (type) {
-        var value = (celsius * 10).roundToInt() / 10f
-        this.setTvContent("$value")
-        this.setTvUnit("℃")
+        setTvContent("${(celsius * 10).roundToInt() / 10f}")
+        setTvUnit("℃")
     } else {
-        var num = celsius * 1.8f + 32
-        var value = (num * 10).roundToInt() / 10f
-        this.setTvContent("$value")
-        this.setTvUnit("℉")
+        setTvContent("${((celsius * 1.8f + 32) * 10).roundToInt() / 10f}")
+        setTvUnit("℉")
     }
 }

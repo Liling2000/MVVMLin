@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="112dp"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/bg_home_dashed_card"
+    android:gravity="center"
+    android:orientation="vertical">
+    <ImageView android:layout_width="34dp" android:layout_height="34dp" android:contentDescription="@null" android:src="@mipmap/ic_common_add_outline" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/home_add_new_device" android:textColor="@color/color_454558" android:textSize="17sp" />
+</LinearLayout>

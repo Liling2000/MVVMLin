@@ -1,28 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/refresh_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/color_f7f8fa"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        tools:context=".app.fragment.HomeFragment">
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:context=".ui.mobilepower.fragment.HomeFragment">
+            android:paddingStart="24dp"
+            android:paddingTop="18dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
 
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar_home"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                app:title="主页"
-                app:titleTextColor="@color/white" />
+                android:layout_height="52dp">
+
+            <ImageView
+                    android:layout_width="86dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:contentDescription="@null"
+                    android:scaleType="fitStart"
+                    android:src="@mipmap/ic_brand_beilien_logo" />
+
+            <ImageButton
+                    android:id="@+id/button_add_device"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:contentDescription="@string/home_add_device"
+                    android:src="@mipmap/ic_common_add_filled" />
+        </FrameLayout>
+
+        <com.youth.banner.Banner
+                android:id="@+id/banner_home"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_marginTop="34dp"
+                android:background="@drawable/bg_home_banner"
+                android:clipToOutline="true" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:gravity="center"
+                android:text="@string/home_primary_devices"
+                android:textColor="@color/color_191c1e"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_home"
+                android:id="@+id/recycler_devices"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_home_device" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="122dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_home_dashed_card"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@null"
+                        android:src="@mipmap/ic_common_history" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/home_monthly_charge"
+                        android:textColor="@color/color_454558"
+                        android:textSize="14sp" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/home_monthly_charge_value"
+                        android:textColor="@color/color_191c1e"
+                        android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_home_dashed_card"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@null"
+                        android:src="@mipmap/ic_common_compass" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/home_carbon_reduction"
+                        android:textColor="@color/color_454558"
+                        android:textSize="14sp" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/home_carbon_reduction_value"
+                        android:textColor="@color/color_191c1e"
+                        android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</com.scwang.smart.refresh.layout.SmartRefreshLayout>
+</androidx.core.widget.NestedScrollView>

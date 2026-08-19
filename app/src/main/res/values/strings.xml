@@ -10,4 +10,235 @@
   <string name="invalid_username">Not a valid username</string>
   <string name="invalid_password">Password must be &gt;5 characters</string>
   <string name="login_failed">"Login failed"</string>
+  <!-- Main / home -->
+  <string name="home_tab_device">设备</string>
+  <string name="home_tab_me">我的</string>
+  <string name="home_add_device">添加设备</string>
+  <string name="home_add_new_device">添加新设备</string>
+  <string name="home_primary_devices">主要设备</string>
+  <string name="home_monthly_charge">本月累计充电</string>
+  <string name="home_monthly_charge_value">128 kWh</string>
+  <string name="home_carbon_reduction">减少碳排放</string>
+  <string name="home_carbon_reduction_value">12.5 kg</string>
+  <string name="home_device_name">ELAU</string>
+  <string name="home_device_description">高性能移动电源</string>
+  <string name="home_device_power">86%</string>
+  <string name="home_bluetooth_connected">蓝牙已连接</string>
+  <string name="home_device_arrow">›</string>
+  <string name="bluetooth_permission_denied">蓝牙权限未授予</string>
+  <string name="bluetooth_permission_settings">请在系统设置中开启蓝牙权限</string>
+  <!-- Bluetooth device scan -->
+  <string name="scan_close">关闭</string>
+  <string name="scan_help">帮助</string>
+  <string name="scan_add_device_title">添加设备</string>
+  <string name="scan_searching_hint">扫描中，请将手机尽量靠近设备</string>
+  <string name="scan_help_message">请打开设备并将手机靠近设备后重试</string>
+  <string name="scan_connect_success">连接成功</string>
+  <string name="scan_connecting">连接中</string>
+  <!-- Me -->
+  <string name="me_user_name">Alex River</string>
+  <string name="me_user_email">support@beillen.com</string>
+  <string name="me_account_management">账号管理</string>
+  <string name="me_switch_language">切换语言</string>
+  <string name="me_language_simplified_chinese">简体中文</string>
+  <string name="me_notifications">消息推送</string>
+  <string name="me_feedback">意见反馈</string>
+  <string name="me_about_app">关于 APP</string>
+  <string name="me_app_version">V.2.4.0</string>
+  <string name="me_customer_service">在线客服</string>
+  <string name="me_user_agreement">用户协议</string>
+  <string name="me_privacy_policy">隐私政策</string>
+  <string name="me_copyright">© 2026 Beillen 嘉德科技</string>
+  <string name="me_profile_picture">用户头像</string>
+  <string name="me_feature_unavailable">%1$s功能暂未开放</string>
+  <!-- Mobile power dashboard -->
+  <string name="power_battery_percent">%1$d%%</string>
+  <string name="power_remaining_time">剩余可输出时间：%1$d H %2$d M</string>
+  <string name="power_temperature">设备温度</string>
+  <string name="power_temperature_value">%1$.1f°C</string>
+  <string name="power_output">输出</string>
+  <string name="power_disconnected">未连接</string>
+  <string name="power_empty_watt">--W</string>
+  <string name="power_port_c1">C1</string>
+  <string name="power_port_c2">C2</string>
+  <string name="power_port_c3">C3</string>
+  <string name="power_port_a1">A1</string>
+  <string name="power_value_watt">%1$.1fW</string>
+  <string name="power_value_voltage_current">%1$.1fV / %2$.1fA</string>
+  <string name="power_cable_info">线材信息</string>
+  <string name="power_cable_value">3A-60W</string>
+  <string name="power_charge_protocol">充电协议</string>
+  <string name="power_device_model">设备型号</string>
+  <string name="power_unknown_value">--</string>
+  <string name="power_low_current_mode">小电流模式</string>
+  <string name="power_screen_settings">屏幕设置</string>
+  <string name="power_battery_info">电池信息</string>
+  <string name="power_cycle_count">循环次数</string>
+  <string name="power_cycle_count_value">%1$d次</string>
+  <string name="power_current_capacity">当前容量</string>
+  <string name="power_capacity_value">%1$dmAh</string>
+  <string name="power_device_c1_name">MacBook Pro</string>
+  <string name="power_device_c2_name">iPhone 17 Pro</string>
+  <string name="power_device_a1_name">USB-A 设备</string>
+  <string name="power_model_c1">MacBook Pro</string>
+  <string name="power_model_c2">iPhone 15 Pro</string>
+  <string name="power_low_current_updated">小电流模式已%1$s</string>
+  <string name="power_enabled">开启</string>
+  <string name="power_disabled">关闭</string>
+  <string name="power_command_failed">设备未连接，设置未发送</string>
+  <string name="power_battery_details">电池健康度 %1$d%%，循环 %2$d 次</string>
+  <string name="power_device_disconnected_notice">设备连接已断开</string>
+  <string name="power_preview_percent">78%</string>
+  <string name="power_preview_remaining">剩余可输出时间：10 H 30 M</string>
+  <string name="power_preview_temperature">32.4°C</string>
+  <string name="power_preview_watt">28.0W</string>
+  <string name="power_preview_metrics">12.0V / 2.3A</string>
+  <string name="power_preview_health">100%</string>
+  <string name="power_page_title">ELAU</string>
+  <string name="power_back">返回</string>
+  <string name="device_setting_title">设备设置</string>
+  <string name="device_setting_charge_mode">充电模式</string>
+  <string name="device_setting_smart_mode">智能模式</string>
+  <string name="device_setting_standard_mode">标准模式</string>
+  <string name="device_setting_device_name">设备名称</string>
+  <string name="device_setting_default_name">ELAU PD888</string>
+  <string name="device_setting_model">设备型号</string>
+  <string name="device_setting_model_value">ELAU PD888</string>
+  <string name="device_setting_certification">认证资质</string>
+  <string name="device_setting_certification_value">六项认证</string>
+  <string name="device_setting_certification_detail">本设备已通过 CCC、CE、FCC、RoHS、UKCA、RCM 六项认证。</string>
+  <string name="device_setting_serial_number">生产序列号</string>
+  <string name="device_setting_serial_number_value">ASHUXB1E51301932</string>
+  <string name="device_setting_factory_reset">恢复出厂设置</string>
+  <string name="device_setting_factory_reset_message">恢复后，设备名称和充电模式将重置。确定继续吗？</string>
+  <string name="device_setting_factory_reset_success">已恢复出厂设置</string>
+  <string name="device_setting_delete">删除设备</string>
+  <string name="device_setting_delete_message">删除后需要重新添加设备，确定删除吗？</string>
+  <string name="device_setting_delete_success">设备已删除</string>
+  <string name="device_setting_edit_name_title">修改设备名称</string>
+  <string name="device_setting_name_hint">请输入设备名称</string>
+  <string name="device_setting_name_empty">设备名称不能为空</string>
+  <string name="device_setting_cancel">取消</string>
+  <string name="device_setting_confirm">确定</string>
+  <string name="device_setting_select_charge_mode">选择充电模式</string>
+  <string name="charging_mode_title">充电模式</string>
+  <string name="charging_mode_smart">智能模式</string>
+  <string name="charging_mode_smart_desc">自动识别设备并匹配快充协议，提供更快的充电速度，最高支持 310W，适合需要快速补电的场景。</string>
+  <string name="charging_mode_smart_tag_fast">极速闪充</string>
+  <string name="charging_mode_smart_tag_control">智慧温控</string>
+  <string name="charging_mode_standard">普充模式</string>
+  <string name="charging_mode_standard_desc">稳定的标准充电模式，适合日常使用，在保证正常充电的同时更好保护电池寿命。</string>
+  <string name="charging_mode_standard_tag_health">健康管理</string>
+  <string name="charging_mode_standard_tag_night">夜间守护</string>
+  <string name="charging_mode_custom">自定义模式</string>
+  <string name="charging_mode_custom_desc">由用户自行设定充电功率、截止电量及保护策略，适合进阶发烧友使用。</string>
+  <string name="charging_mode_custom_tag_parameter">参数调节</string>
+  <string name="charging_mode_custom_tag_strategy">策略定制</string>
+  <string name="charging_mode_tip">* 建议在长时间不使用设备时切换至普充模式以延长电池寿命</string>
+  <string name="custom_mode_title">自定义模式</string>
+  <string name="custom_mode_power">功率调节</string>
+  <string name="custom_mode_power_value">%1$d</string>
+  <string name="custom_mode_power_unit">W</string>
+  <string name="custom_mode_power_min">5W</string>
+  <string name="custom_mode_power_middle">150W</string>
+  <string name="custom_mode_power_max">300W</string>
+  <string name="custom_mode_cutoff">截止电量</string>
+  <string name="custom_mode_percent">%1$d%%</string>
+  <string name="custom_mode_recommend">推荐 90%% 以延长电池寿命</string>
+  <string name="custom_mode_protection">保护策略</string>
+  <string name="custom_mode_overheat">智能过热保护</string>
+  <string name="custom_mode_overheat_desc">动态调节以维持理想温控</string>
+  <string name="custom_mode_full_disconnect">充满自动断电</string>
+  <string name="custom_mode_full_disconnect_desc">零待机功耗，保护电池</string>
+  <string name="custom_mode_night_silent">夜间静音充电</string>
+  <string name="custom_mode_night_silent_desc">降低风扇转速，静谧无声</string>
+  <string name="custom_mode_save">保存并应用</string>
+  <string name="custom_mode_saved">自定义充电模式已保存并应用</string>
+  <string name="login_brand_name">Beillen</string>
+  <string name="login_add_avatar">添加头像</string>
+  <string name="login_name_hint">请输入您的名称</string>
+  <string name="login_guest">访客登录</string>
+  <string name="login_default_guest_name">访客</string>
+  <string name="login_avatar_description">访客头像</string>
+  <string name="start_brand_slogan">智能充电</string>
+  <string name="start_copyright">©Beillen 嘉德科技</string>
+  <string name="statistics_detail_title">详细数据</string>
+  <string name="statistics_total_output">总输出</string>
+  <string name="statistics_port_output">接口输出</string>
+  <string name="statistics_peak_power">峰值功率</string>
+  <string name="statistics_average_power">平均功率</string>
+  <string name="statistics_power_unit">W</string>
+  <string name="statistics_port_c1">C1</string>
+  <string name="statistics_port_c2">C2</string>
+  <string name="statistics_port_c3">C3</string>
+  <string name="statistics_port_a1">A1</string>
+  <string name="screen_setting_title">屏幕设置</string><string name="screen_preview">预览效果</string>
+  <string name="screen_preview_percent">80.25%%</string><string name="screen_preview_output">Output 90W</string>
+  <string name="screen_shutdown">倒计时关机</string><string name="screen_shutdown_desc">设置设备在指定时间后自动关机</string>
+  <string name="screen_timer_reminder">计时提醒</string><string name="screen_timer_reminder_desc">开启后将在计时结束时发出提醒</string>
+  <string name="screen_time_display">时间显示</string><string name="screen_time_display_desc">在设备屏幕上显示当前时间</string>
+  <string name="screen_achievement">成就互动</string><string name="screen_achievement_desc">在设备屏幕上显示趣味互动表情</string>
+  <string name="screen_text_color">文本颜色</string><string name="screen_color_white">白色</string><string name="screen_color_dark">深灰色</string>
+  <string name="screen_saver">屏保</string><string name="screen_custom_text_hint">请输入自定义文本（最多10字符）</string>
+  <string name="screen_wallpaper">壁纸</string><string name="screen_custom_wallpaper">自定义壁纸</string><string name="screen_send">发送</string>
+  <string name="screen_timer_unavailable">计时提醒设置页面暂未开放</string><string name="screen_send_success">屏幕设置已提交</string>
+  <string name="battery_info_title">电池信息</string><string name="battery_history">历史记录</string><string name="battery_history_unavailable">电池历史记录页面暂未开放</string>
+  <string name="battery_health">电池健康</string><string name="battery_healthy">健康</string><string name="battery_healthy_desc">电池处于健康状态</string><string name="battery_health_percent">%1$d%%</string>
+  <string name="battery_manufacturer">电池生产厂</string><string name="battery_model">电池型号</string><string name="battery_cycle_count">循环次数</string><string name="battery_recommended_time">建议使用时间</string>
+  <string name="battery_series">电池串数</string><string name="battery_cell_voltage_name">电芯%1$d电压</string><string name="battery_voltage_mv">%1$dmV</string>
+  <string name="battery_rated_power">额定功率</string><string name="battery_max_charge_power">最大充电功率</string><string name="battery_max_discharge_power">最大放电功率</string>
+  <string name="battery_total_discharge_time">累计放电时长</string><string name="battery_total_discharge_capacity">累计放电量</string>
+  <string name="battery_cycle_format">%1$d次</string><string name="battery_year_format">%1$d年</string><string name="battery_power_format">%1$dW</string>
+  <string name="battery_hours_format">%1$d小时</string><string name="battery_capacity_format">%1$dmAh</string><string name="battery_empty_value">--</string>
+  <string name="timer_shutdown_title">倒计时关机</string>
+  <string name="timer_reminder_title">计时提醒</string>
+  <string name="timer_select_time">选择时间</string>
+  <string name="timer_shutdown_description">设置自动关机倒计时，节省电量。</string>
+  <string name="timer_reminder_description">设置计时结束时的提醒，避免错过重要时刻。</string>
+  <string name="timer_minute">分钟</string>
+  <string name="timer_hour">小时</string>
+  <string name="timer_custom">自定义</string>
+  <string name="timer_plus">+</string>
+  <string name="timer_confirm">确定</string>
+  <string name="timer_cancel">取消</string>
+  <string name="timer_back">返回</string>
+  <string name="timer_selected">已选择</string>
+  <string name="timer_custom_dialog_title">自定义时间</string>
+  <string name="timer_custom_invalid">时间不能为零</string>
+  <string name="timer_setting_success">设置成功</string>
+  <string name="timer_setting_pending">设备协议暂不可用，设置未发送</string>
+  <string name="error_page_title">异常记录</string>
+  <string name="error_history_description">设备历史异常状态记录</string>
+  <string name="error_title_battery_overheat">电池过热</string>
+  <string name="error_title_voltage_unstable">电压不稳</string>
+  <string name="error_title_sensor_error">传感器异常</string>
+  <string name="error_title_unknown">未知异常</string>
+  <string name="error_desc_battery_overheat">系统检测到核心温度超过临界值(45℃)，已启动散热机制。</string>
+  <string name="error_desc_voltage_unstable">输入电压波动超出 ±10% 范围，系统已切换至平稳模式。</string>
+  <string name="error_desc_sensor_error">传感器数据异常，正在重新校准。</string>
+  <string name="error_desc_unknown">暂无描述</string>
+  <string name="error_status_auto_protection">自动保护已触发</string>
+  <string name="error_status_cooling">冷却中</string>
+  <string name="error_empty">暂无异常记录</string>
+  <string name="error_back">返回</string>
+  <string name="error_icon_description">异常类型图标</string>
+  <string name="popup_cancel">取消</string>
+  <string name="popup_confirm">确定</string>
+  <string name="popup_agree">同意</string>
+  <string name="popup_disagree">不同意</string>
+  <string name="popup_go_to_settings">前往设置</string>
+  <string name="popup_bluetooth_title">蓝牙服务申请</string>
+  <string name="popup_bluetooth_message">添加蓝牙设备需要蓝牙服务，请允许</string>
+  <string name="popup_delete_title">删除设备</string>
+  <string name="popup_delete_message">确认将设备从手机中删除</string>
+  <string name="popup_restore_title">恢复出厂设置</string>
+  <string name="popup_restore_message">确定恢复出厂设置吗？</string>
+  <string name="popup_request_title">欢迎使用Beillen APP</string>
+  <string name="popup_request_message">为了更好的为您提供服务，APP需要申请以下权限，我们不会追踪和记录您的位置和敏感信息。</string>
+  <string name="popup_request_detail">附近设备和位置权限:用于搜索附近设备、蓝牙连接等</string>
+  <string name="popup_privacy_title">用户协议和隐私政策</string>
+  <string name="popup_privacy_link_text">用户协议和隐私政策</string>
+  <string name="popup_privacy_intro">依据最新的监管要求，针对嘉德的用户协议和隐私政策，特向您说明如下：</string>
+  <string name="popup_privacy_body">1、为向您提供 APP 的相关基本功能，我们会收集、使用必要的信息。\n2、基于您的明示授权，我们会获取您的位置、用户行为、设备信息、APP 异常事件等信息，您有权拒绝或取消授权。\n3、我们会采取必要的安全措施保护您的信息安全。APP 需要用到设备的蓝牙地址，用于连接设备。\n4、APP 会判断手机是否安装了地图类应用，为寻找设备时提供导航服务。\n5、APP 对获取的信息不会做任何长期保存。</string>
+
 </resources>

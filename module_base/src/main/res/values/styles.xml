@@ -10,12 +10,11 @@
 
     <declare-styleable name="ComToolBar">
         <attr name="tit_text" format="string" />
-        <attr name="tit_size" format="integer" />
+        <attr name="tit_size" format="dimension" />
+        <attr name="tit_image" format="reference" />
         <attr name="tit_left_text" format="string" />
-        <attr name="tit_right_text" format="string" />
-        <attr name="left_icon" format="reference" />
+        <attr name="left_icon" />
         <attr name="right_icon" format="reference" />
-        <attr name="second_right_icon" format="reference" />
         <attr name="show_line" format="boolean" />
     </declare-styleable>
 
@@ -42,6 +41,21 @@
         <attr name="tv_unit_size" format="dimension" />
         <attr name="tv_unit_color" format="color" />
         <attr name="tv_unit" format="string" />
+        <attr name="tv_show_unit_when_empty" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MyInformationView">
+        <attr name="left_icon" format="reference" />
+        <attr name="left_text" format="string|reference" />
+        <attr name="left_text_color" format="color|reference" />
+        <attr name="left_text_size" format="dimension|reference" />
+        <attr name="right_text" format="string|reference" />
+        <attr name="right_text_color" format="color|reference" />
+        <attr name="right_text_size" format="dimension|reference" />
+        <attr name="right_arrow_icon" format="reference" />
+        <attr name="is_show_line" format="boolean" />
+        <attr name="is_show_arrow_right" format="boolean" />
+        <attr name="background" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CommonInformationView">

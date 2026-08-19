@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_popup_container"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/popup_request_horizontal_padding"
+    android:paddingTop="@dimen/popup_request_top_padding"
+    android:paddingEnd="@dimen/popup_request_horizontal_padding"
+    android:paddingBottom="@dimen/popup_request_bottom_padding">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/popup_request_title"
+        android:textColor="@color/color_17181c"
+        android:textSize="@dimen/popup_request_title_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/popup_request_intro_margin"
+        android:lineSpacingExtra="@dimen/popup_line_spacing"
+        android:text="@string/popup_request_message"
+        android:textColor="@color/color_777b8d"
+        android:textSize="@dimen/popup_body_text_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/popup_request_detail_margin"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/popup_line_spacing_small"
+        android:text="@string/popup_request_detail"
+        android:textColor="@color/color_a0a0ab"
+        android:textSize="@dimen/popup_detail_text_size" />
+
+    <TextView
+        android:id="@+id/agree_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popup_button_height"
+        android:layout_marginTop="@dimen/popup_request_button_margin"
+        android:background="@drawable/bg_popup_button_primary"
+        android:gravity="center"
+        android:text="@string/popup_agree"
+        android:textColor="@color/color_ffffff"
+        android:textSize="@dimen/popup_button_text_size" />
+
+    <TextView
+        android:id="@+id/disagree_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popup_text_button_height"
+        android:layout_marginTop="@dimen/popup_disagree_margin"
+        android:gravity="center"
+        android:text="@string/popup_disagree"
+        android:textColor="@color/color_a0a0ab"
+        android:textSize="@dimen/popup_body_text_size" />
+</LinearLayout>

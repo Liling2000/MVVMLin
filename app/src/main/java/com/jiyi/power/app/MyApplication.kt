@@ -3,9 +3,11 @@ package com.jiyi.power.app
 import com.alibaba.android.arouter.launcher.ARouter
 import com.aleyn.mvvm.app.MVVMLin
 import com.aleyn.mvvm.base.BaseApplication
+import com.aleyn.mvvm.utils.MmkvManager
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.BuildConfig
+import com.liling.ble.manager.Ble
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,6 +29,8 @@ class MyApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        MmkvManager.init(this)
+        Ble.getBleApi().init(this)
 
         if (BuildConfig.DEBUG) {
             ARouter.openLog()

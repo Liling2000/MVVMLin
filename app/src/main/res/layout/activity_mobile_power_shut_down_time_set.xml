@@ -11,7 +11,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/c_ffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:tit_text="@string/str_bs_choose_time" />
 
     <LinearLayout
         android:id="@+id/layout_offline_tip"

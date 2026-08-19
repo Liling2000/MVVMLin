@@ -86,6 +86,7 @@ dependencies {
     androidTestImplementation(libs.androidTestJunit)
     androidTestImplementation(libs.espressoCore)
     implementation(project(":module_base"))
+    implementation(project(":module_ble"))
 
     //MVVMLin
 

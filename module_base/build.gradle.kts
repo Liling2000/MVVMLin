@@ -77,6 +77,9 @@ dependencies {
     api(libs.dialogsCore)
     // utils 集合了大量常用的工具类
     api(libs.utilCode)
+    api(libs.mmkv)
+    api(libs.lottie)
+    api(libs.xpopup)
 
     api("com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar")
     api("com.flyco.roundview:FlycoRoundView_Lib:1.1.4@aar")

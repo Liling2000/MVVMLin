@@ -6,11 +6,26 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+            android:name="android.permission.READ_EXTERNAL_STORAGE"
             android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+            android:name="android.permission.WRITE_EXTERNAL_STORAGE"
             android:maxSdkVersion="32"
             tools:ignore="ScopedStorage" />
+    <uses-permission
+            android:name="android.permission.BLUETOOTH"
+            android:maxSdkVersion="30" />
+    <uses-permission
+            android:name="android.permission.BLUETOOTH_ADMIN"
+            android:maxSdkVersion="30" />
+    <uses-permission
+            android:name="android.permission.ACCESS_FINE_LOCATION"
+            android:maxSdkVersion="30" />
+    <uses-permission
+            android:name="android.permission.BLUETOOTH_SCAN"
+            android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
             android:name=".app.MyApplication"
@@ -19,21 +34,32 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity
-                android:name=".ui.detail.DetailActivity"
-                android:exported="false" />
-        <activity
-                android:name=".ui.device.DeviceHomeActivity"
-                android:exported="false" />
-        <activity
-                android:name=".ui.MainActivity"
-                android:exported="true">
+
+        <activity android:name=".app.StartActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".app.LoginActivity" android:exported="false" />
+        <activity android:name=".app.MainActivity" android:exported="false" />
+
+        <activity
+                android:name=".app.BleDeviceScanActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.MobilePowerMainActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.DeviceSettingActivity"
+                android:exported="false" />
+        <activity android:name=".app.ChargingModeActivity" android:exported="false" />
+        <activity android:name=".app.CustomChargingModeActivity" android:exported="false" />
+        <activity android:name=".app.PortPowerStatisticsActivity" android:exported="false" />
+        <activity android:name=".app.ScreenSettingActivity" android:exported="false" />
+        <activity android:name=".app.BatteryInfoActivity" android:exported="false" />
+        <activity android:name=".app.TimerSettingActivity" android:exported="false" />
+        <activity android:name=".app.DeviceExceptionRecordActivity" android:exported="false" />
     </application>
 
 

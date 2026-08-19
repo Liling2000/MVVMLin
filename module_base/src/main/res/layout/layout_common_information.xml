@@ -50,7 +50,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:textColor="@color/c_333333"
+                            android:textColor="@color/color_333333"
                             android:textSize="15sp"
                             tools:text="标题" />
 
@@ -72,7 +72,7 @@
                         android:layout_marginTop="4dp"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:textColor="@color/c_999999"
+                        android:textColor="@color/color_999999"
                         android:textSize="11sp"
                         tools:text="副标题" />
             </LinearLayout>
@@ -101,7 +101,7 @@
                         android:layout_marginStart="10dp"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textColor="@color/c_999999"
+                        android:textColor="@color/color_999999"
                         android:textSize="15sp"
                         tools:text="v2.0.0" />
 
@@ -141,7 +141,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/c_d000000"
+                android:background="@color/color_0d000000"
                 android:visibility="gone" />
     </com.flyco.roundview.RoundFrameLayout>
 </LinearLayout>

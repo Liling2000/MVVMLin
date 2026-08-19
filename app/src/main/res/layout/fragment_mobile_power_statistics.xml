@@ -430,32 +430,32 @@
 
                 </com.flyco.roundview.RoundLinearLayout>
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_one"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_two"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_three"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_four"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_five"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />
 
-                <com.control_center.intelligent.view.widget.CellInformationLayout
+                <com.aleyn.mvvm.widget.CellInformationLayout
                     android:id="@+id/layout_cell_six"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40" />

@@ -5,20 +5,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.aleyn.mvvm.widget.ComToolBar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:title="项目"
-            app:titleTextColor="@color/white" />
+            android:layout_height="wrap_content"
+            app:tit_text="项目" />
 
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tb_project"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_42"
-            app:tabBackground="@color/blue"
+            app:tabBackground="@color/color_00abff"
             app:tabMode="scrollable"
-            app:tabTextColor="@color/white" />
+            app:tabTextColor="@color/color_ffffff" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_project"

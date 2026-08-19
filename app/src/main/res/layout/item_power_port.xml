@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_power_port_inactive"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/text_port"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:background="@drawable/bg_power_chip_normal"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/color_0752ae"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="@string/power_port_c1" />
+
+        <TextView
+                android:id="@+id/text_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/color_0752ae"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="@string/power_output" />
+    </LinearLayout>
+
+    <com.aleyn.mvvm.widget.ContentWithUnitTextView
+            android:id="@+id/text_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            app:tv_content="28.0"
+            app:tv_content_color="@color/color_191c1e"
+            app:tv_content_size="24sp"
+            app:tv_show_unit_when_empty="true"
+            app:tv_unit="W"
+            app:tv_unit_color="@color/color_191c1e"
+            app:tv_unit_size="14sp" />
+
+    <TextView
+            android:id="@+id/text_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/color_77798d"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="@string/power_device_c1_name" />
+
+    <TextView
+            android:id="@+id/text_metrics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_a5a6aa"
+            android:textSize="10sp"
+            tools:text="@string/power_preview_metrics" />
+</LinearLayout>

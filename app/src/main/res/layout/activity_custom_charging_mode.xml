@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f6f7f9"
+        android:orientation="vertical">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_f6f7f9"
+            app:tit_text="@string/custom_mode_title" />
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="28dp">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="205dp"
+                    android:background="@drawable/bg_charge_card"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    android:padding="25dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/custom_mode_power"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:id="@+id/text_power_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_0752ae"
+                            android:textSize="48sp"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/custom_mode_power_unit"
+                            android:textColor="@color/color_45475a"
+                            android:textSize="14sp" />
+                </LinearLayout>
+
+                <SeekBar
+                        android:id="@+id/seek_power"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="24dp"
+                        android:max="295"
+                        android:progress="145"
+                        android:progressDrawable="@drawable/bg_custom_seekbar"
+                        android:splitTrack="false"
+                        android:thumb="@drawable/bg_custom_seekbar_thumb"
+                        android:thumbOffset="0dp" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/custom_mode_power_min"
+                            android:textColor="@color/color_45475a"
+                            android:textSize="13sp" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/custom_mode_power_middle"
+                            android:textColor="@color/color_45475a"
+                            android:textSize="13sp" />
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/custom_mode_power_max"
+                            android:textColor="@color/color_45475a"
+                            android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="197dp"
+                    android:layout_marginTop="22dp"
+                    android:background="@drawable/bg_charge_card"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    android:padding="25dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/custom_mode_cutoff"
+                        android:textColor="@color/color_17181c"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="25dp"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/option_80"
+                            style="@style/CustomChargeOption" />
+
+                    <Space
+                            android:layout_width="12dp"
+                            android:layout_height="1dp" />
+
+                    <TextView
+                            android:id="@+id/option_90"
+                            style="@style/CustomChargeOption" />
+
+                    <Space
+                            android:layout_width="12dp"
+                            android:layout_height="1dp" />
+
+                    <TextView
+                            android:id="@+id/option_100"
+                            style="@style/CustomChargeOption" />
+                </LinearLayout>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="17dp"
+                        android:gravity="center"
+                        android:text="@string/custom_mode_recommend"
+                        android:textColor="@color/color_9295a2"
+                        android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:background="@drawable/bg_charge_card"
+                    android:elevation="2dp"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="25dp"
+                        android:text="@string/custom_mode_protection"
+                        android:textColor="@color/color_17181c"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_eceef2" />
+
+                <LinearLayout
+                        android:id="@+id/row_overheat"
+                        style="@style/CustomProtectionRow">
+
+                    <ImageView
+                            style="@style/CustomProtectionIcon"
+                            android:contentDescription="@string/custom_mode_overheat"
+                            android:src="@mipmap/ic_temperature" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <TextView
+                                style="@style/CustomProtectionTitle"
+                                android:text="@string/custom_mode_overheat" />
+
+                        <TextView
+                                style="@style/CustomProtectionDesc"
+                                android:text="@string/custom_mode_overheat_desc" />
+                    </LinearLayout>
+
+                    <com.aleyn.mvvm.widget.SwitchButtonKotlin
+                            android:id="@+id/switch_overheat"
+                            style="@style/CustomProtectionSwitch" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_eceef2" />
+
+                <LinearLayout
+                        android:id="@+id/row_disconnect"
+                        style="@style/CustomProtectionRow">
+
+                    <ImageView
+                            style="@style/CustomProtectionIcon"
+                            android:contentDescription="@string/custom_mode_full_disconnect"
+                            android:src="@mipmap/ic_power_disabled" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <TextView
+                                style="@style/CustomProtectionTitle"
+                                android:text="@string/custom_mode_full_disconnect" />
+
+                        <TextView
+                                style="@style/CustomProtectionDesc"
+                                android:text="@string/custom_mode_full_disconnect_desc" />
+                    </LinearLayout>
+
+                    <com.aleyn.mvvm.widget.SwitchButtonKotlin
+                            android:id="@+id/switch_disconnect"
+                            style="@style/CustomProtectionSwitch" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_eceef2" />
+
+                <LinearLayout
+                        android:id="@+id/row_night"
+                        style="@style/CustomProtectionRow">
+
+                    <ImageView
+                            style="@style/CustomProtectionIcon"
+                            android:contentDescription="@string/custom_mode_night_silent"
+                            android:src="@mipmap/ic_dark_mode" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <TextView
+                                style="@style/CustomProtectionTitle"
+                                android:text="@string/custom_mode_night_silent" />
+
+                        <TextView
+                                style="@style/CustomProtectionDesc"
+                                android:text="@string/custom_mode_night_silent_desc" />
+                    </LinearLayout>
+
+                    <com.aleyn.mvvm.widget.SwitchButtonKotlin
+                            android:id="@+id/switch_night"
+                            style="@style/CustomProtectionSwitch" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/button_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="44dp"
+                    android:background="@drawable/bg_custom_save"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="@string/custom_mode_save"
+                    android:textColor="@color/color_ffffff"
+                    android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

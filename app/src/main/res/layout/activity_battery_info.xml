@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f6f7f9">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_f6f7f9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:right_icon="@mipmap/ic_common_history"
+            app:tit_text="@string/battery_info_title" />
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="36dp">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="158dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/battery_health"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/battery_healthy"
+                            android:textColor="@color/color_0752ae"
+                            android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:text="@string/battery_healthy_desc"
+                            android:textColor="@color/color_55596a"
+                            android:textSize="13sp" />
+
+                    <TextView
+                            android:id="@+id/text_health_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_55596a"
+                            android:textSize="23sp" />
+                </LinearLayout>
+
+                <ProgressBar
+                        android:id="@+id/progress_health"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:layout_marginTop="14dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_battery_health" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_manufacturer"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_manufacturer" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_model"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:left_text="@string/battery_model" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_cycle"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_cycle_count" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_recommended"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:left_text="@string/battery_recommended_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_series"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_series" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_cells"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_rated_power"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_rated_power" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_max_charge"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_max_charge_power" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_max_discharge"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:left_text="@string/battery_max_discharge_power" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_battery_card"
+                    android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_discharge_time"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:is_show_line="true"
+                        app:left_text="@string/battery_total_discharge_time" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                        android:id="@+id/info_discharge_capacity"
+                        style="@style/BatteryInformationRow"
+                        app:is_show_arrow_right="false"
+                        app:left_text="@string/battery_total_discharge_capacity" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

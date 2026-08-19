@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/c_ffffff"
+        app:tit_text="@string/str_bs_countdown_close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,7 +74,7 @@
             android:layout_marginStart="@dimen/dp20"
             android:layout_marginTop="@dimen/dp2"
             android:text="@string/str_bs_shutdown"
-            android:textColor="#ff8d9097"
+            android:textColor="@color/color_8d9097"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/tv_h"
             app:layout_constraintTop_toBottomOf="@+id/tv_h" />

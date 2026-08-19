@@ -1,22 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f6f7f9"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="36dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="20dp">
 
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:title="网站"
-            app:titleTextColor="@color/white" />
+        <ImageView
+            android:id="@+id/image_profile"
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:contentDescription="@string/me_profile_picture"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_user_profile" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_me_uesd_web"
+        <TextView
+            android:id="@+id/text_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/me_user_name"
+            android:textColor="@color/color_1010c9"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/bg_me_email"
+            android:text="@string/me_user_email"
+            android:textColor="@color/color_777b8d"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/layout_information_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gary" />
-</LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_me_card"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_account"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="true"
+                app:left_icon="@mipmap/ic_security_shield"
+                app:left_text="@string/me_account_management"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right" />
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_language"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="true"
+                app:left_icon="@mipmap/ic_globe"
+                app:left_text="@string/me_switch_language"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right"
+                app:right_text="@string/me_language_simplified_chinese"
+                app:right_text_color="@color/color_17181c" />
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="true"
+                app:left_icon="@mipmap/ic_notification"
+                app:left_text="@string/me_notifications"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right" />
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="true"
+                app:left_icon="@mipmap/ic_alert_message"
+                app:left_text="@string/me_feedback"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right" />
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_about"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="true"
+                app:left_icon="@mipmap/ic_information"
+                app:left_text="@string/me_about_app"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right"
+                app:right_text="@string/me_app_version"
+                app:right_text_color="@color/color_17181c" />
+
+            <com.aleyn.mvvm.widget.MyInformationView
+                android:id="@+id/item_customer_service"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:is_show_line="false"
+                app:left_icon="@mipmap/ic_customer_support"
+                app:left_text="@string/me_customer_service"
+                app:left_text_color="@color/color_17181c"
+                app:right_arrow_icon="@mipmap/ic_chevron_right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_user_agreement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/me_user_agreement"
+                android:textColor="@color/color_17181c"
+                android:textSize="13sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/color_eceef3" />
+
+            <TextView
+                android:id="@+id/text_privacy_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/me_privacy_policy"
+                android:textColor="@color/color_17181c"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/me_copyright"
+            android:textColor="@color/color_777b8d"
+            android:textSize="12sp"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+</ScrollView>

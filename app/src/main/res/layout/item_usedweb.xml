@@ -4,7 +4,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_4"
-            android:background="@color/white"
+            android:background="@color/color_ffffff"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/dp_20">
@@ -14,7 +14,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{itemData.name}"
-                android:textColor="@color/blue"
+                android:textColor="@color/color_00abff"
                 android:textSize="@dimen/sp_16"
                 tools:text="玩安卓" />
 
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
-                android:textColor="@color/blue"
+                android:textColor="@color/color_00abff"
                 android:textSize="@dimen/sp_14"
                 tools:text="www.baidu.com" />
     </LinearLayout>

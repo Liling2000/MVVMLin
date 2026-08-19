@@ -60,7 +60,7 @@ class NavigateTabBar @JvmOverloads constructor(
             context.theme.obtainStyledAttributes(attrs, R.styleable.NavigateTabBar, 0, 0)
         mNormalTextColor =
             typedArray.getColorStateList(R.styleable.NavigateTabBar_navigateTabTextColor)
-                ?: ContextCompat.getColorStateList(context, R.color.c_a0a0ab)
+                ?: ContextCompat.getColorStateList(context, R.color.color_a0a0ab)
         val selectedTabTextColor =
             typedArray.getColorStateList(R.styleable.NavigateTabBar_navigateTabSelectedTextColor)
         mTabTextSize =

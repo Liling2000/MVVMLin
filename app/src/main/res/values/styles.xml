@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/color_008577</item>
+        <item name="colorPrimaryDark">@color/color_00574b</item>
+        <item name="colorAccent">@color/color_d81b60</item>
     </style>
 
     <style name="DeviceHomeModeRadio">
@@ -27,7 +27,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">@dimen/dp_16</item>
         <item name="android:paddingEnd">@dimen/dp_16</item>
-        <item name="android:textColor">@color/device_text_primary</item>
+        <item name="android:textColor">@color/color_1d1d1f</item>
         <item name="android:textSize">@dimen/sp_15</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -38,10 +38,11 @@
         <item name="android:layout_columnWeight">1</item>
         <item name="android:background">@drawable/bg_device_card</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/device_text_primary</item>
+        <item name="android:textColor">@color/color_1d1d1f</item>
         <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="DeviceHomeIconRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp_54</item>
@@ -63,7 +64,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/dp_12</item>
-        <item name="android:textColor">@color/device_text_primary</item>
+        <item name="android:textColor">@color/color_1d1d1f</item>
         <item name="android:textSize">@dimen/sp_15</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -88,8 +89,138 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/dp_8</item>
-        <item name="android:textColor">@color/device_text_primary</item>
+        <item name="android:textColor">@color/color_1d1d1f</item>
         <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="PowerPortTab">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:background">@drawable/bg_power_chip_normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_77798d</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ChargingModeTag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:background">@drawable/bg_charge_chip</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:textColor">@color/color_45475a</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="CustomChargeOption">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_custom_option_normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_45475a</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CustomProtectionRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">25dp</item>
+        <item name="android:paddingEnd">25dp</item>
+    </style>
+
+    <style name="CustomProtectionIcon">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/bg_charge_icon</item>
+        <item name="android:padding">9dp</item>
+    </style>
+
+    <style name="CustomProtectionTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_17181c</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomProtectionDesc">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/color_45475a</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="CustomProtectionSwitch">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="sb_checkedColor">@color/color_0752ae</item>
+        <item name="sb_uncheckedColor">@color/color_dde1e6</item>
+        <item name="sb_thumbColor">@color/color_ffffff</item>
+        <item name="sb_un_thumbColor">@color/color_ffffff</item>
+    </style>
+
+    <style name="StatisticsPortTab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_55596a</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ScreenSettingRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">88dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">22dp</item>
+        <item name="android:paddingEnd">22dp</item>
+    </style>
+
+    <style name="ScreenSettingIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:tint">@color/color_56596b</item>
+    </style>
+
+    <style name="ScreenSettingTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_17181c</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ScreenSettingDesc">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textColor">@color/color_56596b</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ScreenWallpaperFrame">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="BatteryInformationRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="left_text_size">15sp</item>
+        <item name="right_text_size">15sp</item>
+        <item name="left_text_color">@color/color_17181c</item>
+        <item name="right_text_color">@color/color_55596a</item>
     </style>
 </resources>

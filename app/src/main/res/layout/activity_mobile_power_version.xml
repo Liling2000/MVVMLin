@@ -9,10 +9,11 @@
     android:orientation="vertical">
 
     <com.aleyn.mvvm.widget.ComToolBar
-        android:id="@+id/toolbar_mobile_power_version"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/c_ffffff"
+        app:tit_text="@string/str_version"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,9 +26,9 @@
         android:src="@mipmap/ic_bs_devic_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mobile_power_version" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--    <com.aleyn.mvvm.widget.MyInformationView-->
 <!--        android:id="@+id/infov_mobile_power_bl_version"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="@dimen/dp49"-->
@@ -38,7 +39,7 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/imagev_mobile_power_version" />-->
 
-<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--    <com.aleyn.mvvm.widget.MyInformationView-->
 <!--        android:id="@+id/infov_mobile_power_dc_version"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="@dimen/dp49"-->
@@ -49,7 +50,7 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/infov_mobile_power_bl_version" />-->
 
-<!--    <com.control_center.intelligent.view.widget.MyInformationView-->
+<!--    <com.aleyn.mvvm.widget.MyInformationView-->
 <!--        android:id="@+id/bms_mobile_power_dc_version"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="@dimen/dp49"-->

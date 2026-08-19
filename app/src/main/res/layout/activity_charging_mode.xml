@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_f6f7f9"
+        android:orientation="vertical">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_f6f7f9"
+            app:tit_text="@string/charging_mode_title" />
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="32dp">
+
+            <LinearLayout
+                    android:id="@+id/card_smart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_charge_card"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:padding="28dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_charge_icon"
+                            android:contentDescription="@string/charging_mode_smart"
+                            android:padding="15dp"
+                            android:src="@mipmap/ic_auto_mode" />
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/charging_mode_smart"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="23sp"
+                            android:textStyle="bold" />
+
+                    <ImageView
+                            android:id="@+id/indicator_smart"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_charge_selected"
+                            android:contentDescription="@string/charging_mode_smart"
+                            android:padding="6dp"
+                            android:src="@mipmap/ic_check_blue"
+                            app:tint="@color/color_ffffff" />
+                </LinearLayout>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:lineSpacingExtra="6dp"
+                        android:text="@string/charging_mode_smart_desc"
+                        android:textColor="@color/color_45475a"
+                        android:textSize="16sp" />
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:text="@string/charging_mode_smart_tag_fast" />
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/charging_mode_smart_tag_control" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/card_standard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_charge_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:padding="28dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_charge_icon"
+                            android:contentDescription="@string/charging_mode_standard"
+                            android:padding="15dp"
+                            android:src="@mipmap/ic_power_protection" />
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/charging_mode_standard"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="23sp"
+                            android:textStyle="bold" />
+
+                    <ImageView
+                            android:id="@+id/indicator_standard"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_charge_unselected"
+                            android:contentDescription="@string/charging_mode_standard" />
+                </LinearLayout>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:lineSpacingExtra="6dp"
+                        android:text="@string/charging_mode_standard_desc"
+                        android:textColor="@color/color_45475a"
+                        android:textSize="16sp" />
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:text="@string/charging_mode_standard_tag_health" />
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/charging_mode_standard_tag_night" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/card_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/bg_charge_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:padding="28dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_charge_icon"
+                            android:contentDescription="@string/charging_mode_custom"
+                            android:padding="15dp"
+                            android:src="@mipmap/device_home_eq" />
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/charging_mode_custom"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="23sp"
+                            android:textStyle="bold" />
+
+                    <ImageView
+                            android:id="@+id/indicator_custom"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_charge_unselected"
+                            android:contentDescription="@string/charging_mode_custom" />
+                </LinearLayout>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:lineSpacingExtra="6dp"
+                        android:text="@string/charging_mode_custom_desc"
+                        android:textColor="@color/color_45475a"
+                        android:textSize="16sp" />
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:text="@string/charging_mode_custom_tag_parameter" />
+
+                    <TextView
+                            style="@style/ChargingModeTag"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/charging_mode_custom_tag_strategy" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/charging_mode_tip"
+                    android:textColor="@color/color_9295a2"
+                    android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

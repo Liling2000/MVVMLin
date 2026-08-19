@@ -32,7 +32,7 @@
         android:orientation="vertical"
         android:padding="@dimen/dp10">
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_mode"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"
@@ -42,7 +42,7 @@
             app:left_text="@string/str_model"
             app:right_text_color="@color/c_181A1F" />
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_name"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"
@@ -80,7 +80,7 @@
                 android:src="@drawable/cbx_recep_on_off" />
         </FrameLayout>
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_version"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"
@@ -88,21 +88,21 @@
             android:visibility="gone"
             app:left_text="@string/str_version" />
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_restore"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"
             android:layout_marginTop="@dimen/dp10"
             app:left_text="@string/restore_factory" />
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_help"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"
             android:layout_marginTop="@dimen/dp10"
             app:left_text="@string/app_feedback" />
 
-        <com.control_center.intelligent.view.widget.MyInformationView
+        <com.aleyn.mvvm.widget.MyInformationView
             android:id="@+id/item_unbind"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp49"

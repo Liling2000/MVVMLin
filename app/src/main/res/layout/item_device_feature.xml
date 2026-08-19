@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
-            android:textColor="@color/device_text_primary"
+            android:textColor="@color/color_1d1d1f"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
 </LinearLayout>
