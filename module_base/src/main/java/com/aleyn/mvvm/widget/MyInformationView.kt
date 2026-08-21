@@ -37,6 +37,7 @@ class MyInformationView @JvmOverloads constructor(
             .use { array ->
                 bindLeftIcon(array)
                 bindLeftText(array)
+                bindLeftSubText(array)
                 bindRightText(array)
                 bindArrow(array)
                 binding.viewDivider.isVisible =
@@ -65,6 +66,18 @@ class MyInformationView @JvmOverloads constructor(
             )
         )
         applyTextSize(this, array, R.styleable.MyInformationView_left_text_size, 17)
+    }
+
+    private fun bindLeftSubText(array: TypedArray) = with(binding.textLeftSub) {
+        val value = array.getText(R.styleable.MyInformationView_left_sub_text)
+        text = value
+        isVisible = !value.isNullOrEmpty()
+        binding.textLeft.translationY = if (isVisible) -sp(9) else 0f
+        setTextColor(array.getColor(
+            R.styleable.MyInformationView_left_sub_text_color,
+            color(R.color.color_17181c)
+        ))
+        applyTextSize(this, array, R.styleable.MyInformationView_left_sub_text_size, 16)
     }
 
     private fun bindRightText(array: TypedArray) = with(binding.textRight) {
@@ -108,6 +121,14 @@ class MyInformationView @JvmOverloads constructor(
     }
 
     fun setLeftTextValue(value: String?) = setLeftText(value)
+
+    fun setLeftSubTextValue(value: String?) {
+        binding.textLeftSub.text = value.orEmpty()
+        binding.textLeftSub.isVisible = !value.isNullOrEmpty()
+        binding.textLeft.translationY = if (binding.textLeftSub.isVisible) -sp(9) else 0f
+    }
+
+    fun getLeftSubTextValue(): String = binding.textLeftSub.text.toString()
 
     fun setRightText(value: String?) = setRightTextValue(value)
 

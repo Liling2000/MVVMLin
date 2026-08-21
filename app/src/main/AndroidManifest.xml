@@ -43,6 +43,8 @@
         </activity>
         <activity android:name=".app.LoginActivity" android:exported="false" />
         <activity android:name=".app.MainActivity" android:exported="false" />
+        <activity android:name=".app.AboutActivity" android:exported="false" />
+        <activity android:name=".app.AccountInformationActivity" android:exported="false" />
 
         <activity
                 android:name=".app.BleDeviceScanActivity"

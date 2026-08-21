@@ -88,4 +88,22 @@
     <color name="color_e9eaec">#E9EAEC</color>
     <color name="color_ff1717">#FF1717</color>
     <color name="color_ff9634">#FF9634</color>
+    <color name="about_page_background">#F6F7F9</color>
+    <color name="about_brand_blue_start">#3434FF</color>
+    <color name="about_brand_blue_end">#1717D8</color>
+    <color name="about_icon_foreground">#FFFFFF</color>
+    <color name="about_brand_text">#2929FF</color>
+    <color name="about_version_background">#EAECF0</color>
+    <color name="about_card_background">#FFFFFF</color>
+    <color name="about_card_border">#E2E5E9</color>
+    <color name="about_secondary_text">#77798D</color>
+    <color name="about_link_text">#2929FF</color>
+    <color name="about_footer_link">#666A7C</color>
+    <color name="about_footer_divider">#C7C9CE</color>
+    <color name="about_copyright_text">#9A9DA7</color>
+    <color name="account_page_background">#F6F7F9</color>
+    <color name="account_card_background">#FFFFFF</color>
+    <color name="account_card_border">#E2E5E9</color>
+    <color name="account_label_text">#56596B</color>
+    <color name="account_value_text">#17181C</color>
 </resources>

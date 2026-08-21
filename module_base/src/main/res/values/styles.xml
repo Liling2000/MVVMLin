@@ -49,6 +49,9 @@
         <attr name="left_text" format="string|reference" />
         <attr name="left_text_color" format="color|reference" />
         <attr name="left_text_size" format="dimension|reference" />
+        <attr name="left_sub_text" format="string|reference" />
+        <attr name="left_sub_text_color" format="color|reference" />
+        <attr name="left_sub_text_size" format="dimension|reference" />
         <attr name="right_text" format="string|reference" />
         <attr name="right_text_color" format="color|reference" />
         <attr name="right_text_size" format="dimension|reference" />

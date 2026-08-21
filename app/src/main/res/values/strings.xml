@@ -243,4 +243,48 @@
   <string name="popup_privacy_intro">依据最新的监管要求，针对嘉德的用户协议和隐私政策，特向您说明如下：</string>
   <string name="popup_privacy_body">1、为向您提供 APP 的相关基本功能，我们会收集、使用必要的信息。\n2、基于您的明示授权，我们会获取您的位置、用户行为、设备信息、APP 异常事件等信息，您有权拒绝或取消授权。\n3、我们会采取必要的安全措施保护您的信息安全。APP 需要用到设备的蓝牙地址，用于连接设备。\n4、APP 会判断手机是否安装了地图类应用，为寻找设备时提供导航服务。\n5、APP 对获取的信息不会做任何长期保存。</string>
 
+  <string name="about_title">关于 Beillen</string>
+  <string name="about_brand_name">Beillen</string>
+  <string name="about_app_version">APP版本</string>
+  <string name="about_website">官网</string>
+  <string name="about_phone">电话</string>
+  <string name="about_email">邮箱</string>
+  <string name="about_filing">APP备案号</string>
+  <string name="about_website_display" translatable="false">www.beillen.com</string>
+  <string name="about_phone_number" translatable="false">400-888-8888</string>
+  <string name="about_email_address" translatable="false">support@beillen.com</string>
+  <string name="about_filing_number">粤ICP备xxxxxxxx号</string>
+  <string name="about_user_agreement">用户协议</string>
+  <string name="about_privacy_policy">隐私政策</string>
+  <string name="about_copyright">© 2026 Beillen 嘉德科技</string>
+  <string name="about_version_format" translatable="false">v%1$s</string>
+  <string name="about_current_version">当前版本：%1$s</string>
+  <string name="about_app_icon_description">Beillen 应用图标</string>
+  <string name="about_no_handler">未找到可处理此操作的应用</string>
+  <string name="about_website_url" translatable="false">https://www.beillen.com</string>
+  <string name="about_phone_uri" translatable="false">tel:4008888888</string>
+  <string name="about_email_uri" translatable="false">mailto:support@beillen.com</string>
+  <string name="about_filing_url" translatable="false">https://beian.miit.gov.cn</string>
+  <string name="about_user_agreement_url" translatable="false">https://www.beillen.com/user-agreement</string>
+  <string name="about_privacy_policy_url" translatable="false">https://www.beillen.com/privacy-policy</string>
+  <string name="account_title">账号管理</string>
+  <string name="account_user_name">用户名</string>
+  <string name="account_bound_phone">绑定手机</string>
+  <string name="account_email">电子邮箱</string>
+  <string name="account_login_password">登录密码</string>
+  <string name="account_cancellation">账号注销</string>
+  <string name="account_default_user_name">Alex River</string>
+  <string name="account_default_phone" translatable="false">+86 138 **** 0000</string>
+  <string name="account_default_email" translatable="false">support@beillen.com</string>
+  <string name="account_password_mask" translatable="false">********</string>
+  <string name="account_edit_user_name">修改用户名</string>
+  <string name="account_edit_phone">修改绑定手机</string>
+  <string name="account_edit_email">修改电子邮箱</string>
+  <string name="account_save">保存</string>
+  <string name="account_cancel">取消</string>
+  <string name="account_input_required">内容不能为空</string>
+  <string name="account_password_unavailable">当前登录方式暂不支持修改密码</string>
+  <string name="account_cancellation_confirm_title">确认注销账号？</string>
+  <string name="account_cancellation_confirm_message">注销后将清除当前账号的本地登录信息，并返回登录页面。</string>
+  <string name="account_confirm_cancellation">确认注销</string>
 </resources>

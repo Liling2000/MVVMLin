@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/about_page_background"
+    android:orientation="vertical">
+
+    <com.aleyn.mvvm.widget.ComToolBar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/about_page_background"
+        app:tit_text="@string/about_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="30dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="28dp">
+
+            <FrameLayout
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:background="@drawable/bg_about_app_icon"
+                android:elevation="10dp">
+
+                <ImageView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/about_app_icon_description"
+                    android:scaleType="centerInside"
+                    android:src="@mipmap/ic_common_lightning_slanted"
+                    app:tint="@color/about_icon_foreground" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/about_brand_name"
+                android:textColor="@color/about_brand_text"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_version"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_about_version"
+                android:gravity="center"
+                android:minWidth="76dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textColor="@color/about_secondary_text"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="46dp"
+                android:background="@drawable/bg_about_card"
+                android:elevation="2dp"
+                android:orientation="vertical">
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                    android:id="@+id/item_app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    app:is_show_arrow_right="true"
+                    app:is_show_line="true"
+                    app:left_icon="@mipmap/ic_information"
+                    app:left_text="@string/about_app_version"
+                    app:left_text_size="16sp"
+                    app:right_arrow_icon="@mipmap/ic_chevron_right"
+                    app:right_text_color="@color/about_secondary_text"
+                    app:right_text_size="14sp" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                    android:id="@+id/item_website"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    app:is_show_arrow_right="true"
+                    app:is_show_line="true"
+                    app:left_icon="@mipmap/ic_globe"
+                    app:left_text="@string/about_website"
+                    app:left_text_size="16sp"
+                    app:right_arrow_icon="@mipmap/ic_chevron_right"
+                    app:right_text="@string/about_website_display"
+                    app:right_text_color="@color/about_link_text"
+                    app:right_text_size="14sp" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                    android:id="@+id/item_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    app:is_show_arrow_right="true"
+                    app:is_show_line="true"
+                    app:left_icon="@mipmap/ic_phone_outline"
+                    app:left_text="@string/about_phone"
+                    app:left_text_size="16sp"
+                    app:right_arrow_icon="@mipmap/ic_chevron_right"
+                    app:right_text="@string/about_phone_number"
+                    app:right_text_color="@color/about_secondary_text"
+                    app:right_text_size="14sp" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                    android:id="@+id/item_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    app:is_show_arrow_right="true"
+                    app:is_show_line="true"
+                    app:left_icon="@mipmap/ic_email"
+                    app:left_text="@string/about_email"
+                    app:left_text_size="16sp"
+                    app:right_arrow_icon="@mipmap/ic_chevron_right"
+                    app:right_text="@string/about_email_address"
+                    app:right_text_color="@color/about_secondary_text"
+                    app:right_text_size="14sp" />
+
+                <com.aleyn.mvvm.widget.MyInformationView
+                    android:id="@+id/item_filing"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    app:is_show_arrow_right="true"
+                    app:is_show_line="false"
+                    app:left_icon="@mipmap/ic_security_shield"
+                    app:left_text="@string/about_filing"
+                    app:left_text_size="16sp"
+                    app:right_arrow_icon="@mipmap/ic_chevron_right"
+                    app:right_text="@string/about_filing_number"
+                    app:right_text_color="@color/about_secondary_text"
+                    app:right_text_size="13sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_user_agreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/about_user_agreement"
+                    android:textColor="@color/about_footer_link"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="14dp"
+                    android:background="@color/about_footer_divider" />
+
+                <TextView
+                    android:id="@+id/text_privacy_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/about_privacy_policy"
+                    android:textColor="@color/about_footer_link"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_copyright"
+                android:textColor="@color/about_copyright_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

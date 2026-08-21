@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.blankj.utilcode.util.ToastUtils
 import com.aleyn.mvvm.base.BaseVMFragment
 import com.jiyi.power.R
+import com.jiyi.power.app.AboutActivity
+import com.jiyi.power.app.AccountInformationActivity
 import com.jiyi.power.app.viewmodel.MeViewModel
 import com.jiyi.power.databinding.MeFragmentBinding
 
@@ -17,7 +19,7 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
         itemAccount.setOnClickListener {
-            showUnavailable(R.string.me_account_management)
+            startActivity(Intent(requireContext(), AccountInformationActivity::class.java))
         }
         itemLanguage.setOnClickListener {
             showUnavailable(R.string.me_switch_language)
@@ -29,7 +31,7 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
             showUnavailable(R.string.me_feedback)
         }
         itemAbout.setOnClickListener {
-            showUnavailable(R.string.me_about_app)
+            startActivity(Intent(requireContext(), AboutActivity::class.java))
         }
         itemCustomerService.setOnClickListener {
             showUnavailable(R.string.me_customer_service)
