@@ -265,6 +265,28 @@ data class PortMetrics(
     val protocol: FastChargeProtocol? = null
 )
 
+/** 首页展示的端口类型。 */
+enum class MobilePowerPortType { C1, C2, USB_A }
+
+/** 首页单个端口信息；C1、C2、USB-A 统一存放在列表中。 */
+data class MobilePowerPortInfo(
+    val type: MobilePowerPortType,
+    val metrics: PortMetrics,
+    val connected: Boolean,
+    val charging: Boolean = false,
+    val exception: Boolean = false,
+)
+
+/** 单台已绑定设备的首页完整运行信息。 */
+data class MobilePowerHomeInfoBean(
+    val sn: String,
+    val ports: List<MobilePowerPortInfo>,
+    val battery: BatteryInfo,
+    val deviceStatus: DeviceStatus?,
+    val cells: List<CellVoltage>,
+    val settings: DeviceSettings,
+)
+
 /**
  * 快充协议枚举。
  *

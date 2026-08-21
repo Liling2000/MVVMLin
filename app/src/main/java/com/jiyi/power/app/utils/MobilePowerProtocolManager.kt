@@ -9,6 +9,9 @@ import com.jiyi.power.app.bean.FastChargeProtocol
 import com.jiyi.power.app.bean.FirmwareInfo
 import com.jiyi.power.app.bean.FunctionSpec
 import com.jiyi.power.app.bean.MobilePowerSnapshot
+import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
+import com.jiyi.power.app.bean.MobilePowerPortInfo
+import com.jiyi.power.app.bean.MobilePowerPortType
 import com.jiyi.power.app.bean.OperationType
 import com.jiyi.power.app.bean.ParsedFrame
 import com.jiyi.power.app.bean.Payload
@@ -26,6 +29,8 @@ import java.util.Locale
  * - 未识别或长度不足的数据不会抛异常，而是保留为 [Payload.Unknown]，方便上层排查原始数据。
  */
 object MobilePowerProtocolManager {
+
+    private const val HOME_INFO_REGISTER_LENGTH = 0x3B
 
     private val specs: Map<String, FunctionSpec> = buildSpecs()
 
@@ -59,6 +64,42 @@ object MobilePowerProtocolManager {
 
     fun buildReadCommand(functionCode: String, readLength: Int): String? {
         return ProtocolUtil.buildReadCommand(functionCode, readLength)
+    }
+
+    /** 连续读取 0x00..0x3A，一次获取设备首页所需的端口、电池、Cell 和设置状态。 */
+    fun buildHomeInfoReadCommand(): String? =
+        buildReadCommand(CmdConstant.FunctionCode.CODE_00, HOME_INFO_REGISTER_LENGTH)
+
+    fun toHomeInfoBean(sn: String, snapshot: MobilePowerSnapshot): MobilePowerHomeInfoBean {
+        val status = snapshot.deviceStatus
+        return MobilePowerHomeInfoBean(
+            sn = sn,
+            ports = listOf(
+                MobilePowerPortInfo(
+                    type = MobilePowerPortType.C1,
+                    metrics = snapshot.c1,
+                    connected = status?.c1Connected == true,
+                    charging = status?.c1Charging == true,
+                    exception = status?.c1Exception == true,
+                ),
+                MobilePowerPortInfo(
+                    type = MobilePowerPortType.C2,
+                    metrics = snapshot.c2,
+                    connected = status?.c2Connected == true,
+                    charging = status?.c2Charging == true,
+                    exception = status?.c2Exception == true,
+                ),
+                MobilePowerPortInfo(
+                    type = MobilePowerPortType.USB_A,
+                    metrics = snapshot.usbA,
+                    connected = status?.usbAConnected == true,
+                ),
+            ),
+            battery = snapshot.battery,
+            deviceStatus = status,
+            cells = snapshot.cells,
+            settings = snapshot.settings,
+        )
     }
 
     fun buildWriteByteCommand(functionCode: String, value: Int): String? {
@@ -109,12 +150,18 @@ object MobilePowerProtocolManager {
         // 先处理有固定 payload 结构的功能码；剩余的寄存器区统一构建快照。
         // 这样可以避免把 0x90/0xC0 这类事件数据误当成连续寄存器。
         return when (functionCode) {
-            CmdConstant.FunctionCode.CODE_90, CmdConstant.FunctionCode.CODE_E0 -> parseUploadStart(bytes)
+            CmdConstant.FunctionCode.CODE_90, CmdConstant.FunctionCode.CODE_E0 -> parseUploadStart(
+                bytes
+            )
+
             CmdConstant.FunctionCode.CODE_91, CmdConstant.FunctionCode.CODE_80, CmdConstant.FunctionCode.CODE_E1 -> Payload.DataPacket(
                 bytes, bytes.toHexString()
             )
 
-            CmdConstant.FunctionCode.CODE_92, CmdConstant.FunctionCode.CODE_E2 -> parseTransferEnd(bytes)
+            CmdConstant.FunctionCode.CODE_92, CmdConstant.FunctionCode.CODE_E2 -> parseTransferEnd(
+                bytes
+            )
+
             CmdConstant.FunctionCode.CODE_93, CmdConstant.FunctionCode.CODE_94, CmdConstant.FunctionCode.CODE_95, CmdConstant.FunctionCode.CODE_E3, CmdConstant.FunctionCode.CODE_E4, CmdConstant.FunctionCode.CODE_E5 -> parseIndexCommand(
                 bytes
             )
@@ -180,47 +227,37 @@ object MobilePowerProtocolManager {
 
         // 电芯电压是成对的低/高字节寄存器，缺任意一个字节就不生成该电芯数据。
         val cells = listOfNotNull(
-            u16(CmdConstant.FunctionCode.CODE_23, CmdConstant.FunctionCode.CODE_24)?.let {
-                CellVoltage(
-                    1, it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_25, CmdConstant.FunctionCode.CODE_26)?.let {
-                CellVoltage(
-                    2,
-                    it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_27, CmdConstant.FunctionCode.CODE_28)?.let {
-                CellVoltage(
-                    3,
-                    it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_29, CmdConstant.FunctionCode.CODE_2A)?.let {
-                CellVoltage(
-                    4,
-                    it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_2B, CmdConstant.FunctionCode.CODE_2C)?.let {
-                CellVoltage(
-                    5,
-                    it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_2D, CmdConstant.FunctionCode.CODE_2E)?.let {
-                CellVoltage(
-                    6,
-                    it
-                )
-            },
-            u16(CmdConstant.FunctionCode.CODE_30, CmdConstant.FunctionCode.CODE_31)?.let {
-                CellVoltage(
-                    7,
-                    it
-                )
-            })
+            u16(
+            CmdConstant.FunctionCode.CODE_23, CmdConstant.FunctionCode.CODE_24
+        )?.let {
+            CellVoltage(
+                1, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_25, CmdConstant.FunctionCode.CODE_26)?.let {
+            CellVoltage(
+                2, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_27, CmdConstant.FunctionCode.CODE_28)?.let {
+            CellVoltage(
+                3, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_29, CmdConstant.FunctionCode.CODE_2A)?.let {
+            CellVoltage(
+                4, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_2B, CmdConstant.FunctionCode.CODE_2C)?.let {
+            CellVoltage(
+                5, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_2D, CmdConstant.FunctionCode.CODE_2E)?.let {
+            CellVoltage(
+                6, it
+            )
+        }, u16(CmdConstant.FunctionCode.CODE_30, CmdConstant.FunctionCode.CODE_31)?.let {
+            CellVoltage(
+                7, it
+            )
+        })
 
         return MobilePowerSnapshot(
             c1 = PortMetrics(
@@ -244,17 +281,14 @@ object MobilePowerProtocolManager {
                 voltageMv = u16(CmdConstant.FunctionCode.CODE_18, CmdConstant.FunctionCode.CODE_19),
                 currentMa = u16(CmdConstant.FunctionCode.CODE_1A, CmdConstant.FunctionCode.CODE_1B),
                 cycleCount = u16(
-                    CmdConstant.FunctionCode.CODE_1C,
-                    CmdConstant.FunctionCode.CODE_1D
+                    CmdConstant.FunctionCode.CODE_1C, CmdConstant.FunctionCode.CODE_1D
                 ),
                 healthPercent = value(CmdConstant.FunctionCode.CODE_1E),
                 chargeRemainMinutes = u16(
-                    CmdConstant.FunctionCode.CODE_1F,
-                    CmdConstant.FunctionCode.CODE_20
+                    CmdConstant.FunctionCode.CODE_1F, CmdConstant.FunctionCode.CODE_20
                 ),
                 dischargeRemainMinutes = u16(
-                    CmdConstant.FunctionCode.CODE_21,
-                    CmdConstant.FunctionCode.CODE_22
+                    CmdConstant.FunctionCode.CODE_21, CmdConstant.FunctionCode.CODE_22
                 ),
                 status1 = value(CmdConstant.FunctionCode.CODE_39),
                 status2 = value(CmdConstant.FunctionCode.CODE_3A)
@@ -263,8 +297,7 @@ object MobilePowerProtocolManager {
                 c2OutputPowerW = value(CmdConstant.FunctionCode.CODE_33),
                 lowCurrentMode = value(CmdConstant.FunctionCode.CODE_34)?.let { it != 0 },
                 lowCurrentLimitMinutes = u16(
-                    CmdConstant.FunctionCode.CODE_35,
-                    CmdConstant.FunctionCode.CODE_36
+                    CmdConstant.FunctionCode.CODE_35, CmdConstant.FunctionCode.CODE_36
                 ),
                 highTemperatureThresholdC = value(CmdConstant.FunctionCode.CODE_37)?.toSignedByteInt(),
                 lowTemperatureThresholdC = value(CmdConstant.FunctionCode.CODE_38)?.toSignedByteInt(),
@@ -404,8 +437,18 @@ object MobilePowerProtocolManager {
             OperationType.READ_ONLY,
             "C1当前VBUS电压高字节，单位毫伏"
         )
-        f(CmdConstant.FunctionCode.CODE_04, "C1功率低字节", OperationType.READ_ONLY, "C1功率低字节，单位W")
-        f(CmdConstant.FunctionCode.CODE_05, "C1功率高字节", OperationType.READ_ONLY, "C1功率高字节，单位W")
+        f(
+            CmdConstant.FunctionCode.CODE_04,
+            "C1功率低字节",
+            OperationType.READ_ONLY,
+            "C1功率低字节，单位W"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_05,
+            "C1功率高字节",
+            OperationType.READ_ONLY,
+            "C1功率高字节，单位W"
+        )
         f(
             CmdConstant.FunctionCode.CODE_06,
             "C2电流低字节",
@@ -430,8 +473,18 @@ object MobilePowerProtocolManager {
             OperationType.READ_ONLY,
             "C2当前VBUS电压高字节，单位毫伏"
         )
-        f(CmdConstant.FunctionCode.CODE_0A, "C2功率低字节", OperationType.READ_ONLY, "C2功率低字节，单位W")
-        f(CmdConstant.FunctionCode.CODE_0B, "C2功率高字节", OperationType.READ_ONLY, "C2功率高字节，单位W")
+        f(
+            CmdConstant.FunctionCode.CODE_0A,
+            "C2功率低字节",
+            OperationType.READ_ONLY,
+            "C2功率低字节，单位W"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_0B,
+            "C2功率高字节",
+            OperationType.READ_ONLY,
+            "C2功率高字节，单位W"
+        )
         f(
             CmdConstant.FunctionCode.CODE_0C,
             "C1口协议",
@@ -629,9 +682,24 @@ object MobilePowerProtocolManager {
             OperationType.READ_ONLY,
             "Cell7电压高字节，单位毫伏"
         )
-        f(CmdConstant.FunctionCode.CODE_32, "C1输出功率设置", OperationType.READ_WRITE, "C1输出功率设置，单位W")
-        f(CmdConstant.FunctionCode.CODE_33, "C2输出功率设置", OperationType.READ_WRITE, "C2输出功率设置，单位W")
-        f(CmdConstant.FunctionCode.CODE_34, "小电流模式设置", OperationType.READ_WRITE, "小电流模式0/1")
+        f(
+            CmdConstant.FunctionCode.CODE_32,
+            "C1输出功率设置",
+            OperationType.READ_WRITE,
+            "C1输出功率设置，单位W"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_33,
+            "C2输出功率设置",
+            OperationType.READ_WRITE,
+            "C2输出功率设置，单位W"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_34,
+            "小电流模式设置",
+            OperationType.READ_WRITE,
+            "小电流模式0/1"
+        )
         f(
             CmdConstant.FunctionCode.CODE_35,
             "小电流时间限制低字节",
@@ -644,8 +712,18 @@ object MobilePowerProtocolManager {
             OperationType.READ_WRITE,
             "小电流时间限制高字节，单位分钟"
         )
-        f(CmdConstant.FunctionCode.CODE_37, "高温保护阈值", OperationType.READ_WRITE, "高温保护阈值，单位摄氏度")
-        f(CmdConstant.FunctionCode.CODE_38, "低温保护阈值", OperationType.READ_WRITE, "低温保护阈值，单位摄氏度")
+        f(
+            CmdConstant.FunctionCode.CODE_37,
+            "高温保护阈值",
+            OperationType.READ_WRITE,
+            "高温保护阈值，单位摄氏度"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_38,
+            "低温保护阈值",
+            OperationType.READ_WRITE,
+            "低温保护阈值，单位摄氏度"
+        )
         f(CmdConstant.FunctionCode.CODE_39, "电池状态1", OperationType.READ_ONLY, "根据AFE分类")
         f(CmdConstant.FunctionCode.CODE_3A, "电池状态2", OperationType.READ_ONLY, "根据AFE分类")
         f(
@@ -654,7 +732,12 @@ object MobilePowerProtocolManager {
             OperationType.READ_WRITE,
             "0标准，1时间，2天气，3歌词，4微信，5图片投影，6心情"
         )
-        f(CmdConstant.FunctionCode.CODE_61, "模式状态", OperationType.READ_ONLY, "当前模式状态，定义参考60H")
+        f(
+            CmdConstant.FunctionCode.CODE_61,
+            "模式状态",
+            OperationType.READ_ONLY,
+            "当前模式状态，定义参考60H"
+        )
         f(
             CmdConstant.FunctionCode.CODE_65,
             "升级命令",
@@ -667,12 +750,43 @@ object MobilePowerProtocolManager {
             OperationType.READ,
             "Bit7完成，Bit6传输中，Bit5错误，Bit4 Ready，Bit3 APP模式，Bit2-0当前状态"
         )
-        f(CmdConstant.FunctionCode.CODE_67, "固件CRC值低字节", OperationType.READ_WRITE, "CRC16-8005低字节")
-        f(CmdConstant.FunctionCode.CODE_68, "固件CRC值高字节", OperationType.READ_WRITE, "CRC16-8005高字节")
-        f(CmdConstant.FunctionCode.CODE_69, "24位固件长度字节0", OperationType.READ_WRITE, "固件长度低字节")
-        f(CmdConstant.FunctionCode.CODE_6A, "24位固件长度字节1", OperationType.READ_WRITE, "固件长度中字节")
-        f(CmdConstant.FunctionCode.CODE_6B, "24位固件长度字节2", OperationType.READ_WRITE, "固件长度高字节")
-        f(CmdConstant.FunctionCode.CODE_80, "升级数据", OperationType.WRITE_ONLY, "升级数据0-256bytes", true)
+        f(
+            CmdConstant.FunctionCode.CODE_67,
+            "固件CRC值低字节",
+            OperationType.READ_WRITE,
+            "CRC16-8005低字节"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_68,
+            "固件CRC值高字节",
+            OperationType.READ_WRITE,
+            "CRC16-8005高字节"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_69,
+            "24位固件长度字节0",
+            OperationType.READ_WRITE,
+            "固件长度低字节"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_6A,
+            "24位固件长度字节1",
+            OperationType.READ_WRITE,
+            "固件长度中字节"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_6B,
+            "24位固件长度字节2",
+            OperationType.READ_WRITE,
+            "固件长度高字节"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_80,
+            "升级数据",
+            OperationType.WRITE_ONLY,
+            "升级数据0-256bytes",
+            true
+        )
         f(
             CmdConstant.FunctionCode.CODE_90,
             "图片上传开始",
@@ -680,7 +794,13 @@ object MobilePowerProtocolManager {
             "图片index和图片数据块总数",
             true
         )
-        f(CmdConstant.FunctionCode.CODE_91, "图片数据包", OperationType.WRITE_ONLY, "图片数据0-256bytes", true)
+        f(
+            CmdConstant.FunctionCode.CODE_91,
+            "图片数据包",
+            OperationType.WRITE_ONLY,
+            "图片数据0-256bytes",
+            true
+        )
         f(
             CmdConstant.FunctionCode.CODE_92,
             "图片数据传输结束",
@@ -688,40 +808,143 @@ object MobilePowerProtocolManager {
             "图片index和传输状态",
             true
         )
-        f(CmdConstant.FunctionCode.CODE_93, "图片数据删除", OperationType.EVENT, "删除的图片index", true)
-        f(CmdConstant.FunctionCode.CODE_94, "图片设置", OperationType.EVENT, "设置为主题图片的index", true)
-        f(CmdConstant.FunctionCode.CODE_95, "图片数据查询", OperationType.EVENT, "要查询的图片index", true)
-        f(CmdConstant.FunctionCode.CODE_96, "从机事件ACK", OperationType.RESPONSE, "0x00 OK，0x01 ERR", true)
-        f(CmdConstant.FunctionCode.CODE_99, "时间同步", OperationType.EVENT, "年、月、日、时、分、秒、星期")
+        f(
+            CmdConstant.FunctionCode.CODE_93,
+            "图片数据删除",
+            OperationType.EVENT,
+            "删除的图片index",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_94,
+            "图片设置",
+            OperationType.EVENT,
+            "设置为主题图片的index",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_95,
+            "图片数据查询",
+            OperationType.EVENT,
+            "要查询的图片index",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_96,
+            "从机事件ACK",
+            OperationType.RESPONSE,
+            "0x00 OK，0x01 ERR",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_99,
+            "时间同步",
+            OperationType.EVENT,
+            "年、月、日、时、分、秒、星期"
+        )
         f(
             CmdConstant.FunctionCode.CODE_B0,
             "天气同步",
             OperationType.EVENT,
             "天气、当前温度、最高温度、最低温度、城市"
         )
-        f(CmdConstant.FunctionCode.CODE_C0, "歌词总数和开始传输", OperationType.EVENT, "歌词总数、作者、歌曲名")
-        f(CmdConstant.FunctionCode.CODE_C1, "歌曲名称", OperationType.EVENT, "128bytes字符串，协议标注删除")
-        f(CmdConstant.FunctionCode.CODE_C2, "歌曲作者", OperationType.EVENT, "128bytes字符串，协议标注删除")
-        f(CmdConstant.FunctionCode.CODE_C3, "歌词传输", OperationType.WRITE_ONLY, "歌词index和歌词数据")
-        f(CmdConstant.FunctionCode.CODE_C4, "歌词传输结束", OperationType.EVENT, "0x01完成，0x02中断")
+        f(
+            CmdConstant.FunctionCode.CODE_C0,
+            "歌词总数和开始传输",
+            OperationType.EVENT,
+            "歌词总数、作者、歌曲名"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_C1,
+            "歌曲名称",
+            OperationType.EVENT,
+            "128bytes字符串，协议标注删除"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_C2,
+            "歌曲作者",
+            OperationType.EVENT,
+            "128bytes字符串，协议标注删除"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_C3,
+            "歌词传输",
+            OperationType.WRITE_ONLY,
+            "歌词index和歌词数据"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_C4,
+            "歌词传输结束",
+            OperationType.EVENT,
+            "0x01完成，0x02中断"
+        )
         f(CmdConstant.FunctionCode.CODE_C5, "演唱的进度", OperationType.EVENT, "当前歌词index")
         f(CmdConstant.FunctionCode.CODE_C6, "歌词删除", OperationType.EVENT, "0x01删除保存的歌词")
-        f(CmdConstant.FunctionCode.CODE_D0, "微信新消息", OperationType.EVENT, "来电人员名字，64bytes")
-        f(CmdConstant.FunctionCode.CODE_D1, "微信消息内容", OperationType.EVENT, "消息内容，最多256bytes")
-        f(CmdConstant.FunctionCode.CODE_D2, "微信消息设置", OperationType.EVENT, "0x01删除，0x02已读")
-        f(CmdConstant.FunctionCode.CODE_E0, "心情模式表情传输", OperationType.EVENT, "index和长度", true)
-        f(CmdConstant.FunctionCode.CODE_E1, "表情数据包", OperationType.EVENT, "表情数据0-256bytes", true)
-        f(CmdConstant.FunctionCode.CODE_E2, "表情数据传输结束", OperationType.EVENT, "index和状态", true)
+        f(
+            CmdConstant.FunctionCode.CODE_D0,
+            "微信新消息",
+            OperationType.EVENT,
+            "来电人员名字，64bytes"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_D1,
+            "微信消息内容",
+            OperationType.EVENT,
+            "消息内容，最多256bytes"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_D2,
+            "微信消息设置",
+            OperationType.EVENT,
+            "0x01删除，0x02已读"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_E0,
+            "心情模式表情传输",
+            OperationType.EVENT,
+            "index和长度",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_E1,
+            "表情数据包",
+            OperationType.EVENT,
+            "表情数据0-256bytes",
+            true
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_E2,
+            "表情数据传输结束",
+            OperationType.EVENT,
+            "index和状态",
+            true
+        )
         f(CmdConstant.FunctionCode.CODE_E3, "表情数据删除", OperationType.EVENT, "表情index", true)
         f(CmdConstant.FunctionCode.CODE_E4, "表情设置", OperationType.EVENT, "表情index", true)
         f(CmdConstant.FunctionCode.CODE_E5, "表情数据查询", OperationType.EVENT, "表情index", true)
-        f(CmdConstant.FunctionCode.CODE_E6, "表情总数", OperationType.READ_ONLY, "回复表情总数，预留", true)
+        f(
+            CmdConstant.FunctionCode.CODE_E6,
+            "表情总数",
+            OperationType.READ_ONLY,
+            "回复表情总数，预留",
+            true
+        )
         f(CmdConstant.FunctionCode.CODE_F0, "设备型号", OperationType.EVENT, "32bytes字符串")
         f(CmdConstant.FunctionCode.CODE_F1, "序列号", OperationType.EVENT, "32bytes字符串")
         f(CmdConstant.FunctionCode.CODE_F2, "生产批次", OperationType.EVENT, "32bytes字符串")
         f(CmdConstant.FunctionCode.CODE_F3, "生产日期", OperationType.EVENT, "16bytes字符串")
-        f(CmdConstant.FunctionCode.CODE_F4, "额定容量", OperationType.EVENT, "2bytes，低8位在前，单位mAh")
-        f(CmdConstant.FunctionCode.CODE_F5, "标称电压", OperationType.EVENT, "2bytes，低8位在前，单位mV")
+        f(
+            CmdConstant.FunctionCode.CODE_F4,
+            "额定容量",
+            OperationType.EVENT,
+            "2bytes，低8位在前，单位mAh"
+        )
+        f(
+            CmdConstant.FunctionCode.CODE_F5,
+            "标称电压",
+            OperationType.EVENT,
+            "2bytes，低8位在前，单位mV"
+        )
         f(CmdConstant.FunctionCode.CODE_F6, "电池信息", OperationType.EVENT, "16bytes字符串")
         f(CmdConstant.FunctionCode.CODE_F7, "版本号", OperationType.EVENT, "16bytes字符串")
 

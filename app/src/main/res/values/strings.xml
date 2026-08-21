@@ -24,6 +24,8 @@
   <string name="home_device_description">高性能移动电源</string>
   <string name="home_device_power">86%</string>
   <string name="home_bluetooth_connected">蓝牙已连接</string>
+  <string name="home_bluetooth_connecting">蓝牙连接中</string>
+  <string name="home_bluetooth_disconnected">蓝牙未连接</string>
   <string name="home_device_arrow">›</string>
   <string name="bluetooth_permission_denied">蓝牙权限未授予</string>
   <string name="bluetooth_permission_settings">请在系统设置中开启蓝牙权限</string>

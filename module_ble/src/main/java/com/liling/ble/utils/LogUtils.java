@@ -1,5 +1,7 @@
 package com.liling.ble.utils;
 
+import android.util.Log;
+
 import com.orhanobut.logger.Logger;
 
 /**
@@ -9,7 +11,7 @@ import com.orhanobut.logger.Logger;
  */
 public class LogUtils {
 
-    private static boolean isShowLog = false; //日志打印开关 默认关闭
+    private static boolean isShowLog = true; //日志打印开关 默认关闭
 
     /**
      * 设置日志打印开关
@@ -21,7 +23,8 @@ public class LogUtils {
 
     public static void e(String msg) {
         if (isShowLog) {
-            Logger.e(msg);
+//            Logger.e(msg);
+            Log.e("LogUtils", msg);
         }
     }
 

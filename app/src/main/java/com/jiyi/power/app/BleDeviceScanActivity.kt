@@ -28,7 +28,11 @@ import kotlinx.coroutines.launch
 @Route(path = RouterPath.BLE_SCAN)
 class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScanBinding>() {
 
-    private val deviceAdapter = BleDeviceAdapter { device -> viewModel.connect(device) }
+    private val deviceAdapter = BleDeviceAdapter { device ->
+
+
+        viewModel.connect(device)
+    }
     private var scanAnimator: ObjectAnimator? = null
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -36,6 +40,7 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
         BarUtils.setStatusBarLightMode(this, true)
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.toolbar.setRightIconClickListener {
+            viewModel.stopScan()
             ToastUtils.showShort(R.string.scan_help_message)
         }
         mBinding.rvDevices.apply {
@@ -57,15 +62,13 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
                     when (event) {
                         is BleConnectEvent.Success -> {
                             ToastUtils.showShort(R.string.scan_connect_success)
-                            ARouter.getInstance()
-                                .build(RouterPath.MOBILE_POWER_MAIN)
-                                .withString(
-                                    MobilePowerMainActivity.EXTRA_DEVICE_SN,
-                                    event.device.bluetoothSn,
-                                )
-                                .navigation()
+                            ARouter.getInstance().build(RouterPath.MOBILE_POWER_MAIN).withString(
+                                MobilePowerMainActivity.EXTRA_DEVICE_SN,
+                                event.device.bluetoothSn,
+                            ).navigation()
                             finish()
                         }
+
                         is BleConnectEvent.Failed -> ToastUtils.showShort(event.message)
                     }
                 }
@@ -102,11 +105,12 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
 
     private fun updateScanAnimation(scanning: Boolean) {
         if (scanning && scanAnimator?.isRunning != true) {
-            scanAnimator = ObjectAnimator.ofFloat(mBinding.imageScanning, "alpha", 1f, 0.68f, 1f).apply {
-                duration = 1_500L
-                repeatCount = ValueAnimator.INFINITE
-                start()
-            }
+            scanAnimator =
+                ObjectAnimator.ofFloat(mBinding.imageScanning, "alpha", 1f, 0.68f, 1f).apply {
+                    duration = 1_500L
+                    repeatCount = ValueAnimator.INFINITE
+                    start()
+                }
         } else if (!scanning) {
             scanAnimator?.cancel()
             mBinding.imageScanning.alpha = 1f

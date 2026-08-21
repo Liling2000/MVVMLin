@@ -1,9 +1,11 @@
 package com.jiyi.power.app
 
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.R as BaseR
 import com.aleyn.mvvm.extend.flowLaunch
@@ -16,20 +18,25 @@ import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.databinding.ActivityMobilePowerMainBinding
 import com.jiyi.power.databinding.ItemPowerPortBinding
-import com.jiyi.power.app.bean.MobilePowerSnapshot
+import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
+import com.jiyi.power.app.bean.MobilePowerPortInfo
+import com.jiyi.power.app.bean.MobilePowerPortType
 import com.jiyi.power.app.bean.PortMetrics
+import com.jiyi.power.app.ble.BleConnectionCoordinator
+import com.jiyi.power.app.ble.BleConnectionEvent
+import com.jiyi.power.app.ble.BleIoEvent
+import com.jiyi.power.app.ble.DeviceConnectionState
 import com.jiyi.power.app.viewmodel.MainFragmentViewModel
-import com.liling.ble.constant.BleConstant
-import com.liling.ble.listener.BleDataListener
-import com.liling.ble.manager.Ble
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import java.util.Locale
 
 @Route(path = RouterPath.MOBILE_POWER_MAIN)
 class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
-
     private val viewModel: MainFragmentViewModel by viewModels()
     private var selectedPort = Port.C1
     private var renderingSwitch = false
+    private var pendingLowCurrentMode: Boolean? = null
     private val deviceSn: String? by lazy {
         intent.getStringExtra(EXTRA_DEVICE_SN) ?: BleDeviceStore.getDevices()
             .lastOrNull()?.bluetoothSn
@@ -47,12 +54,15 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
 
     override fun initObserve() {
         flowLaunch {
-            viewModel.dashboardSnapshot.collect(::render)
+            viewModel.homeInfo.collect(::render)
         }
     }
 
     override fun initData() {
-        viewModel.requestDashboard(deviceSn)
+        val connected = BleConnectionCoordinator.connectionStates.value.any { (sn, state) ->
+            sn.equals(deviceSn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
+        }
+        if (connected) viewModel.requestDashboard(deviceSn)
     }
 
     private fun setupStaticContent() = with(mBinding) {
@@ -93,16 +103,18 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             if (renderingSwitch) return@setOnCheckedChangeListener
             val sent = viewModel.setLowCurrentMode(deviceSn, checked)
             if (sent) {
-                ToastUtils.showShort(
-                    getString(
-                        R.string.power_low_current_updated,
-                        getString(if (checked) R.string.power_enabled else R.string.power_disabled),
-                    ),
-                )
+                pendingLowCurrentMode = checked
+                switchLowCurrent.isEnabled = false
             } else {
+                renderingSwitch = true
+                switchLowCurrent.setEnableEffect(false)
+                switchLowCurrent.isChecked = viewModel.homeInfo.value?.settings?.lowCurrentMode == true
+                switchLowCurrent.setEnableEffect(true)
+                renderingSwitch = false
                 ToastUtils.showShort(R.string.power_command_failed)
             }
         }
+
         buttonScreenSettings.setOnClickListener {
             ARouter.getInstance().build(ROUTE_THEME).navigation()
         }
@@ -116,37 +128,67 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     }
 
     private fun setupBleNotifications() {
-        Ble.getBleApi().setOnBleDataListener(object : BleDataListener {
-            override fun onBleNotify(device: BluetoothDevice, data: ByteArray) {
-                if (deviceSn != null && device.address != deviceSn) return
-                viewModel.onBleDataReceive(
-                    data.joinToString(separator = "") { byte -> "%02X".format(byte.toInt() and 0xFF) },
-                )
-            }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    BleConnectionCoordinator.ioEvents.collect { event ->
+                        when (event) {
+                            is BleIoEvent.Notification -> if (
+                                deviceSn == null || event.sn.equals(deviceSn, ignoreCase = true)
+                            ) {
+                                viewModel.onBleDataReceive(
+                                    event.data.joinToString("") { byte ->
+                                        "%02X".format(byte.toInt() and 0xFF)
+                                    },
+                                )
+                            }
 
-            override fun sendConnectState(device: BluetoothDevice, state: Int) {
-                if (deviceSn != null && device.address != deviceSn) return
-                if (state == BleConstant.BleConnectState.stateDisconnected) {
-                    runOnUiThread {
-                        ToastUtils.showShort(R.string.power_device_disconnected_notice)
+                            is BleIoEvent.WriteResult -> if (
+                                event.sn.equals(deviceSn, ignoreCase = true) &&
+                                event.data?.getOrNull(2)?.toInt()?.and(0xFF) == 0x34
+                            ) {
+                                if (!event.success) {
+                                    pendingLowCurrentMode = null
+                                    ToastUtils.showShort(R.string.power_command_failed)
+                                }
+                                delay(150L)
+                                viewModel.requestDashboard(deviceSn)
+                                mBinding.switchLowCurrent.isEnabled = true
+                            }
+
+                            else -> Unit
+                        }
+                    }
+                }
+                launch {
+                    BleConnectionCoordinator.connectionEvents.collect { event ->
+                        when (event) {
+                            is BleConnectionEvent.Connected -> {
+                                if (event.device.bluetoothSn.equals(deviceSn, ignoreCase = true)) {
+                                    viewModel.requestDashboard(deviceSn)
+                                }
+                            }
+
+                            is BleConnectionEvent.Disconnected -> {
+                                if (deviceSn == null || event.sn.equals(deviceSn, ignoreCase = true)) {
+                                    ToastUtils.showShort(R.string.power_device_disconnected_notice)
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            override fun sendWriteMsg(device: BluetoothDevice, state: Int) = Unit
-            override fun mtuResponse(sn: String, state: Int, mtu: Int) = Unit
-            override fun onRssiResponse(sn: String, model: String, rssi: Int) = Unit
-        })
+        }
     }
 
     private fun selectPort(port: Port) {
         selectedPort = port
         renderPortSelection()
-        renderPortDetails(viewModel.dashboardSnapshot.value)
+        renderPortDetails(viewModel.homeInfo.value)
     }
 
-    private fun render(snapshot: MobilePowerSnapshot?) = with(mBinding) {
-        val battery = snapshot?.battery
+    private fun render(info: MobilePowerHomeInfoBean?) = with(mBinding) {
+        val battery = info?.battery
         textBatteryPercent.setTvContent((battery?.percent ?: 0).toString())
         val remainMinutes = battery?.dischargeRemainMinutes ?: 0
         textRemainingTime.text = getString(
@@ -159,18 +201,36 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             (battery?.temperatureC ?: 0).toFloat(),
         )
 
-        renderPortCard(cardC1, Port.C1, snapshot?.c1)
-        renderPortCard(cardC2, Port.C2, snapshot?.c2)
+        renderPortCard(cardC1, Port.C1, info.port(MobilePowerPortType.C1)?.metrics)
+        renderPortCard(cardC2, Port.C2, info.port(MobilePowerPortType.C2)?.metrics)
         renderPortCard(cardC3, Port.C3, null)
-        renderPortCard(cardA1, Port.A1, snapshot?.usbA)
+        renderPortCard(cardA1, Port.A1, info.port(MobilePowerPortType.USB_A)?.metrics)
         renderPortSelection()
-        renderPortDetails(snapshot)
+        renderPortDetails(info)
 
         renderingSwitch = true
         switchLowCurrent.setEnableEffect(false)
-        switchLowCurrent.isChecked = snapshot?.settings?.lowCurrentMode == true
+        switchLowCurrent.isChecked = info?.settings?.lowCurrentMode == true
         switchLowCurrent.setEnableEffect(true)
+        switchLowCurrent.isEnabled = BleConnectionCoordinator.connectionStates.value.any { (sn, state) ->
+            sn.equals(deviceSn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
+        }
         renderingSwitch = false
+        pendingLowCurrentMode?.let { expected ->
+            if (info != null) {
+                if (info.settings.lowCurrentMode == expected) {
+                    ToastUtils.showShort(
+                        getString(
+                            R.string.power_low_current_updated,
+                            getString(if (expected) R.string.power_enabled else R.string.power_disabled),
+                        ),
+                    )
+                } else {
+                    ToastUtils.showShort(R.string.power_command_failed)
+                }
+                pendingLowCurrentMode = null
+            }
+        }
         textBatteryHealth.setTvContent((battery?.healthPercent ?: 0).toString())
         detailCycleCount.textValue.text = getString(
             R.string.power_cycle_count_value,
@@ -248,12 +308,12 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
     }
 
-    private fun renderPortDetails(snapshot: MobilePowerSnapshot?) = with(mBinding) {
+    private fun renderPortDetails(info: MobilePowerHomeInfoBean?) = with(mBinding) {
         val metrics = when (selectedPort) {
-            Port.C1 -> snapshot?.c1
-            Port.C2 -> snapshot?.c2
+            Port.C1 -> info.port(MobilePowerPortType.C1)?.metrics
+            Port.C2 -> info.port(MobilePowerPortType.C2)?.metrics
             Port.C3 -> null
-            Port.A1 -> snapshot?.usbA
+            Port.A1 -> info.port(MobilePowerPortType.USB_A)?.metrics
         }
         detailProtocol.textValue.text =
             metrics?.protocol?.text ?: getString(R.string.power_unknown_value)
@@ -263,6 +323,9 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             Port.C3, Port.A1 -> getString(R.string.power_unknown_value)
         }
     }
+
+    private fun MobilePowerHomeInfoBean?.port(type: MobilePowerPortType): MobilePowerPortInfo? =
+        this?.ports?.firstOrNull { it.type == type }
 
     private enum class Port { C1, C2, C3, A1 }
 

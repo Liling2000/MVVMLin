@@ -7,7 +7,7 @@ import com.jiyi.power.R
 data class BleSavedDevice(
     val bluetoothName: String,
     val bluetoothSn: String,
-    @DrawableRes val deviceIcon: Int = R.mipmap.device_home_headphones_product
+    @DrawableRes val deviceIcon: Int = R.mipmap.ic_s_device
 )
 
 object BleDeviceStore {

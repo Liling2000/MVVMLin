@@ -11,6 +11,7 @@ import com.jiyi.power.databinding.ItemHomeDeviceBinding
 
 sealed interface HomeDeviceItem {
     data class Device(
+        val sn: String,
         val name: String,
         val description: String,
         val power: String,
@@ -63,7 +64,7 @@ class HomeDeviceAdapter(private val onItemClick: (HomeDeviceItem.Device?) -> Uni
         const val TYPE_ADD = 1
         val DeviceDiffCallback = object : DiffUtil.ItemCallback<HomeDeviceItem>() {
             override fun areItemsTheSame(oldItem: HomeDeviceItem, newItem: HomeDeviceItem) =
-                oldItem is HomeDeviceItem.AddDevice && newItem is HomeDeviceItem.AddDevice || oldItem is HomeDeviceItem.Device && newItem is HomeDeviceItem.Device && oldItem.name == newItem.name
+                oldItem is HomeDeviceItem.AddDevice && newItem is HomeDeviceItem.AddDevice || oldItem is HomeDeviceItem.Device && newItem is HomeDeviceItem.Device && oldItem.sn == newItem.sn
 
             override fun areContentsTheSame(oldItem: HomeDeviceItem, newItem: HomeDeviceItem) =
                 oldItem == newItem

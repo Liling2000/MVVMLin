@@ -4,6 +4,9 @@ import com.aleyn.mvvm.base.BaseViewModel
 import android.text.TextUtils
 import com.jiyi.power.app.bean.Payload
 import com.jiyi.power.app.bean.MobilePowerSnapshot
+import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
+import com.jiyi.power.app.ble.BleConnectionCoordinator
+import com.jiyi.power.app.ble.DeviceConnectionState
 import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import com.jiyi.power.app.utils.CmdConstant
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +19,8 @@ data class C1PortMetricsUiState(
 )
 
 class MainFragmentViewModel : BaseViewModel() {
+
+    private var receiveBuffer = ""
 
     // 设备温度
     val mMobileTemperature = MutableStateFlow(0)
@@ -57,19 +62,69 @@ class MainFragmentViewModel : BaseViewModel() {
     val mBmsModuleVersion = MutableStateFlow("")
     val c1PortMetrics = MutableStateFlow(C1PortMetricsUiState())
     val dashboardSnapshot = MutableStateFlow<MobilePowerSnapshot?>(null)
+    val homeInfo = MutableStateFlow<MobilePowerHomeInfoBean?>(null)
+    private var currentDeviceSn: String? = null
 
 
     override fun onBleDataReceive(data: String?) {
         super.onBleDataReceive(data)
-        parsingReadResult(data)
-        parsingWriteResult(data)
+        appendAndExtractFrames(data).forEach { frame ->
+            parsingReadResult(frame)
+            parsingWriteResult(frame)
+        }
+    }
+
+    /** 设备首页连续读取响应较长，这里按协议长度处理 BLE 分包和粘包。 */
+    private fun appendAndExtractFrames(data: String?): List<String> {
+        val chunk = data?.filterNot(Char::isWhitespace)?.uppercase() ?: return emptyList()
+        if (chunk.isEmpty() || chunk.length % 2 != 0 || chunk.any { it !in "0123456789ABCDEF" }) {
+            return emptyList()
+        }
+        receiveBuffer = (receiveBuffer + chunk).takeLast(8192)
+        val frames = mutableListOf<String>()
+        while (receiveBuffer.isNotEmpty()) {
+            var head = -1
+            var index = 0
+            while (index + 2 <= receiveBuffer.length) {
+                if (receiveBuffer.regionMatches(index, "AA", 0, 2)) {
+                    head = index
+                    break
+                }
+                index += 2
+            }
+            if (head < 0) {
+                receiveBuffer = ""
+                break
+            }
+            if (head > 0) receiveBuffer = receiveBuffer.substring(head)
+            if (receiveBuffer.length < 8) break
+
+            val command = receiveBuffer.substring(2, 4).toInt(16)
+            val lowLength = receiveBuffer.substring(6, 8).toInt(16)
+            val dataLength = ((command shr 6) shl 8) + lowLength
+            val frameHexLength = (CmdConstant.MIN_FRAME_LENGTH + dataLength) * 2
+            if (frameHexLength > 4096 * 2) {
+                receiveBuffer = receiveBuffer.drop(2)
+                continue
+            }
+            if (receiveBuffer.length < frameHexLength) break
+            frames += receiveBuffer.substring(0, frameHexLength)
+            receiveBuffer = receiveBuffer.substring(frameHexLength)
+        }
+        return frames
     }
 
     private fun parsingReadResult(data: String?) {
         val parsedFrame = data?.let { MobilePowerProtocolManager.parseFrame(it) } ?: return
+        if (!parsedFrame.raw.functionCode.equals(CmdConstant.FunctionCode.CODE_00, ignoreCase = true)) {
+            return
+        }
         val registerBlock = parsedFrame.payload as? Payload.RegisterBlock ?: return
         val snapshot = registerBlock.snapshot
         dashboardSnapshot.value = snapshot
+        currentDeviceSn?.let { sn ->
+            homeInfo.value = MobilePowerProtocolManager.toHomeInfoBean(sn, snapshot)
+        }
         val c1 = snapshot.c1
 
         c1PortMetrics.value = C1PortMetricsUiState(
@@ -145,11 +200,9 @@ class MainFragmentViewModel : BaseViewModel() {
     }
 
     fun requestDashboard(sn: String?): Boolean {
-        val command = MobilePowerProtocolManager.buildReadCommand(
-            CmdConstant.FunctionCode.CODE_00,
-            0x3B,
-        ) ?: return false
         if (sn.isNullOrBlank()) return false
+        val command = MobilePowerProtocolManager.buildHomeInfoReadCommand() ?: return false
+        currentDeviceSn = sn
         sendCmdData(sn, command)
         return true
     }
@@ -160,10 +213,11 @@ class MainFragmentViewModel : BaseViewModel() {
             if (isOpen) 1 else 0,
         ) ?: return false
         if (sn.isNullOrBlank()) return false
-        sendCmdData(sn, command)
-        dashboardSnapshot.value = dashboardSnapshot.value?.let { snapshot ->
-            snapshot.copy(settings = snapshot.settings.copy(lowCurrentMode = isOpen))
+        val connected = BleConnectionCoordinator.connectionStates.value.any { (deviceSn, state) ->
+            deviceSn.equals(sn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
         }
+        if (!connected) return false
+        sendCmdData(sn, command)
         return true
     }
 

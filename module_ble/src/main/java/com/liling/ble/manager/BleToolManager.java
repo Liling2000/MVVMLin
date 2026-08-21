@@ -88,11 +88,11 @@ public class BleToolManager {
     //蓝牙mac地址/名称map
     private Map<String, String> bleSnNameMap = new ArrayMap<>();
     //服务UUID
-    private String serviceUuidTemp = "";
+    private String serviceUuidTemp = "53527AA4-29F7-AE11-4E74-997334782568";
     //写UUID
-    private String writeUuidTemp = "";
+    private String writeUuidTemp = "EE684B1A-1E9B-ED3E-EE55-F894667E92AC";
     //通知UUID
-    private String notifyUuidTemp = "";
+    private String notifyUuidTemp = "654B749C-E37F-AE1F-EBAB-40CA133E3690";
     private static BleToolManager instance = null;
     private BleScanDeviceCallBack bleScanDeviceCallBack;
     //记录连接标识缓存
@@ -101,6 +101,7 @@ public class BleToolManager {
     private String currentDeviceName = "";
     private Handler handler = null;
     private MyScanCallback myScanCallback;
+    private final Runnable stopScanRunnable = this::stopScanResolve;
     //扫描到的设备mac地址集合
     private List<String> macList = new ArrayList<>();
     private List<String> allMatchDevices; //过滤设备列表
@@ -336,8 +337,9 @@ public class BleToolManager {
     protected void stopScanDelay(boolean isDelay) {
         //10s后停止扫描
         if (isBleOpen()) {
+            handler.removeCallbacks(stopScanRunnable);
             if (isDelay) {
-                handler.postDelayed(this::stopScanResolve, scanTimeOut);
+                handler.postDelayed(stopScanRunnable, scanTimeOut);
             } else {
                 stopScanResolve();
             }
@@ -495,7 +497,29 @@ public class BleToolManager {
             bluetoothGatt.close();
         }
         LogUtils.e(TAG + "设备请求连接---" + "model:" + model + "&sn:" + mBluetoothDevice.getAddress());
-        mBluetoothDevice.connectGatt(context, false, new MyBluetoothGattCallback(), BluetoothDevice.TRANSPORT_LE);
+        BluetoothGatt pendingGatt = mBluetoothDevice.connectGatt(
+                context, false, new MyBluetoothGattCallback(), BluetoothDevice.TRANSPORT_LE
+        );
+        // 连接建立前也要持有 Gatt，超时时才能主动终止 pending connectGatt。
+        if (pendingGatt != null) {
+            gattMap.put(mBluetoothDevice.getAddress(), pendingGatt);
+            ThreadPoolManager.getInstance().executeOnMainThread(() -> {
+                if (bleDataListener != null) {
+                    bleDataListener.sendConnectState(
+                            mBluetoothDevice, BleConstant.BleConnectState.stateConnecting
+                    );
+                }
+            });
+        } else {
+            connectStateMap.remove(mBluetoothDevice.getAddress());
+            ThreadPoolManager.getInstance().executeOnMainThread(() -> {
+                if (bleDataListener != null) {
+                    bleDataListener.sendConnectState(
+                            mBluetoothDevice, BleConstant.BleConnectState.stateDisconnected
+                    );
+                }
+            });
+        }
     }
 
     /**
