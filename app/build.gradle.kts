@@ -6,6 +6,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore/release.jks")
+            storePassword = "jiyi888"
+            keyAlias = "release"
+            keyPassword = "jiyi888"
+        }
+    }
+
     compileSdk = libs.versions.compileSdk.get().toInt()
     namespace = "com.jiyi.power"
     defaultConfig {
@@ -25,12 +34,14 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
         release {
             isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
