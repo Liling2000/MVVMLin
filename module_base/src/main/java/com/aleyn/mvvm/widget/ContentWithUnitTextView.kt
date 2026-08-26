@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.aleyn.mvvm.R
 import kotlin.math.roundToInt
+import androidx.core.graphics.toColorInt
 
 /** Displays a value and its unit with independently configurable text styles. */
 class ContentWithUnitTextView @JvmOverloads constructor(
@@ -18,8 +19,8 @@ class ContentWithUnitTextView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private var contentSize = sp(16f)
     private var unitSize = sp(12f)
-    private var contentColor = Color.parseColor("#111113")
-    private var unitColor = Color.parseColor("#111113")
+    private var contentColor = "#111113".toColorInt()
+    private var unitColor = "#111113".toColorInt()
     private var content = ""
     private var unit = ""
     private var hideUnit = false

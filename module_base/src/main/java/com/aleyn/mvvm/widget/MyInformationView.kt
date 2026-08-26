@@ -33,22 +33,25 @@ class MyInformationView @JvmOverloads constructor(
     }
 
     private fun applyAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        context.obtainStyledAttributes(attrs, R.styleable.MyInformationView, defStyleAttr, 0)
-            .use { array ->
-                bindLeftIcon(array)
-                bindLeftText(array)
-                bindLeftSubText(array)
-                bindRightText(array)
-                bindArrow(array)
-                binding.viewDivider.isVisible =
-                    array.getBoolean(R.styleable.MyInformationView_is_show_line, false)
+        val array =
+            context.obtainStyledAttributes(attrs, R.styleable.MyInformationView, defStyleAttr, 0)
+        try {
+            bindLeftIcon(array)
+            bindLeftText(array)
+            bindLeftSubText(array)
+            bindRightText(array)
+            bindArrow(array)
+            binding.viewDivider.isVisible =
+                array.getBoolean(R.styleable.MyInformationView_is_show_line, false)
 
-                val contentBackground =
-                    array.getResourceId(R.styleable.MyInformationView_background, 0)
-                if (contentBackground != 0) binding.informationContent.setBackgroundResource(
-                    contentBackground
-                )
+            val contentBackground =
+                array.getResourceId(R.styleable.MyInformationView_background, 0)
+            if (contentBackground != 0) {
+                binding.informationContent.setBackgroundResource(contentBackground)
             }
+        } finally {
+            array.recycle()
+        }
     }
 
     private fun bindLeftIcon(array: TypedArray) {
