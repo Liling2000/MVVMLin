@@ -46,6 +46,9 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
         textHealthPercent.text =
             health?.let { getString(R.string.battery_health_percent, it) } ?: emptyValue()
         progressHealth.progress = health ?: 0
+        textHealthCycle.text = data.cycleCount?.let {
+            getString(R.string.battery_cycle_format, it)
+        } ?: emptyValue()
         infoManufacturer.setRightTextValue(data.manufacturer ?: emptyValue())
         infoModel.setRightTextValue(data.model ?: emptyValue())
         infoCycle.setRightTextValue(data.cycleCount?.let {

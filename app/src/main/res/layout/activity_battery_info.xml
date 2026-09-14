@@ -33,10 +33,13 @@
 
             <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="158dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_battery_card"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="14dp">
 
                 <LinearLayout
                         android:layout_width="match_parent"
@@ -50,49 +53,127 @@
                             android:layout_weight="1"
                             android:text="@string/battery_health"
                             android:textColor="@color/color_17181c"
-                            android:textSize="22sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                     <TextView
+                            android:id="@+id/text_health_level"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/battery_healthy"
-                            android:textColor="@color/color_0752ae"
+                            android:text="@string/battery_health_excellent"
+                            android:textColor="@color/battery_health_progress"
                             android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:orientation="horizontal">
-
-                    <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="1"
-                            android:text="@string/battery_healthy_desc"
-                            android:textColor="@color/color_55596a"
-                            android:textSize="13sp" />
 
                     <TextView
                             android:id="@+id/text_health_percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/color_55596a"
-                            android:textSize="23sp" />
+                            android:layout_marginStart="6dp"
+                            android:textColor="@color/battery_health_progress"
+                            android:textSize="14sp" />
                 </LinearLayout>
 
-                <ProgressBar
-                        android:id="@+id/progress_health"
-                        style="?android:attr/progressBarStyleHorizontal"
+                <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="14dp"
-                        android:max="100"
-                        android:progressDrawable="@drawable/progress_battery_health" />
+                        android:layout_height="34dp"
+                        android:layout_marginTop="18dp">
+
+                    <ProgressBar
+                            android:id="@+id/progress_health"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="12dp"
+                            android:max="100"
+                            android:progressDrawable="@drawable/progress_battery_health"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline_health_65"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.65" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline_health_80"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.80" />
+
+                    <View
+                            android:layout_width="2dp"
+                            android:layout_height="12dp"
+                            android:background="@color/color_ffffff"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_health_65"
+                            app:layout_constraintStart_toStartOf="@id/guideline_health_65"
+                            app:layout_constraintTop_toTopOf="@id/progress_health" />
+
+                    <View
+                            android:layout_width="2dp"
+                            android:layout_height="12dp"
+                            android:background="@color/color_ffffff"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_health_80"
+                            app:layout_constraintStart_toStartOf="@id/guideline_health_80"
+                            app:layout_constraintTop_toTopOf="@id/progress_health" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/battery_health_threshold_65"
+                            android:textColor="@color/color_a5a6aa"
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_health_65"
+                            app:layout_constraintStart_toStartOf="@id/guideline_health_65"
+                            app:layout_constraintTop_toBottomOf="@id/progress_health" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/battery_health_threshold_80"
+                            android:textColor="@color/color_a5a6aa"
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_health_80"
+                            app:layout_constraintStart_toStartOf="@id/guideline_health_80"
+                            app:layout_constraintTop_toBottomOf="@id/progress_health" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/battery_healthy_desc"
+                        android:textColor="@color/color_a5a6aa"
+                        android:textSize="12sp" />
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/color_e7eaf0" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/battery_cycle_count"
+                            android:textColor="@color/color_17181c"
+                            android:textSize="16sp" />
+
+                    <TextView
+                            android:id="@+id/text_health_cycle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_55596a"
+                            android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

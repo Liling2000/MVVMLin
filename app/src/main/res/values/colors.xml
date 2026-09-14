@@ -120,6 +120,7 @@
     <color name="custom_mode_dashed_border">#C7C9CE</color>
     <color name="custom_mode_add_text">#77798D</color>
     <color name="custom_mode_list_value">#12B82F</color>
+    <color name="battery_health_progress">#12B82F</color>
     <color name="custom_mode_selected_indicator">#0752AE</color>
     <color name="custom_mode_unselected_indicator">#D9DDE2</color>
     <color name="custom_time_page_background">#F6F7F9</color>
