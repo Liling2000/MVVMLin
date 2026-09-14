@@ -26,6 +26,7 @@ import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.ble.BleConnectionEvent
 import com.jiyi.power.app.ble.BleIoEvent
 import com.jiyi.power.app.ble.DeviceConnectionState
+import com.jiyi.power.app.common.RouterPath.ROUTE_THEME
 import com.jiyi.power.app.viewmodel.MainFragmentViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
@@ -68,16 +69,15 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     private fun setupStaticContent() = with(mBinding) {
         setupPortCard(cardC1, R.string.power_port_c1)
         setupPortCard(cardC2, R.string.power_port_c2)
-        setupPortCard(cardC3, R.string.power_port_c3)
         setupPortCard(cardA1, R.string.power_port_a1)
 
         detailCable.textLabel.setText(R.string.power_cable_info)
         detailCable.textValue.setText(R.string.power_cable_value)
-        detailCable.imageIcon.setImageResource(R.mipmap.ic_power_cable)
+        detailCable.imageIcon.setImageResource(R.mipmap.ic_charging_cable)
         detailProtocol.textLabel.setText(R.string.power_charge_protocol)
         detailProtocol.imageIcon.setImageResource(R.mipmap.ic_lightning)
         detailModel.textLabel.setText(R.string.power_device_model)
-        detailModel.imageIcon.setImageResource(R.mipmap.ic_mobile_device)
+        detailModel.imageIcon.setImageResource(R.mipmap.ic_device_outline)
 
         detailCycleCount.textLabel.setText(R.string.power_cycle_count)
         detailCapacity.textLabel.setText(R.string.power_current_capacity)
@@ -91,11 +91,9 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
         cardC1.root.setOnClickListener { selectPort(Port.C1) }
         cardC2.root.setOnClickListener { selectPort(Port.C2) }
-        cardC3.root.setOnClickListener { selectPort(Port.C3) }
         cardA1.root.setOnClickListener { selectPort(Port.A1) }
         tabC1.setOnClickListener { selectPort(Port.C1) }
         tabC2.setOnClickListener { selectPort(Port.C2) }
-        tabC3.setOnClickListener { selectPort(Port.C3) }
         tabA1.setOnClickListener { selectPort(Port.A1) }
 
         switchLowCurrent.setOnClickListener { switchLowCurrent.toggle() }
@@ -203,7 +201,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
 
         renderPortCard(cardC1, Port.C1, info.port(MobilePowerPortType.C1)?.metrics)
         renderPortCard(cardC2, Port.C2, info.port(MobilePowerPortType.C2)?.metrics)
-        renderPortCard(cardC3, Port.C3, null)
         renderPortCard(cardA1, Port.A1, info.port(MobilePowerPortType.USB_A)?.metrics)
         renderPortSelection()
         renderPortDetails(info)
@@ -261,12 +258,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         )
         binding.textPower.setContentTextColor(powerColor)
         binding.textPower.setUnitTextColor(powerColor)
-        binding.textDevice.setTextColor(
-            ContextCompat.getColor(
-                this,
-                if (hasOutput) R.color.color_77798d else R.color.color_9a9da7
-            ),
-        )
         binding.textMetrics.setTextColor(
             ContextCompat.getColor(
                 this,
@@ -275,12 +266,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         )
         binding.textPower.setTvContent(
             metrics?.powerW?.let { String.format(Locale.US, "%.1f", it.toFloat()) })
-        binding.textDevice.text = when {
-            !hasOutput -> getString(R.string.power_disconnected)
-            port == Port.C1 -> getString(R.string.power_device_c1_name)
-            port == Port.C2 -> getString(R.string.power_device_c2_name)
-            else -> getString(R.string.power_device_a1_name)
-        }
         binding.textMetrics.text = getString(
             R.string.power_value_voltage_current,
             (metrics?.voltageMv ?: 0) / 1000f,
@@ -292,7 +277,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         listOf(
             Port.C1 to tabC1,
             Port.C2 to tabC2,
-            Port.C3 to tabC3,
             Port.A1 to tabA1,
         ).forEach { (port, tab) ->
             val selected = port == selectedPort
@@ -312,7 +296,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         val metrics = when (selectedPort) {
             Port.C1 -> info.port(MobilePowerPortType.C1)?.metrics
             Port.C2 -> info.port(MobilePowerPortType.C2)?.metrics
-            Port.C3 -> null
             Port.A1 -> info.port(MobilePowerPortType.USB_A)?.metrics
         }
         detailProtocol.textValue.text =
@@ -320,17 +303,16 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         detailModel.textValue.text = when (selectedPort) {
             Port.C1 -> getString(R.string.power_model_c1)
             Port.C2 -> getString(R.string.power_model_c2)
-            Port.C3, Port.A1 -> getString(R.string.power_unknown_value)
+            Port.A1 -> getString(R.string.power_unknown_value)
         }
     }
 
     private fun MobilePowerHomeInfoBean?.port(type: MobilePowerPortType): MobilePowerPortInfo? =
         this?.ports?.firstOrNull { it.type == type }
 
-    private enum class Port { C1, C2, C3, A1 }
+    private enum class Port { C1, C2, A1 }
 
     companion object {
         const val EXTRA_DEVICE_SN = "device_sn"
-        private const val ROUTE_THEME = "/mobilepower/theme_choose"
     }
 }

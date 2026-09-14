@@ -57,10 +57,12 @@
                 android:exported="false" />
         <activity android:name=".app.ChargingModeActivity" android:exported="false" />
         <activity android:name=".app.CustomChargingModeActivity" android:exported="false" />
+        <activity android:name=".app.CustomChargingModeListActivity" android:exported="false" />
         <activity android:name=".app.PortPowerStatisticsActivity" android:exported="false" />
         <activity android:name=".app.ScreenSettingActivity" android:exported="false" />
         <activity android:name=".app.BatteryInfoActivity" android:exported="false" />
         <activity android:name=".app.TimerSettingActivity" android:exported="false" />
+        <activity android:name=".app.CustomTimeActivity" android:exported="false" />
         <activity android:name=".app.DeviceExceptionRecordActivity" android:exported="false" />
     </application>
 

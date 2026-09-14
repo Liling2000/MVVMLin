@@ -22,7 +22,7 @@ class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
         mBinding.cardSmart.setOnClickListener { selectMode(ChargingPreferences.MODE_SMART) }
         mBinding.cardStandard.setOnClickListener { selectMode(ChargingPreferences.MODE_STANDARD) }
         mBinding.cardCustom.setOnClickListener {
-            startActivity(Intent(this, CustomChargingModeActivity::class.java))
+            startActivity(Intent(this, CustomChargingModeListActivity::class.java))
         }
         renderSelection(currentMode())
     }

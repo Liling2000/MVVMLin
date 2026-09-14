@@ -5,4 +5,5 @@ object RouterPath {
     const val BLE_SCAN = "/ble/scan"
     const val MOBILE_POWER_MAIN = "/mobilepower/main"
     const val DEVICE_SETTING = "/device/setting"
+    const val ROUTE_THEME = "/mobilepower/theme_choose"
 }

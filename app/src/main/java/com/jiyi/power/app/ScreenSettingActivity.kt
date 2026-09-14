@@ -15,24 +15,32 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleyn.mvvm.base.BaseActivity
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.aleyn.mvvm.R as BaseR
 import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.ScreenSettingUiData
 import com.jiyi.power.app.bean.ScreenTextColor
 import com.jiyi.power.app.bean.TimerSettingType
+import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.ScreenSettingViewModel
 import com.jiyi.power.databinding.ActivityScreenSettingBinding
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.ROUTE_THEME)
 class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
     private val viewModel by viewModels<ScreenSettingViewModel>()
     private var rendering = false
-    private val wallpaperPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        uri ?: return@registerForActivityResult
-        runCatching { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
-        viewModel.setCustomWallpaper(uri.toString())
-    }
+    private val wallpaperPicker =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri ?: return@registerForActivityResult
+            runCatching {
+                contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            }
+            viewModel.setCustomWallpaper(uri.toString())
+        }
 
     override fun initView(savedInstanceState: Bundle?) {
         val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
@@ -47,8 +55,16 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
 
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
-        rowShutdown.setOnClickListener { TimerSettingActivity.start(this@ScreenSettingActivity, TimerSettingType.SHUTDOWN) }
-        rowReminder.setOnClickListener { TimerSettingActivity.start(this@ScreenSettingActivity, TimerSettingType.REMINDER) }
+        rowShutdown.setOnClickListener {
+            TimerSettingActivity.start(
+                this@ScreenSettingActivity, TimerSettingType.SHUTDOWN
+            )
+        }
+        rowReminder.setOnClickListener {
+            TimerSettingActivity.start(
+                this@ScreenSettingActivity, TimerSettingType.REMINDER
+            )
+        }
         rowTime.setOnClickListener { switchTime.toggle() }
         rowAchievement.setOnClickListener { switchAchievement.toggle() }
         switchTime.setOnClickListener { switchTime.toggle() }
@@ -62,10 +78,13 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         }
         customWallpaper.setOnClickListener { wallpaperPicker.launch(arrayOf("image/*")) }
         editCustomText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!rendering) viewModel.setCustomText(s?.toString().orEmpty())
             }
+
             override fun afterTextChanged(s: Editable?) = Unit
         })
         buttonSend.setOnClickListener { submitSettings(viewModel.uiState.value) }
@@ -84,7 +103,10 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         if (editCustomText.text.toString() != state.customText) editCustomText.setText(state.customText)
         optionWhite.setBackgroundResource(if (state.textColor == ScreenTextColor.WHITE) R.drawable.bg_screen_option_selected else android.R.color.transparent)
         optionDark.setBackgroundResource(if (state.textColor == ScreenTextColor.DARK) R.drawable.bg_screen_option_selected else android.R.color.transparent)
-        val textColor = ContextCompat.getColor(this@ScreenSettingActivity, if (state.textColor == ScreenTextColor.WHITE) BaseR.color.color_ffffff else R.color.color_43474b)
+        val textColor = ContextCompat.getColor(
+            this@ScreenSettingActivity,
+            if (state.textColor == ScreenTextColor.WHITE) BaseR.color.color_ffffff else R.color.color_43474b
+        )
         previewPrimary.setTextColor(textColor)
         previewSecondary.setTextColor(textColor)
         previewCustomText.setTextColor(textColor)
@@ -97,8 +119,15 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
     }
 
     private fun renderWallpaperSelection(selectedId: Int) {
-        val frames: List<FrameLayout> = listOf(mBinding.wallpaper1, mBinding.wallpaper2, mBinding.wallpaper3, mBinding.wallpaper4)
-        val checks: List<ImageView> = listOf(mBinding.checkWallpaper1, mBinding.checkWallpaper2, mBinding.checkWallpaper3, mBinding.checkWallpaper4)
+        val frames: List<FrameLayout> = listOf(
+            mBinding.wallpaper1, mBinding.wallpaper2, mBinding.wallpaper3, mBinding.wallpaper4
+        )
+        val checks: List<ImageView> = listOf(
+            mBinding.checkWallpaper1,
+            mBinding.checkWallpaper2,
+            mBinding.checkWallpaper3,
+            mBinding.checkWallpaper4
+        )
         frames.forEachIndexed { index, frame ->
             val selected = selectedId == viewModel.wallpapers[index].id
             frame.setBackgroundResource(if (selected) R.drawable.bg_screen_wallpaper_selected else android.R.color.transparent)

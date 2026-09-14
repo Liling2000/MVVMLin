@@ -68,7 +68,11 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
     }
 
     private fun onOptionClick(option: TimerOption) {
-        if (option.isCustom) showCustomTimeDialog(option.time) else viewModel.select(option)
+        if (option.isCustom) {
+            val typeName = intent.getStringExtra(EXTRA_TYPE)
+            val type = runCatching { TimerSettingType.valueOf(typeName.orEmpty()) }.getOrDefault(TimerSettingType.SHUTDOWN)
+            CustomTimeActivity.start(this, type, option.time)
+        } else viewModel.select(option)
     }
 
     private fun showCustomTimeDialog(currentMinutes: Int) {
