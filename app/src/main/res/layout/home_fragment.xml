@@ -31,12 +31,14 @@
                     android:scaleType="fitStart"
                     android:src="@mipmap/ic_brand_beilien_logo" />
 
-            <ImageButton
+            <ImageView
                     android:id="@+id/button_add_device"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
-                    android:contentDescription="@string/home_add_device"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:src="@mipmap/ic_common_add_filled" />
         </FrameLayout>
 

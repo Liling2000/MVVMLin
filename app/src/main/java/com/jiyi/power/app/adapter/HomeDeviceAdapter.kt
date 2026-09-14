@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.jiyi.power.R
 import com.jiyi.power.databinding.ItemHomeAddDeviceBinding
 import com.jiyi.power.databinding.ItemHomeDeviceBinding
 
@@ -47,7 +48,7 @@ class HomeDeviceAdapter(private val onItemClick: (HomeDeviceItem.Device?) -> Uni
     inner class DeviceViewHolder(private val binding: ItemHomeDeviceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HomeDeviceItem.Device) = with(binding) {
-            imageDevice.setImageResource(item.imageRes)
+            imageDevice.setImageResource(R.mipmap.ic_s_device)
             textDeviceName.text = item.name
             textDeviceDesc.text = item.description
             textDevicePower.text = item.power

@@ -22,6 +22,7 @@ import com.jiyi.power.app.bean.TimerOption
 import com.jiyi.power.app.bean.TimerSettingType
 import com.jiyi.power.app.bean.TimerSettingUiData
 import com.jiyi.power.app.viewmodel.TimerSettingViewModel
+import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import com.jiyi.power.databinding.ActivityTimerSettingBinding
 import com.jiyi.power.databinding.DialogCustomTimerBinding
 import kotlinx.coroutines.launch
@@ -35,15 +36,13 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         BarUtils.setStatusBarColor(this, background)
         BarUtils.setStatusBarLightMode(this, true)
         BarUtils.setNavBarColor(this, background)
-        mBinding.buttonBack.setOnClickListener { finish() }
+        mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.timerOptions.layoutManager = GridLayoutManager(this, 2)
         mBinding.timerOptions.adapter = adapter
         mBinding.timerOptions.isNestedScrollingEnabled = false
         mBinding.timerOptions.addItemDecoration(GridSpacingDecoration(resources.getDimensionPixelSize(R.dimen.timer_grid_spacing)))
         mBinding.buttonConfirm.setOnClickListener {
-            val sent = viewModel.confirm()
-            ToastUtils.showShort(if (sent) R.string.timer_setting_success else R.string.timer_setting_pending)
-            if (sent) finish()
+            if (!viewModel.confirm()) ToastUtils.showShort(R.string.power_command_failed)
         }
         observeState()
     }
@@ -57,12 +56,27 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
 
     private fun observeState() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) { viewModel.uiState.collect(::render) }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect(::render) }
+                launch {
+                    viewModel.commandEvents.collect { event ->
+                        when (event) {
+                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf("C0", "C1")) {
+                                ToastUtils.showShort(R.string.timer_setting_success)
+                                finish()
+                            }
+                            is DeviceCommandViewModel.CommandEvent.WriteFailed,
+                            DeviceCommandViewModel.CommandEvent.Disconnected -> ToastUtils.showShort(R.string.power_command_failed)
+                            else -> Unit
+                        }
+                    }
+                }
+            }
         }
     }
 
     private fun render(state: TimerSettingUiData) = with(mBinding) {
-        toolbarTitle.setText(if (state.type == TimerSettingType.SHUTDOWN) R.string.timer_shutdown_title else R.string.timer_reminder_title)
+        toolbar.setTitStr(getString(if (state.type == TimerSettingType.SHUTDOWN) R.string.timer_shutdown_title else R.string.timer_reminder_title))
         timerDescription.setText(if (state.type == TimerSettingType.SHUTDOWN) R.string.timer_shutdown_description else R.string.timer_reminder_description)
         adapter.submitList(state.options)
     }

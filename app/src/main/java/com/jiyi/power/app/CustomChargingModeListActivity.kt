@@ -2,6 +2,7 @@ package com.jiyi.power.app
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseActivity
@@ -9,9 +10,11 @@ import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.CustomChargingModeAdapter
 import com.jiyi.power.app.common.ChargingPreferences
+import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.databinding.ActivityCustomChargingModeListBinding
 
 class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeListBinding>() {
+    private val viewModel by viewModels<ChargingModeViewModel>()
     private val modeAdapter = CustomChargingModeAdapter(
         onSelect = { mode -> selectMode(mode.id) },
         onEdit = { mode -> openEditor(mode.id) },
@@ -42,6 +45,10 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     )
 
     private fun selectMode(id: Long) {
+        if (!viewModel.applyMode(ChargingPreferences.MODE_CUSTOM)) {
+            com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+            return
+        }
         CustomChargingModeRepository.select(id)
         getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE).edit()
             .putInt(ChargingPreferences.KEY_MODE, ChargingPreferences.MODE_CUSTOM)

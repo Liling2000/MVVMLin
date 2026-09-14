@@ -37,54 +37,20 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="54dp">
 
-                <ImageView
+                <com.aleyn.mvvm.widget.RoundImageView
                         android:id="@+id/preview_wallpaper"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:contentDescription="@string/screen_preview"
+                        android:layout_gravity="center_horizontal"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_power_banner_space" />
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                    <TextView
-                            android:id="@+id/preview_primary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/screen_preview_percent"
-                            android:textColor="@color/color_ffffff"
-                            android:textSize="25sp"
-                            android:textStyle="bold" />
-
-                    <TextView
-                            android:id="@+id/preview_secondary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/screen_preview_output"
-                            android:textColor="@color/color_ffffff"
-                            android:textSize="11sp" />
-
-                    <TextView
-                            android:id="@+id/preview_custom_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:maxLines="1"
-                            android:textColor="@color/color_ffffff"
-                            android:textSize="11sp" />
-                </LinearLayout>
+                        app:riv_radius="36dp" />
             </FrameLayout>
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="46dp"
+                    android:layout_marginTop="28dp"
                     android:text="@string/screen_preview"
                     android:textColor="@color/color_9a9da9"
                     android:textSize="15sp" />
@@ -92,48 +58,9 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/bg_screen_card"
                     android:orientation="vertical">
-
-                <LinearLayout
-                        android:id="@+id/row_shutdown"
-                        style="@style/ScreenSettingRow">
-
-                    <ImageView
-                            style="@style/ScreenSettingIcon"
-                            android:contentDescription="@string/screen_shutdown"
-                            android:src="@mipmap/ic_countdown_nor" />
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/ScreenSettingTitle"
-                                android:text="@string/screen_shutdown" />
-
-                        <TextView
-                                style="@style/ScreenSettingDesc"
-                                android:text="@string/screen_shutdown_desc" />
-                    </LinearLayout>
-
-                    <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:contentDescription="@string/screen_shutdown"
-                            android:src="@mipmap/ic_chevron_right" />
-                </LinearLayout>
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginEnd="22dp"
-                        android:background="@color/color_eff0f3" />
 
                 <LinearLayout
                         android:id="@+id/row_reminder"
@@ -142,7 +69,7 @@
                     <ImageView
                             style="@style/ScreenSettingIcon"
                             android:contentDescription="@string/screen_timer_reminder"
-                            android:src="@mipmap/ic_notification" />
+                            android:src="@mipmap/ic_alarm" />
 
                     <LinearLayout
                             android:layout_width="0dp"
@@ -181,7 +108,7 @@
                     <ImageView
                             style="@style/ScreenSettingIcon"
                             android:contentDescription="@string/screen_time_display"
-                            android:src="@mipmap/ic_clock_outline" />
+                            android:src="@mipmap/ic_clock" />
 
                     <LinearLayout
                             android:layout_width="0dp"
@@ -330,124 +257,13 @@
                         style="@style/ScreenSettingTitle"
                         android:text="@string/screen_wallpaper" />
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_wallpapers"
                         android:layout_width="match_parent"
-                        android:layout_height="96dp"
+                        android:layout_height="208dp"
                         android:layout_marginTop="20dp"
-                        android:orientation="horizontal">
-
-                    <FrameLayout
-                            android:id="@+id/wallpaper_1"
-                            style="@style/ScreenWallpaperFrame">
-
-                        <ImageView
-                                android:id="@+id/image_wallpaper_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_power_banner_space" />
-
-                        <ImageView
-                                android:id="@+id/check_wallpaper_1"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="top|end"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/bg_screen_check"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_check_blue"
-                                app:tint="@color/color_ffffff" />
-                    </FrameLayout>
-
-                    <Space
-                            android:layout_width="16dp"
-                            android:layout_height="1dp" />
-
-                    <FrameLayout
-                            android:id="@+id/wallpaper_2"
-                            style="@style/ScreenWallpaperFrame">
-
-                        <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_power_banner_panther" />
-
-                        <ImageView
-                                android:id="@+id/check_wallpaper_2"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="top|end"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/bg_screen_check"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_check_blue"
-                                app:tint="@color/color_ffffff" />
-                    </FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="96dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-
-                    <FrameLayout
-                            android:id="@+id/wallpaper_3"
-                            style="@style/ScreenWallpaperFrame">
-
-                        <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_power_banner_deer" />
-
-                        <ImageView
-                                android:id="@+id/check_wallpaper_3"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="top|end"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/bg_screen_check"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_check_blue"
-                                app:tint="@color/color_ffffff" />
-                    </FrameLayout>
-
-                    <Space
-                            android:layout_width="16dp"
-                            android:layout_height="1dp" />
-
-                    <FrameLayout
-                            android:id="@+id/wallpaper_4"
-                            style="@style/ScreenWallpaperFrame">
-
-                        <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_power_banner_flower" />
-
-                        <ImageView
-                                android:id="@+id/check_wallpaper_4"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="top|end"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/bg_screen_check"
-                                android:contentDescription="@string/screen_wallpaper"
-                                android:padding="5dp"
-                                android:src="@mipmap/ic_check_blue"
-                                app:tint="@color/color_ffffff" />
-                    </FrameLayout>
-                </LinearLayout>
+                        android:clipToPadding="false"
+                        android:overScrollMode="never" />
 
                 <LinearLayout
                         android:id="@+id/custom_wallpaper"

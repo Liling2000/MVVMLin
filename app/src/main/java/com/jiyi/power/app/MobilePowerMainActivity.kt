@@ -21,13 +21,12 @@ import com.jiyi.power.databinding.ItemPowerPortBinding
 import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
 import com.jiyi.power.app.bean.MobilePowerPortInfo
 import com.jiyi.power.app.bean.MobilePowerPortType
-import com.jiyi.power.app.bean.PortMetrics
+import com.jiyi.power.app.bean.PortDirection
 import com.jiyi.power.app.ble.BleConnectionCoordinator
-import com.jiyi.power.app.ble.BleConnectionEvent
-import com.jiyi.power.app.ble.BleIoEvent
 import com.jiyi.power.app.ble.DeviceConnectionState
 import com.jiyi.power.app.common.RouterPath.ROUTE_THEME
 import com.jiyi.power.app.viewmodel.MainFragmentViewModel
+import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import java.util.Locale
@@ -60,6 +59,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     }
 
     override fun initData() {
+        viewModel.bindDevice(deviceSn)
         val connected = BleConnectionCoordinator.connectionStates.value.any { (sn, state) ->
             sn.equals(deviceSn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
         }
@@ -128,51 +128,23 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     private fun setupBleNotifications() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    BleConnectionCoordinator.ioEvents.collect { event ->
-                        when (event) {
-                            is BleIoEvent.Notification -> if (
-                                deviceSn == null || event.sn.equals(deviceSn, ignoreCase = true)
-                            ) {
-                                viewModel.onBleDataReceive(
-                                    event.data.joinToString("") { byte ->
-                                        "%02X".format(byte.toInt() and 0xFF)
-                                    },
-                                )
-                            }
-
-                            is BleIoEvent.WriteResult -> if (
-                                event.sn.equals(deviceSn, ignoreCase = true) &&
-                                event.data?.getOrNull(2)?.toInt()?.and(0xFF) == 0x34
-                            ) {
-                                if (!event.success) {
-                                    pendingLowCurrentMode = null
-                                    ToastUtils.showShort(R.string.power_command_failed)
-                                }
-                                delay(150L)
-                                viewModel.requestDashboard(deviceSn)
-                                mBinding.switchLowCurrent.isEnabled = true
-                            }
-
-                            else -> Unit
+                // 原始 BLE 数据已由 ViewModel 处理；Activity 仅消费业务级的写入/连接结果。
+                viewModel.commandEvents.collect { event ->
+                    when (event) {
+                        is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == "34") {
+                            // 等设备应用新配置后重新读取寄存器，以设备回包为最终状态。
+                            delay(150L)
+                            viewModel.requestDashboard(deviceSn)
+                            mBinding.switchLowCurrent.isEnabled = true
                         }
-                    }
-                }
-                launch {
-                    BleConnectionCoordinator.connectionEvents.collect { event ->
-                        when (event) {
-                            is BleConnectionEvent.Connected -> {
-                                if (event.device.bluetoothSn.equals(deviceSn, ignoreCase = true)) {
-                                    viewModel.requestDashboard(deviceSn)
-                                }
-                            }
-
-                            is BleConnectionEvent.Disconnected -> {
-                                if (deviceSn == null || event.sn.equals(deviceSn, ignoreCase = true)) {
-                                    ToastUtils.showShort(R.string.power_device_disconnected_notice)
-                                }
-                            }
+                        is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (event.functionCode == "34") {
+                            pendingLowCurrentMode = null
+                            mBinding.switchLowCurrent.isEnabled = true
+                            ToastUtils.showShort(R.string.power_command_failed)
                         }
+                        DeviceCommandViewModel.CommandEvent.Disconnected ->
+                            ToastUtils.showShort(R.string.power_device_disconnected_notice)
+                        else -> Unit
                     }
                 }
             }
@@ -199,9 +171,9 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             (battery?.temperatureC ?: 0).toFloat(),
         )
 
-        renderPortCard(cardC1, Port.C1, info.port(MobilePowerPortType.C1)?.metrics)
-        renderPortCard(cardC2, Port.C2, info.port(MobilePowerPortType.C2)?.metrics)
-        renderPortCard(cardA1, Port.A1, info.port(MobilePowerPortType.USB_A)?.metrics)
+        renderPortCard(cardC1, info.port(MobilePowerPortType.C1))
+        renderPortCard(cardC2, info.port(MobilePowerPortType.C2))
+        renderPortCard(cardA1, info.port(MobilePowerPortType.USB_A))
         renderPortSelection()
         renderPortDetails(info)
 
@@ -236,40 +208,63 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         detailCapacity.textValue.text = getString(R.string.power_capacity_value, 25000)
     }
 
-    private fun renderPortCard(binding: ItemPowerPortBinding, port: Port, metrics: PortMetrics?) {
-        val hasOutput = (metrics?.powerW ?: 0) > 0 || (metrics?.currentMa ?: 0) > 0
+    private fun renderPortCard(binding: ItemPowerPortBinding, port: MobilePowerPortInfo?) {
+        val direction = port?.direction ?: PortDirection.NONE
+        val isActive = direction == PortDirection.INPUT || direction == PortDirection.OUTPUT
+        val metrics = port?.metrics
+
+        // 卡片状态只服从协议层给出的方向。即使保留上一帧功率，NONE 也必须完整置灰。
         binding.root.setBackgroundResource(
-            if (hasOutput) R.drawable.bg_power_port_active else R.drawable.bg_power_port_inactive,
+            if (isActive) R.drawable.bg_power_port_active else R.drawable.bg_power_port_inactive,
         )
-        binding.textStatus.text =
-            getString(if (hasOutput) R.string.power_output else R.string.power_disconnected)
+        binding.textStatus.text = when (direction) {
+            PortDirection.INPUT -> getString(R.string.power_input)
+            PortDirection.OUTPUT -> getString(R.string.power_output)
+            PortDirection.NONE -> getString(R.string.power_unknown_value)
+        }
         binding.textStatus.setTextColor(
             ContextCompat.getColor(
-                this, if (hasOutput) R.color.color_0752ae else R.color.color_9a9da7
+                this, if (isActive) R.color.color_0752ae else R.color.color_9a9da7
             ),
+        )
+        binding.textPort.setBackgroundResource(
+            if (isActive) R.drawable.bg_power_chip_normal else R.drawable.bg_power_chip_inactive,
         )
         binding.textPort.setTextColor(
             ContextCompat.getColor(
-                this, if (hasOutput) R.color.color_0752ae else R.color.color_9a9da7
+                this, if (isActive) R.color.color_0752ae else R.color.color_9a9da7
             ),
         )
         val powerColor = ContextCompat.getColor(
-            this, if (hasOutput) R.color.color_191c1e else R.color.color_9a9da7
+            this, if (isActive) R.color.color_191c1e else R.color.color_9a9da7
         )
         binding.textPower.setContentTextColor(powerColor)
         binding.textPower.setUnitTextColor(powerColor)
         binding.textMetrics.setTextColor(
             ContextCompat.getColor(
                 this,
-                if (hasOutput) R.color.color_a5a6aa else R.color.color_9a9da7
+                if (isActive) R.color.color_a5a6aa else R.color.color_9a9da7
             ),
         )
-        binding.textPower.setTvContent(
-            metrics?.powerW?.let { String.format(Locale.US, "%.1f", it.toFloat()) })
+        if (!isActive) {
+            binding.textPower.setTvContent(getString(R.string.power_unknown_value))
+            binding.textMetrics.text = getString(
+                R.string.power_value_voltage_current_text,
+                getString(R.string.power_empty_voltage),
+                getString(R.string.power_empty_current),
+            )
+            return
+        }
+
+        // Active 时字段可以独立缺失；0 是有效实时值，不能把卡片切为置灰状态。
+        binding.textPower.setTvContent(metrics?.powerW?.let { String.format(Locale.US, "%.1f", it.toFloat()) }
+            ?: getString(R.string.power_unknown_value))
         binding.textMetrics.text = getString(
-            R.string.power_value_voltage_current,
-            (metrics?.voltageMv ?: 0) / 1000f,
-            (metrics?.currentMa ?: 0) / 1000f,
+            R.string.power_value_voltage_current_text,
+            metrics?.voltageMv?.let { getString(R.string.power_value_voltage, it / 1000f) }
+                ?: getString(R.string.power_empty_voltage),
+            metrics?.currentMa?.let { getString(R.string.power_value_current, it / 1000f) }
+                ?: getString(R.string.power_empty_current),
         )
     }
 

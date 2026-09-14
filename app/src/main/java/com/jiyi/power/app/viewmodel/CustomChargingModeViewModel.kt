@@ -1,13 +1,12 @@
 package com.jiyi.power.app.viewmodel
 
-import androidx.lifecycle.ViewModel
 import com.jiyi.power.app.CustomChargingModeRepository
 import com.jiyi.power.app.bean.CustomChargingMode
 import com.jiyi.power.app.bean.PowerChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CustomChargingModeViewModel : ViewModel() {
+class CustomChargingModeViewModel : DeviceCommandViewModel() {
     private val _channels = MutableStateFlow(defaultChannels())
     val channels = _channels.asStateFlow()
 

@@ -16,6 +16,7 @@ import com.jiyi.power.app.bean.OperationType
 import com.jiyi.power.app.bean.ParsedFrame
 import com.jiyi.power.app.bean.Payload
 import com.jiyi.power.app.bean.PortMetrics
+import com.jiyi.power.app.bean.PortDirection
 import com.jiyi.power.app.bean.RegisterValue
 import java.nio.charset.Charset
 import java.util.Locale
@@ -78,6 +79,12 @@ object MobilePowerProtocolManager {
                 MobilePowerPortInfo(
                     type = MobilePowerPortType.C1,
                     metrics = snapshot.c1,
+                    // 先由连接位过滤未接入端口；已接入的 C 口再由充电位区分受电(INPUT)与放电(OUTPUT)。
+                    direction = when {
+                        status?.c1Connected != true -> PortDirection.NONE
+                        status.c1Charging -> PortDirection.INPUT
+                        else -> PortDirection.OUTPUT
+                    },
                     connected = status?.c1Connected == true,
                     charging = status?.c1Charging == true,
                     exception = status?.c1Exception == true,
@@ -85,6 +92,11 @@ object MobilePowerProtocolManager {
                 MobilePowerPortInfo(
                     type = MobilePowerPortType.C2,
                     metrics = snapshot.c2,
+                    direction = when {
+                        status?.c2Connected != true -> PortDirection.NONE
+                        status.c2Charging -> PortDirection.INPUT
+                        else -> PortDirection.OUTPUT
+                    },
                     connected = status?.c2Connected == true,
                     charging = status?.c2Charging == true,
                     exception = status?.c2Exception == true,
@@ -92,6 +104,8 @@ object MobilePowerProtocolManager {
                 MobilePowerPortInfo(
                     type = MobilePowerPortType.USB_A,
                     metrics = snapshot.usbA,
+                    // A 口不支持受电：已连接就是输出，未连接则置灰。
+                    direction = if (status?.usbAConnected == true) PortDirection.OUTPUT else PortDirection.NONE,
                     connected = status?.usbAConnected == true,
                 ),
             ),

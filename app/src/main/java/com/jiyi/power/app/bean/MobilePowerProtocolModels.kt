@@ -268,10 +268,14 @@ data class PortMetrics(
 /** 首页展示的端口类型。 */
 enum class MobilePowerPortType { C1, C2, USB_A }
 
+/** 端口当前能量方向；卡片是否置灰只能由该字段决定。 */
+enum class PortDirection { INPUT, OUTPUT, NONE }
+
 /** 首页单个端口信息；C1、C2、USB-A 统一存放在列表中。 */
 data class MobilePowerPortInfo(
     val type: MobilePowerPortType,
     val metrics: PortMetrics,
+    val direction: PortDirection = PortDirection.NONE,
     val connected: Boolean,
     val charging: Boolean = false,
     val exception: Boolean = false,

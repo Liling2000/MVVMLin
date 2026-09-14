@@ -2,15 +2,18 @@ package com.jiyi.power.app
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.R as BaseR
 import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.common.ChargingPreferences
+import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.databinding.ActivityChargingModeBinding
 
 class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
+    private val viewModel by viewModels<ChargingModeViewModel>()
     private val preferences by lazy { getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE) }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -41,6 +44,10 @@ class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
     } else ChargingPreferences.MODE_STANDARD
 
     private fun selectMode(mode: Int) {
+        if (!viewModel.applyMode(mode)) {
+            com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+            return
+        }
         preferences.edit()
             .putInt(ChargingPreferences.KEY_MODE, mode)
             .putBoolean(ChargingPreferences.KEY_LEGACY_SMART_MODE, mode == ChargingPreferences.MODE_SMART)

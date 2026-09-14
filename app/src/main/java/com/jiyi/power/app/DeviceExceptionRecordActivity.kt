@@ -26,7 +26,7 @@ class DeviceExceptionRecordActivity : BaseActivity<ActivityDeviceExceptionRecord
         BarUtils.setStatusBarColor(this, background)
         BarUtils.setStatusBarLightMode(this, true)
         BarUtils.setNavBarColor(this, background)
-        mBinding.buttonBack.setOnClickListener { finish() }
+        mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.errorList.layoutManager = LinearLayoutManager(this)
         mBinding.errorList.adapter = adapter
         observeState()

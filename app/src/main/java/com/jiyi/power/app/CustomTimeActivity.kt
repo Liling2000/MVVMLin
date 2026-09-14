@@ -15,6 +15,7 @@ import com.jiyi.power.R
 import com.jiyi.power.app.bean.CustomTimeUiState
 import com.jiyi.power.app.bean.TimerSettingType
 import com.jiyi.power.app.viewmodel.CustomTimeViewModel
+import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import com.jiyi.power.databinding.ActivityCustomTimeBinding
 import com.base.baseus.widget.wheelview.ArrayWheelAdapter
 import com.base.baseus.widget.wheelview.OnItemSelectedListener
@@ -43,12 +44,25 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
             buttonAddHour.setOnClickListener { viewModel.addMinutes(60) }
             buttonReset.setOnClickListener { viewModel.reset() }
             buttonConfirm.setOnClickListener {
-                val sent = viewModel.confirm()
-                ToastUtils.showShort(if (sent) R.string.timer_setting_success else R.string.timer_setting_pending)
-                if (sent) finish()
+                if (!viewModel.confirm()) ToastUtils.showShort(R.string.power_command_failed)
             }
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) { viewModel.uiState.collect(::render) }
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    launch { viewModel.uiState.collect(::render) }
+                    launch {
+                        viewModel.commandEvents.collect { event ->
+                            when (event) {
+                                is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf("C0", "C1")) {
+                                    ToastUtils.showShort(R.string.timer_setting_success)
+                                    finish()
+                                }
+                                is DeviceCommandViewModel.CommandEvent.WriteFailed,
+                                DeviceCommandViewModel.CommandEvent.Disconnected -> ToastUtils.showShort(R.string.power_command_failed)
+                                else -> Unit
+                            }
+                        }
+                    }
+                }
             }
         }
     }

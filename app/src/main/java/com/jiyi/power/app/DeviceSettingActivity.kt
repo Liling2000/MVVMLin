@@ -7,6 +7,7 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.activity.viewModels
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.BarUtils
@@ -15,10 +16,13 @@ import com.jiyi.power.R
 import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
+import com.jiyi.power.app.viewmodel.DeviceSettingViewModel
 import com.jiyi.power.databinding.ActivityDeviceSettingBinding
 
 @Route(path = RouterPath.DEVICE_SETTING)
 class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
+
+    private val viewModel by viewModels<DeviceSettingViewModel>()
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE) }
     private val deviceSn by lazy { intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN) }
@@ -102,9 +106,12 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
             .setMessage(R.string.device_setting_factory_reset_message)
             .setNegativeButton(R.string.device_setting_cancel, null)
             .setPositiveButton(R.string.device_setting_confirm) { _, _ ->
-                preferences.edit().clear().apply()
-                renderStoredValues()
-                ToastUtils.showShort(R.string.device_setting_factory_reset_success)
+                viewModel.bindDevice(deviceSn)
+                if (viewModel.restoreFactorySettings()) {
+                    preferences.edit().clear().apply()
+                    renderStoredValues()
+                    ToastUtils.showShort(R.string.device_setting_factory_reset_success)
+                } else ToastUtils.showShort(R.string.power_command_failed)
             }.show()
     }
 

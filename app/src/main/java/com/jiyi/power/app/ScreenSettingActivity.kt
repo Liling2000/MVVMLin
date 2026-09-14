@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.aleyn.mvvm.R as BaseR
@@ -22,14 +22,18 @@ import com.jiyi.power.R
 import com.jiyi.power.app.bean.ScreenSettingUiData
 import com.jiyi.power.app.bean.ScreenTextColor
 import com.jiyi.power.app.bean.TimerSettingType
+import com.jiyi.power.app.adapter.ScreenWallpaperAdapter
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.ScreenSettingViewModel
+import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import com.jiyi.power.databinding.ActivityScreenSettingBinding
 import kotlinx.coroutines.launch
 
 @Route(path = RouterPath.ROUTE_THEME)
 class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
     private val viewModel by viewModels<ScreenSettingViewModel>()
+    // 不在 Activity 构造阶段解引用 by viewModels()；点击发生时页面已完成挂载。
+    private val wallpaperAdapter = ScreenWallpaperAdapter { viewModel.setWallpaper(it) }
     private var rendering = false
     private val wallpaperPicker =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -47,6 +51,12 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         BarUtils.setStatusBarColor(this, background)
         BarUtils.setStatusBarLightMode(this, true)
         BarUtils.setNavBarColor(this, background)
+        mBinding.recyclerWallpapers.apply {
+            layoutManager = GridLayoutManager(this@ScreenSettingActivity, 2)
+            adapter = wallpaperAdapter
+            isNestedScrollingEnabled = false
+            addItemDecoration(WallpaperGridDecoration(resources.getDimensionPixelSize(R.dimen.dp16)))
+        }
         setupClicks()
         observeState()
     }
@@ -55,11 +65,7 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
 
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
-        rowShutdown.setOnClickListener {
-            TimerSettingActivity.start(
-                this@ScreenSettingActivity, TimerSettingType.SHUTDOWN
-            )
-        }
+
         rowReminder.setOnClickListener {
             TimerSettingActivity.start(
                 this@ScreenSettingActivity, TimerSettingType.REMINDER
@@ -73,9 +79,6 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         switchAchievement.setOnCheckedChangeListener { if (!rendering) viewModel.setAchievement(it) }
         optionWhite.setOnClickListener { viewModel.setTextColor(ScreenTextColor.WHITE) }
         optionDark.setOnClickListener { viewModel.setTextColor(ScreenTextColor.DARK) }
-        listOf(wallpaper1, wallpaper2, wallpaper3, wallpaper4).forEachIndexed { index, view ->
-            view.setOnClickListener { viewModel.setWallpaper(viewModel.wallpapers[index]) }
-        }
         customWallpaper.setOnClickListener { wallpaperPicker.launch(arrayOf("image/*")) }
         editCustomText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
@@ -87,12 +90,26 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
 
             override fun afterTextChanged(s: Editable?) = Unit
         })
-        buttonSend.setOnClickListener { submitSettings(viewModel.uiState.value) }
+        buttonSend.setOnClickListener { submitSettings() }
     }
 
     private fun observeState() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) { viewModel.uiState.collect(::render) }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect(::render) }
+                launch {
+                    viewModel.commandEvents.collect { event ->
+                        when (event) {
+                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == "C2")
+                                com.blankj.utilcode.util.ToastUtils.showShort(R.string.screen_send_success)
+                            is DeviceCommandViewModel.CommandEvent.WriteFailed,
+                            DeviceCommandViewModel.CommandEvent.Disconnected ->
+                                com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+                            else -> Unit
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -107,36 +124,31 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
             this@ScreenSettingActivity,
             if (state.textColor == ScreenTextColor.WHITE) BaseR.color.color_ffffff else R.color.color_43474b
         )
-        previewPrimary.setTextColor(textColor)
-        previewSecondary.setTextColor(textColor)
-        previewCustomText.setTextColor(textColor)
-        previewCustomText.text = state.customText
-        previewSecondary.visibility = if (state.showTime) View.VISIBLE else View.INVISIBLE
+
         state.wallpaper.customUri?.let { previewWallpaper.setImageURI(Uri.parse(it)) }
             ?: previewWallpaper.setImageResource(state.wallpaper.wallpaperRes)
-        renderWallpaperSelection(state.wallpaper.id)
+        wallpaperAdapter.submit(viewModel.wallpapers, state.wallpaper.id)
         rendering = false
     }
 
-    private fun renderWallpaperSelection(selectedId: Int) {
-        val frames: List<FrameLayout> = listOf(
-            mBinding.wallpaper1, mBinding.wallpaper2, mBinding.wallpaper3, mBinding.wallpaper4
-        )
-        val checks: List<ImageView> = listOf(
-            mBinding.checkWallpaper1,
-            mBinding.checkWallpaper2,
-            mBinding.checkWallpaper3,
-            mBinding.checkWallpaper4
-        )
-        frames.forEachIndexed { index, frame ->
-            val selected = selectedId == viewModel.wallpapers[index].id
-            frame.setBackgroundResource(if (selected) R.drawable.bg_screen_wallpaper_selected else android.R.color.transparent)
-            checks[index].visibility = if (selected) View.VISIBLE else View.GONE
-        }
+    private fun submitSettings() {
+        val sent = viewModel.submit()
+        if (!sent) com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
     }
 
-    private fun submitSettings(state: ScreenSettingUiData) {
-        // Device protocol is not defined yet; keep the complete state ready for the protocol layer.
-        com.blankj.utilcode.util.ToastUtils.showShort(R.string.screen_send_success)
+    /** 两列壁纸的间距交由 RecyclerView 处理，item 本身只负责图片与选中图标。 */
+    private class WallpaperGridDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: android.graphics.Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State,
+        ) {
+            val position = parent.getChildAdapterPosition(view)
+            if (position == RecyclerView.NO_POSITION) return
+            outRect.left = if (position % 2 == 0) 0 else spacing / 2
+            outRect.right = if (position % 2 == 0) spacing / 2 else 0
+            if (position >= 2) outRect.top = spacing
+        }
     }
 }

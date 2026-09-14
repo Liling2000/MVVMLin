@@ -193,4 +193,17 @@
         <!--选中区域/分割线上下偏移，通过移动分割线上下限制的位置来实现扩大/缩小显示区域-->
         <attr name="wv_dividerOffsetY" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="AbsRoundImageView">
+        <attr name="riv_borderWidth" format="dimension|reference" />
+        <attr name="riv_borderColor" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundImageView">
+        <attr name="riv_radius" format="dimension|reference" />
+        <attr name="riv_leftTopRadius" format="dimension|reference" />
+        <attr name="riv_rightTopRadius" format="dimension|reference" />
+        <attr name="riv_rightBottomRadius" format="dimension|reference" />
+        <attr name="riv_leftBottomRadius" format="dimension|reference" />
+    </declare-styleable>
 </resources>

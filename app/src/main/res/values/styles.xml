@@ -200,9 +200,8 @@
     </style>
 
     <style name="ScreenSettingIcon">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
-        <item name="android:tint">@color/color_56596b</item>
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
     </style>
 
     <style name="ScreenSettingTitle">

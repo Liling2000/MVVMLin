@@ -5,31 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/color_f6f7f9">
 
-    <FrameLayout
+    <com.aleyn.mvvm.widget.ComToolBar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/timer_toolbar_height"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/button_back"
-            android:layout_width="@dimen/timer_toolbar_height"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/timer_back"
-            android:padding="@dimen/dp_20"
-            android:src="@mipmap/ic_back" />
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@color/color_17181c"
-            android:textSize="@dimen/sp_20"
-            android:textStyle="bold" />
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/color_f6f7f9"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/content_scroll"

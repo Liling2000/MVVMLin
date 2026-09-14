@@ -1,6 +1,5 @@
 package com.jiyi.power.app.viewmodel
 
-import com.aleyn.mvvm.base.BaseViewModel
 import android.text.TextUtils
 import com.jiyi.power.app.bean.Payload
 import com.jiyi.power.app.bean.MobilePowerSnapshot
@@ -18,7 +17,7 @@ data class C1PortMetricsUiState(
     val powerW: Int? = null
 )
 
-class MainFragmentViewModel : BaseViewModel() {
+class MainFragmentViewModel : DeviceCommandViewModel() {
 
     private var receiveBuffer = ""
 
@@ -171,7 +170,8 @@ class MainFragmentViewModel : BaseViewModel() {
     }
 
     fun writeDeviceStatus(code: String, value: String): Boolean {
-        return false
+        val byteValue = value.toIntOrNull() ?: return false
+        return sendDeviceCommand(code, MobilePowerProtocolManager.buildWriteByteCommand(code, byteValue))
     }
 
     fun writeDeviceStatus(code: String, value: String, priority: Int): Boolean {
@@ -195,16 +195,14 @@ class MainFragmentViewModel : BaseViewModel() {
         return false
     }
 
-    fun setLowCurrentMode(isOpen: Boolean): Boolean {
-        return false
-    }
+    fun setLowCurrentMode(isOpen: Boolean): Boolean = setLowCurrentMode(currentDeviceSn, isOpen)
 
     fun requestDashboard(sn: String?): Boolean {
-        if (sn.isNullOrBlank()) return false
+        bindDevice(sn)
+        if (deviceSn.isNullOrBlank()) return false
         val command = MobilePowerProtocolManager.buildHomeInfoReadCommand() ?: return false
-        currentDeviceSn = sn
-        sendCmdData(sn, command)
-        return true
+        currentDeviceSn = deviceSn
+        return sendDeviceCommand(CmdConstant.FunctionCode.CODE_00, command)
     }
 
     fun setLowCurrentMode(sn: String?, isOpen: Boolean): Boolean {
@@ -212,37 +210,40 @@ class MainFragmentViewModel : BaseViewModel() {
             CmdConstant.FunctionCode.CODE_34,
             if (isOpen) 1 else 0,
         ) ?: return false
-        if (sn.isNullOrBlank()) return false
-        val connected = BleConnectionCoordinator.connectionStates.value.any { (deviceSn, state) ->
-            deviceSn.equals(sn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
-        }
-        if (!connected) return false
-        sendCmdData(sn, command)
-        return true
+        bindDevice(sn)
+        return sendDeviceCommand(CmdConstant.FunctionCode.CODE_34, command)
     }
 
-    fun setMobileTheme(value: String): Boolean {
-        return false
+    fun setMobileTheme(value: String): Boolean = false
+
+    fun setScreensaverText(value: String): Boolean = sendDeviceCommand(
+        CmdConstant.FunctionCode.CODE_C2,
+        MobilePowerProtocolManager.buildEventCommand(CmdConstant.FunctionCode.CODE_C2, value.toByteArray(Charsets.UTF_8).copyOf(32)),
+    )
+
+    fun setCountdownReminder(value: String): Boolean = setTimer(CmdConstant.FunctionCode.CODE_C1, value, true)
+
+    fun setCountdownOff(value: String): Boolean = setTimer(CmdConstant.FunctionCode.CODE_C0, value, true)
+
+    fun closeCountdownOff(value: String): Boolean = setTimer(CmdConstant.FunctionCode.CODE_C0, value, false)
+
+    fun setRestore(value: String): Boolean = sendDeviceCommand(
+        CmdConstant.FunctionCode.CODE_3D,
+        MobilePowerProtocolManager.buildWriteByteCommand(CmdConstant.FunctionCode.CODE_3D, 0xFF),
+    )
+
+    fun setChargeMode(mode: Int): Boolean {
+        val c1 = sendDeviceCommand(CmdConstant.FunctionCode.CODE_3B, MobilePowerProtocolManager.buildWriteByteCommand(CmdConstant.FunctionCode.CODE_3B, mode))
+        val c2 = sendDeviceCommand(CmdConstant.FunctionCode.CODE_3C, MobilePowerProtocolManager.buildWriteByteCommand(CmdConstant.FunctionCode.CODE_3C, mode))
+        return c1 && c2
     }
 
-    fun setScreensaverText(value: String): Boolean {
-        return false
-    }
+    override fun onDeviceReconnected() { requestDashboard(deviceSn) }
 
-    fun setCountdownReminder(value: String): Boolean {
-        return false
-    }
-
-    fun setCountdownOff(value: String): Boolean {
-        return false
-    }
-
-    fun closeCountdownOff(value: String): Boolean {
-        return false
-    }
-
-    fun setRestore(value: String): Boolean {
-        return false
+    private fun setTimer(code: String, value: String, enabled: Boolean): Boolean {
+        val minutes = value.toIntOrNull()?.coerceIn(0, 0x7FFF) ?: return false
+        val packed = minutes or if (enabled) 0x8000 else 0
+        return sendDeviceCommand(code, MobilePowerProtocolManager.buildEventCommand(code, byteArrayOf((packed and 0xFF).toByte(), (packed shr 8).toByte())))
     }
 
     private fun getPortStatusValue(

@@ -1,18 +1,19 @@
 package com.jiyi.power.app.viewmodel
 
-import androidx.lifecycle.ViewModel
 import com.jiyi.power.app.bean.CustomTimeUiState
 import com.jiyi.power.app.bean.TimerSettingType
+import com.jiyi.power.app.utils.CmdConstant
+import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CustomTimeViewModel : ViewModel() {
-    private val deviceCommands = MainFragmentViewModel()
+class CustomTimeViewModel : DeviceCommandViewModel() {
     private val _uiState = MutableStateFlow(CustomTimeUiState())
     val uiState = _uiState.asStateFlow()
     private var type = TimerSettingType.SHUTDOWN
 
-    fun initialize(settingType: TimerSettingType, initialMinutes: Int) {
+    fun initialize(settingType: TimerSettingType, initialMinutes: Int, deviceSn: String? = null) {
+        bindDevice(deviceSn)
         type = settingType
         updateTotalMinutes(initialMinutes)
     }
@@ -22,9 +23,16 @@ class CustomTimeViewModel : ViewModel() {
     fun addMinutes(minutes: Int) = updateTotalMinutes(_uiState.value.totalMinutes + minutes)
     fun reset() = updateTime(0, 0)
 
-    fun confirm(): Boolean = when (type) {
-        TimerSettingType.SHUTDOWN -> deviceCommands.setCountdownOff(_uiState.value.totalMinutes.toString())
-        TimerSettingType.REMINDER -> deviceCommands.setCountdownReminder(_uiState.value.totalMinutes.toString())
+    fun confirm(): Boolean {
+        // 与快捷定时相同：0x8000 表示启用，其余位保存分钟数。
+        val enabledMinutes = (_uiState.value.totalMinutes.coerceIn(1, 0x7FFF) or 0x8000)
+        val code = if (type == TimerSettingType.SHUTDOWN) CmdConstant.FunctionCode.CODE_C0 else CmdConstant.FunctionCode.CODE_C1
+        return sendDeviceCommand(
+            code,
+            MobilePowerProtocolManager.buildEventCommand(
+                code, byteArrayOf((enabledMinutes and 0xFF).toByte(), (enabledMinutes shr 8).toByte()),
+            ),
+        )
     }
 
     private fun updateTime(hour: Int, minute: Int) = updateTotalMinutes(hour * 60 + minute)
