@@ -24,8 +24,8 @@ import java.util.Locale
  * 移动电源业务协议解析器。
  *
  * [ProtocolUtil] 只负责把十六进制帧拆成通用字段，本类负责进一步解释功能码：
- * - 0x00..0x6B 是设备寄存器区，可以连续读取并组合成 [MobilePowerSnapshot]。
- * - 0x80 以后多为升级、图片、歌词、微信、心情模式等事件或块传输 payload。
+ * - 0x00..0x44 是 V2.0 设备寄存器区，可以连续读取并组合成 [MobilePowerSnapshot]。
+ * - 0x80 以后为升级、图片、定时、异常日志与设备信息等事件或块传输 payload。
  * - 未识别或长度不足的数据不会抛异常，而是保留为 [Payload.Unknown]，方便上层排查原始数据。
  */
 object MobilePowerProtocolManager {
@@ -125,9 +125,7 @@ object MobilePowerProtocolManager {
     ): Map<String, RegisterValue> {
         val start = startCode.toIntOrNull(16) ?: return emptyMap()
 
-        // 0x00..0x6B 是当前定义的寄存器区。大于 0x6B 的功能码属于事件/块数据，
-        // 不能按连续寄存器解释，否则图片、歌词、固件数据会被错误映射成寄存器。
-        if (start > 0x6B) return emptyMap()
+        if (start > 0x44) return emptyMap()
 
         return bytes.mapIndexed { index, byte ->
             val code = (start + index).toHexByteString()
@@ -150,19 +148,21 @@ object MobilePowerProtocolManager {
         // 先处理有固定 payload 结构的功能码；剩余的寄存器区统一构建快照。
         // 这样可以避免把 0x90/0xC0 这类事件数据误当成连续寄存器。
         return when (functionCode) {
-            CmdConstant.FunctionCode.CODE_90, CmdConstant.FunctionCode.CODE_E0 -> parseUploadStart(
+            CmdConstant.FunctionCode.CODE_90 -> parseUploadStart(
                 bytes
             )
 
-            CmdConstant.FunctionCode.CODE_91, CmdConstant.FunctionCode.CODE_80, CmdConstant.FunctionCode.CODE_E1 -> Payload.DataPacket(
+            CmdConstant.FunctionCode.CODE_91, CmdConstant.FunctionCode.CODE_80,
+            CmdConstant.FunctionCode.CODE_D0, CmdConstant.FunctionCode.CODE_D1,
+            CmdConstant.FunctionCode.CODE_D2, CmdConstant.FunctionCode.CODE_D4 -> Payload.DataPacket(
                 bytes, bytes.toHexString()
             )
 
-            CmdConstant.FunctionCode.CODE_92, CmdConstant.FunctionCode.CODE_E2 -> parseTransferEnd(
+            CmdConstant.FunctionCode.CODE_92 -> parseTransferEnd(
                 bytes
             )
 
-            CmdConstant.FunctionCode.CODE_93, CmdConstant.FunctionCode.CODE_94, CmdConstant.FunctionCode.CODE_95, CmdConstant.FunctionCode.CODE_E3, CmdConstant.FunctionCode.CODE_E4, CmdConstant.FunctionCode.CODE_E5 -> parseIndexCommand(
+            CmdConstant.FunctionCode.CODE_93, CmdConstant.FunctionCode.CODE_94, CmdConstant.FunctionCode.CODE_95 -> parseIndexCommand(
                 bytes
             )
 
@@ -171,19 +171,14 @@ object MobilePowerProtocolManager {
             )
 
             CmdConstant.FunctionCode.CODE_99 -> parseTimeSync(bytes)
-            CmdConstant.FunctionCode.CODE_B0 -> parseWeatherSync(bytes)
-            CmdConstant.FunctionCode.CODE_C0 -> parseLyricsStart(bytes)
-            CmdConstant.FunctionCode.CODE_C1, CmdConstant.FunctionCode.CODE_C2, CmdConstant.FunctionCode.CODE_D0, CmdConstant.FunctionCode.CODE_D1, CmdConstant.FunctionCode.CODE_F0, CmdConstant.FunctionCode.CODE_F1, CmdConstant.FunctionCode.CODE_F2, CmdConstant.FunctionCode.CODE_F3, CmdConstant.FunctionCode.CODE_F6, CmdConstant.FunctionCode.CODE_F7 -> Payload.Text(
-                bytes.toCleanString()
-            )
-
-            CmdConstant.FunctionCode.CODE_C3 -> parseLyricLine(bytes)
-            CmdConstant.FunctionCode.CODE_C4, CmdConstant.FunctionCode.CODE_C5, CmdConstant.FunctionCode.CODE_C6, CmdConstant.FunctionCode.CODE_D2 -> Payload.IndexCommand(
-                bytes[0].u8()
-            )
-
-            CmdConstant.FunctionCode.CODE_F4, CmdConstant.FunctionCode.CODE_F5 -> Payload.UInt16Value(
+            CmdConstant.FunctionCode.CODE_C0, CmdConstant.FunctionCode.CODE_C1 -> Payload.UInt16Value(
                 bytes.u16LE(0) ?: bytes[0].u8()
+            )
+            CmdConstant.FunctionCode.CODE_C2, CmdConstant.FunctionCode.CODE_D3, CmdConstant.FunctionCode.CODE_D5,
+            CmdConstant.FunctionCode.CODE_F0, CmdConstant.FunctionCode.CODE_F1, CmdConstant.FunctionCode.CODE_F2,
+            CmdConstant.FunctionCode.CODE_F3, CmdConstant.FunctionCode.CODE_F4, CmdConstant.FunctionCode.CODE_F5,
+            CmdConstant.FunctionCode.CODE_F6, CmdConstant.FunctionCode.CODE_F7 -> Payload.Text(
+                bytes.toCleanString()
             )
 
             CmdConstant.FunctionCode.CODE_65 -> Payload.FirmwareUpgradeCommand(bytes[0].u8() and 0x07)
@@ -191,7 +186,7 @@ object MobilePowerProtocolManager {
             else -> {
                 val start = functionCode.toIntOrNull(16) ?: -1
                 // 普通读取或连续读取寄存器时，返回完整快照；未覆盖到的字段保持 null。
-                if (start in 0x00..0x6B) Payload.RegisterBlock(buildSnapshot(registers))
+                if (start in 0x00..0x44) Payload.RegisterBlock(buildSnapshot(registers))
                 else Payload.Unknown(bytes, bytes.toHexString())
             }
         }
@@ -301,8 +296,8 @@ object MobilePowerProtocolManager {
                 ),
                 highTemperatureThresholdC = value(CmdConstant.FunctionCode.CODE_37)?.toSignedByteInt(),
                 lowTemperatureThresholdC = value(CmdConstant.FunctionCode.CODE_38)?.toSignedByteInt(),
-                modeSetting = mode(CmdConstant.FunctionCode.CODE_60),
-                modeStatus = mode(CmdConstant.FunctionCode.CODE_61)
+                modeSetting = null,
+                modeStatus = null
             ), firmware = FirmwareInfo(
                 upgradeCommand = value(CmdConstant.FunctionCode.CODE_65)?.let { it and 0x07 },
                 upgradeStatus = firmwareStatus,
@@ -948,6 +943,34 @@ object MobilePowerProtocolManager {
         f(CmdConstant.FunctionCode.CODE_F6, "电池信息", OperationType.EVENT, "16bytes字符串")
         f(CmdConstant.FunctionCode.CODE_F7, "版本号", OperationType.EVENT, "16bytes字符串")
 
+        // UM3506 V2.0 移除了天气、歌词、微信与表情协议，以下仅保留新协议定义。
+        listOf("60", "61", "B0", "C3", "C4", "C5", "C6", "E0", "E1", "E2", "E3", "E4", "E5", "E6").forEach(result::remove)
+        f(CmdConstant.FunctionCode.CODE_3B, "C1充电模式", OperationType.READ_WRITE, "0智能模式，1 idle模式，2自定义模式")
+        f(CmdConstant.FunctionCode.CODE_3C, "C2充电模式", OperationType.READ_WRITE, "0智能模式，1 idle模式，2自定义模式")
+        f(CmdConstant.FunctionCode.CODE_3D, "恢复出厂设置", OperationType.WRITE_ONLY, "写入0xFF恢复出厂设置")
+        f(CmdConstant.FunctionCode.CODE_3E, "LCD设置", OperationType.READ_WRITE, "Bit2-3文字颜色，Bit1成就互动，Bit0显示时间")
+        f(CmdConstant.FunctionCode.CODE_40, "累计放电时长低字节", OperationType.READ_ONLY, "单位分钟")
+        f(CmdConstant.FunctionCode.CODE_41, "累计放电时长高字节", OperationType.READ_ONLY, "单位分钟")
+        f(CmdConstant.FunctionCode.CODE_42, "累计放电量低字节", OperationType.READ_ONLY, "单位mAh")
+        f(CmdConstant.FunctionCode.CODE_43, "累计放电量高字节", OperationType.READ_ONLY, "单位mAh")
+        f(CmdConstant.FunctionCode.CODE_44, "设备异常LOG状态", OperationType.READ_ONLY, "电池充电电压、温度、禁用、欠压、过压异常")
+        f(CmdConstant.FunctionCode.CODE_C0, "定时关机", OperationType.EVENT, "2bytes，小端；bit15使能，bit0-14为分钟")
+        f(CmdConstant.FunctionCode.CODE_C1, "定时提醒", OperationType.EVENT, "2bytes，小端；bit15使能，bit0-14为分钟")
+        f(CmdConstant.FunctionCode.CODE_C2, "自定义文字", OperationType.EVENT, "32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_D0, "异常日志读取", OperationType.READ_ONLY, "12bytes一组，共6组")
+        f(CmdConstant.FunctionCode.CODE_D1, "异常日志存储状态", OperationType.READ_ONLY, "异常禁用标志与日志数量")
+        f(CmdConstant.FunctionCode.CODE_D2, "C1线材信息", OperationType.READ_ONLY, "Block类型：最大电流、最大功率", true)
+        f(CmdConstant.FunctionCode.CODE_D3, "C1口设备信息", OperationType.READ_ONLY, "Block类型，32bytes字符串", true)
+        f(CmdConstant.FunctionCode.CODE_D4, "C2线材信息", OperationType.READ_ONLY, "Block类型：最大电流、最大功率", true)
+        f(CmdConstant.FunctionCode.CODE_D5, "C2口设备信息", OperationType.READ_ONLY, "Block类型，32bytes字符串", true)
+        f(CmdConstant.FunctionCode.CODE_F0, "设备型号", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F1, "序列号", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F2, "生产批次", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F3, "生产日期", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F4, "额定容量", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F5, "标称电压", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F6, "电池制造商信息", OperationType.EVENT, "最大32bytes字符串")
+        f(CmdConstant.FunctionCode.CODE_F7, "版本号", OperationType.EVENT, "最大32bytes字符串")
         return result
     }
 

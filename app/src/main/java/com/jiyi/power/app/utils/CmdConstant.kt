@@ -12,7 +12,9 @@ object CmdConstant {
     const val INDEX_DATA_START = 4
     const val BYTE_MASK = 0xFF
     const val DATA_LENGTH_EXTEND_MASK = 0x03
-    const val MAX_DATA_LENGTH = 0x3FF
+    /** V2.0 block 数据域最大 256 bytes；普通帧使用单字节长度字段，最大 255 bytes。 */
+    const val MAX_DATA_LENGTH = 0x100
+    const val MAX_STANDARD_DATA_LENGTH = 0xFF
 
     object CommandType {
         const val READ = 0x00
@@ -145,10 +147,24 @@ object CmdConstant {
         const val CODE_39 = "39"
         /** 电池状态2 */
         const val CODE_3A = "3A"
-        /** 模式设置 */
-        const val CODE_60 = "60"
-        /** 模式状态 */
-        const val CODE_61 = "61"
+        /** C1 充电模式 */
+        const val CODE_3B = "3B"
+        /** C2 充电模式 */
+        const val CODE_3C = "3C"
+        /** 恢复出厂设置 */
+        const val CODE_3D = "3D"
+        /** LCD 设置 */
+        const val CODE_3E = "3E"
+        /** 累计放电时长低字节 */
+        const val CODE_40 = "40"
+        /** 累计放电时长高字节 */
+        const val CODE_41 = "41"
+        /** 累计放电量低字节 */
+        const val CODE_42 = "42"
+        /** 累计放电量高字节 */
+        const val CODE_43 = "43"
+        /** 设备异常 LOG 状态 */
+        const val CODE_44 = "44"
         /** 升级命令 */
         const val CODE_65 = "65"
         /** 升级状态 */
@@ -181,41 +197,38 @@ object CmdConstant {
         const val CODE_96 = "96"
         /** 时间同步 */
         const val CODE_99 = "99"
-        /** 天气同步 */
-        const val CODE_B0 = "B0"
-        /** 歌词总数和开始传输 */
+        /** 定时关机 */
         const val CODE_C0 = "C0"
-        /** 歌曲名称 */
+        /** 定时提醒 */
         const val CODE_C1 = "C1"
-        /** 歌曲作者 */
+        /** 自定义文字 */
         const val CODE_C2 = "C2"
-        /** 歌词传输 */
-        const val CODE_C3 = "C3"
-        /** 歌词传输结束 */
-        const val CODE_C4 = "C4"
-        /** 演唱的进度 */
-        const val CODE_C5 = "C5"
-        /** 歌词删除 */
-        const val CODE_C6 = "C6"
-        /** 微信新消息 */
+        /** 异常日志读取 */
         const val CODE_D0 = "D0"
-        /** 微信消息内容 */
+        /** 异常日志存储状态 */
         const val CODE_D1 = "D1"
-        /** 微信消息设置 */
+        /** C1 线材信息 */
         const val CODE_D2 = "D2"
-        /** 心情模式表情传输 */
+        /** C1 口设备信息 */
+        const val CODE_D3 = "D3"
+        /** C2 线材信息 */
+        const val CODE_D4 = "D4"
+        /** C2 口设备信息 */
+        const val CODE_D5 = "D5"
+        /** V2.0 不再定义，保留常量仅用于兼容旧日志解析。 */
+        const val CODE_60 = "60"
+        const val CODE_61 = "61"
+        const val CODE_B0 = "B0"
+        const val CODE_C3 = "C3"
+        const val CODE_C4 = "C4"
+        const val CODE_C5 = "C5"
+        const val CODE_C6 = "C6"
         const val CODE_E0 = "E0"
-        /** 表情数据包 */
         const val CODE_E1 = "E1"
-        /** 表情数据传输结束 */
         const val CODE_E2 = "E2"
-        /** 表情数据删除 */
         const val CODE_E3 = "E3"
-        /** 表情设置 */
         const val CODE_E4 = "E4"
-        /** 表情数据查询 */
         const val CODE_E5 = "E5"
-        /** 表情总数 */
         const val CODE_E6 = "E6"
         /** 设备型号 */
         const val CODE_F0 = "F0"

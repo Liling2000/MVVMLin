@@ -16,7 +16,7 @@ import java.util.Locale
  * - bit0-bit3：命令类型，READ/WRITE/RESPONSE/EVENT。
  * - bit4：连续读取标记。
  * - bit5：块数据标记。
- * - bit6-bit7：数据长度高 2 位，所以最大数据长度是 0x3FF。
+ * - bit6-bit7：块数据长度扩展。V2.0 的块数据最大 256 bytes，普通帧最大 255 bytes。
  */
 object ProtocolUtil {
 
@@ -88,9 +88,8 @@ object ProtocolUtil {
         val dataBytes = dataHex.hexToByteArrayOrNull() ?: return null
         val dataLength = dataLengthOverride ?: dataBytes.size
 
-        // 协议只有 10 bit 表示数据长度：命令码 bit6-bit7 是高 2 位，
-        // dataLength 字段是低 8 位，所以允许范围是 0..0x3FF。
-        if (dataLength !in 0..CmdConstant.MAX_DATA_LENGTH) return null
+        val maxLength = if (isBlock) CmdConstant.MAX_DATA_LENGTH else CmdConstant.MAX_STANDARD_DATA_LENGTH
+        if (dataLength !in 0..maxLength) return null
         if (dataLengthOverride != null && dataBytes.isNotEmpty() && dataLengthOverride != dataBytes.size) {
             return null
         }
@@ -132,7 +131,7 @@ object ProtocolUtil {
             return null
         }
 
-        if (dataLengthExtend !in 0..3) {
+        if (dataLengthExtend !in 0..1) {
             return null
         }
 
