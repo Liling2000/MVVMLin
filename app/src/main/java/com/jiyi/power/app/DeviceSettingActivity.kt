@@ -57,7 +57,8 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
 
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
-        rowChargeMode.setOnClickListener { startActivity(Intent(this@DeviceSettingActivity, ChargingModeActivity::class.java)) }
+        rowChargeMode.setOnClickListener { startActivity(Intent(this@DeviceSettingActivity, ChargingModeActivity::class.java)
+            .putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)) }
         rowDeviceName.setOnClickListener { showRenameDialog() }
         rowCertification.setOnClickListener {
             AlertDialog.Builder(this@DeviceSettingActivity)

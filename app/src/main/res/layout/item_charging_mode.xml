@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_charge_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:layout_marginBottom="26dp">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+        <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:contentDescription="@string/charging_mode_smart"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_auto_mode"
+                android:id="@+id/icon_mode" />
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="@string/charging_mode_smart"
+                android:textColor="@color/color_17181c"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                android:id="@+id/text_title" />
+        <ImageView
+                android:id="@+id/indicator_mode"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/bg_charge_selected"
+                android:contentDescription="@string/charging_mode_smart"
+                android:padding="6dp"
+                android:src="@mipmap/ic_check_blue"
+                app:tint="@color/color_ffffff" />
+    </LinearLayout>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/charging_mode_smart_desc"
+            android:textColor="@color/color_45475a"
+            android:textSize="16sp"
+            android:id="@+id/text_description" />
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+        <TextView
+                style="@style/ChargingModeTag"
+                android:text="@string/charging_mode_smart_tag_fast"
+                android:id="@+id/text_tag_first" />
+        <TextView
+                style="@style/ChargingModeTag"
+                android:layout_marginStart="10dp"
+                android:text="@string/charging_mode_smart_tag_control"
+                android:id="@+id/text_tag_second" />
+    </LinearLayout>
+</LinearLayout>
