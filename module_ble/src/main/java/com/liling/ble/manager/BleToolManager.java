@@ -88,11 +88,11 @@ public class BleToolManager {
     //蓝牙mac地址/名称map
     private Map<String, String> bleSnNameMap = new ArrayMap<>();
     //服务UUID
-    private String serviceUuidTemp = "53527AA4-29F7-AE11-4E74-997334782568";
+    private String serviceUuidTemp = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
     //写UUID
-    private String writeUuidTemp = "EE684B1A-1E9B-ED3E-EE55-F894667E92AC";
+    private String writeUuidTemp = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
     //通知UUID
-    private String notifyUuidTemp = "654B749C-E37F-AE1F-EBAB-40CA133E3690";
+    private String notifyUuidTemp = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
     private static BleToolManager instance = null;
     private BleScanDeviceCallBack bleScanDeviceCallBack;
     //记录连接标识缓存
