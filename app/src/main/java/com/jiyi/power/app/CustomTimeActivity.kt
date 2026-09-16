@@ -1,5 +1,6 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.utils.CmdConstant
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -52,7 +53,7 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
                     launch {
                         viewModel.commandEvents.collect { event ->
                             when (event) {
-                                is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf("C0", "C1")) {
+                                is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf(CmdConstant.FunctionCode.CODE_C0, CmdConstant.FunctionCode.CODE_C1)) {
                                     ToastUtils.showShort(R.string.timer_setting_success)
                                     finish()
                                 }

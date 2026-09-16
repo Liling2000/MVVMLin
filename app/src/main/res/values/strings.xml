@@ -242,6 +242,7 @@
     <string name="battery_year_format">%1$d年</string>
     <string name="battery_power_format">%1$dW</string>
     <string name="battery_hours_format">%1$d小时</string>
+    <string name="battery_duration_format">%1$d小时%2$d分钟</string>
     <string name="battery_capacity_format">%1$dmAh</string>
     <string name="battery_empty_value">--</string>
     <string name="timer_shutdown_title">倒计时关机</string>

@@ -4,8 +4,9 @@ import android.text.TextUtils
 import com.jiyi.power.app.bean.Payload
 import com.jiyi.power.app.bean.MobilePowerSnapshot
 import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
-import com.jiyi.power.app.ble.BleConnectionCoordinator
-import com.jiyi.power.app.ble.DeviceConnectionState
+import com.jiyi.power.app.bean.MobilePowerPortDetails
+import com.jiyi.power.app.bean.MobilePowerPortType
+import com.jiyi.power.app.utils.ProtocolUtil
 import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import com.jiyi.power.app.utils.CmdConstant
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,6 +63,8 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
     val c1PortMetrics = MutableStateFlow(C1PortMetricsUiState())
     val dashboardSnapshot = MutableStateFlow<MobilePowerSnapshot?>(null)
     val homeInfo = MutableStateFlow<MobilePowerHomeInfoBean?>(null)
+    val ratedCapacity = MutableStateFlow<String?>(null)
+    val portDetails = MutableStateFlow<Map<MobilePowerPortType, MobilePowerPortDetails>>(emptyMap())
     private var currentDeviceSn: String? = null
 
 
@@ -115,11 +118,43 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
 
     private fun parsingReadResult(data: String?) {
         val parsedFrame = data?.let { MobilePowerProtocolManager.parseFrame(it) } ?: return
+        val code = parsedFrame.raw.functionCode
+        if (code == CmdConstant.FunctionCode.CODE_F4) {
+            ratedCapacity.value = (parsedFrame.payload as? Payload.Text)?.value?.takeIf { it.isNotBlank() }
+            return
+        }
+        val portType = when (code) {
+            CmdConstant.FunctionCode.CODE_D2, CmdConstant.FunctionCode.CODE_D3 -> MobilePowerPortType.C1
+            CmdConstant.FunctionCode.CODE_D4, CmdConstant.FunctionCode.CODE_D5 -> MobilePowerPortType.C2
+            else -> null
+        }
+        if (portType != null) {
+            val previous = portDetails.value[portType] ?: MobilePowerPortDetails()
+            val details = if (code == CmdConstant.FunctionCode.CODE_D2 || code == CmdConstant.FunctionCode.CODE_D4) {
+                previous.copy(cable = parsedFrame.payload as? Payload.CableInfo)
+            } else {
+                previous.copy(deviceInfo = (parsedFrame.payload as? Payload.Text)?.value?.takeIf { it.isNotBlank() })
+            }
+            portDetails.value = portDetails.value + (portType to details)
+            return
+        }
         if (!parsedFrame.raw.functionCode.equals(CmdConstant.FunctionCode.CODE_00, ignoreCase = true)) {
             return
         }
         val registerBlock = parsedFrame.payload as? Payload.RegisterBlock ?: return
         val snapshot = registerBlock.snapshot
+        val previousStatus = dashboardSnapshot.value?.deviceStatus
+        snapshot.deviceStatus?.let { status ->
+            listOf(
+                Triple(MobilePowerPortType.C1, status.c1Connected, previousStatus?.c1Connected),
+                Triple(MobilePowerPortType.C2, status.c2Connected, previousStatus?.c2Connected),
+            ).forEach { (type, connected, wasConnected) ->
+                if (wasConnected != null && connected != wasConnected) {
+                    portDetails.value = portDetails.value - type
+                    requestPortDetails(type)
+                }
+            }
+        }
         dashboardSnapshot.value = snapshot
         currentDeviceSn?.let { sn ->
             homeInfo.value = MobilePowerProtocolManager.toHomeInfoBean(sn, snapshot)
@@ -202,7 +237,27 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
         if (deviceSn.isNullOrBlank()) return false
         val command = MobilePowerProtocolManager.buildHomeInfoReadCommand() ?: return false
         currentDeviceSn = deviceSn
-        return sendDeviceCommand(CmdConstant.FunctionCode.CODE_00, command)
+        portDetails.value = emptyMap()
+        ratedCapacity.value = null
+        val sent = sendDeviceCommand(CmdConstant.FunctionCode.CODE_00, command)
+        if (sent) {
+            requestPortDetails(MobilePowerPortType.C1)
+            requestPortDetails(MobilePowerPortType.C2)
+            sendDeviceCommand(
+                CmdConstant.FunctionCode.CODE_F4,
+                MobilePowerProtocolManager.buildEventCommand(CmdConstant.FunctionCode.CODE_F4),
+            )
+        }
+        return sent
+    }
+
+    private fun requestPortDetails(type: MobilePowerPortType) {
+        val codes = when (type) {
+            MobilePowerPortType.C1 -> listOf(CmdConstant.FunctionCode.CODE_D2, CmdConstant.FunctionCode.CODE_D3)
+            MobilePowerPortType.C2 -> listOf(CmdConstant.FunctionCode.CODE_D4, CmdConstant.FunctionCode.CODE_D5)
+            MobilePowerPortType.USB_A -> emptyList()
+        }
+        codes.forEach { code -> sendDeviceCommand(code, ProtocolUtil.buildBlockReadCommand(code)) }
     }
 
     fun setLowCurrentMode(sn: String?, isOpen: Boolean): Boolean {
@@ -239,6 +294,13 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
     }
 
     override fun onDeviceReconnected() { requestDashboard(deviceSn) }
+
+    override fun onDeviceDisconnected() {
+        receiveBuffer = ""
+        dashboardSnapshot.value = null
+        portDetails.value = emptyMap()
+        ratedCapacity.value = null
+    }
 
     private fun setTimer(code: String, value: String, enabled: Boolean): Boolean {
         val minutes = value.toIntOrNull()?.coerceIn(0, 0x7FFF) ?: return false

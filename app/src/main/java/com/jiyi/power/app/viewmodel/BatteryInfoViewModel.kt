@@ -1,27 +1,44 @@
 package com.jiyi.power.app.viewmodel
 
-import androidx.lifecycle.ViewModel
-import com.jiyi.power.app.bean.BatteryCellInfo
-import com.jiyi.power.app.bean.BatteryInfoUiData
+import com.jiyi.power.app.utils.CmdConstant
+import com.jiyi.power.app.utils.BatteryInfoProtocol
+import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class BatteryInfoViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        BatteryInfoUiData(
-            healthPercent = 100,
-            manufacturer = "SUNPOWER",
-            model = "INR21700-5000",
-            cycleCount = 12,
-            recommendedYears = 5,
-            batterySeries = "5S",
-            cells = listOf(5000, 5000, 5000, 5000, 5000).mapIndexed { index, voltage -> BatteryCellInfo(index + 1, voltage) },
-            ratedPowerW = 300,
-            maxChargePowerW = 150,
-            maxDischargePowerW = 300,
-            totalDischargeHours = 20,
-            totalDischargeCapacityMah = 9315
-        )
-    )
+class BatteryInfoViewModel : DeviceCommandViewModel() {
+    private val protocol = BatteryInfoProtocol()
+    private val _uiState = MutableStateFlow(protocol.state)
     val uiState = _uiState.asStateFlow()
+
+    fun refresh() {
+        protocol.reset()
+        _uiState.value = protocol.state
+        // 循环次数、健康度及全部七路电芯电压。
+        sendDeviceCommand(
+            CmdConstant.FunctionCode.CODE_1C,
+            MobilePowerProtocolManager.buildReadCommand(CmdConstant.FunctionCode.CODE_1C, 0x16),
+        )
+        sendDeviceCommand(
+            CmdConstant.FunctionCode.CODE_40,
+            MobilePowerProtocolManager.buildReadCommand(CmdConstant.FunctionCode.CODE_40, 4),
+        )
+        // 沿用 F0..F7 设备信息的空 payload 事件查询方式。
+        sendDeviceCommand(
+            CmdConstant.FunctionCode.CODE_F6,
+            MobilePowerProtocolManager.buildEventCommand(CmdConstant.FunctionCode.CODE_F6),
+        )
+    }
+
+    override fun onBleDataReceive(data: String?) {
+        super.onBleDataReceive(data)
+        _uiState.value = protocol.accept(data)
+    }
+
+    override fun onDeviceReconnected() = refresh()
+
+    override fun onDeviceDisconnected() {
+        protocol.reset()
+        _uiState.value = protocol.state
+    }
 }

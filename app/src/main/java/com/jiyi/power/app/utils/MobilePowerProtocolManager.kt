@@ -139,7 +139,7 @@ object MobilePowerProtocolManager {
     ): Map<String, RegisterValue> {
         val start = startCode.toIntOrNull(16) ?: return emptyMap()
 
-        if (start > 0x44) return emptyMap()
+        if (start > CmdConstant.FunctionCode.CODE_44.toInt(16)) return emptyMap()
 
         return bytes.mapIndexed { index, byte ->
             val code = (start + index).toHexByteString()
@@ -167,10 +167,13 @@ object MobilePowerProtocolManager {
             )
 
             CmdConstant.FunctionCode.CODE_91, CmdConstant.FunctionCode.CODE_80,
-            CmdConstant.FunctionCode.CODE_D0, CmdConstant.FunctionCode.CODE_D1,
-            CmdConstant.FunctionCode.CODE_D2, CmdConstant.FunctionCode.CODE_D4 -> Payload.DataPacket(
+            CmdConstant.FunctionCode.CODE_D0, CmdConstant.FunctionCode.CODE_D1 -> Payload.DataPacket(
                 bytes, bytes.toHexString()
             )
+
+            CmdConstant.FunctionCode.CODE_D2, CmdConstant.FunctionCode.CODE_D4 ->
+                if (bytes.size == 2) Payload.CableInfo(bytes[0].u8(), bytes[1].u8())
+                else Payload.Unknown(bytes, bytes.toHexString())
 
             CmdConstant.FunctionCode.CODE_92 -> parseTransferEnd(
                 bytes
@@ -200,7 +203,7 @@ object MobilePowerProtocolManager {
             else -> {
                 val start = functionCode.toIntOrNull(16) ?: -1
                 // 普通读取或连续读取寄存器时，返回完整快照；未覆盖到的字段保持 null。
-                if (start in 0x00..0x44) Payload.RegisterBlock(buildSnapshot(registers))
+                if (start in CmdConstant.FunctionCode.CODE_00.toInt(16)..CmdConstant.FunctionCode.CODE_44.toInt(16)) Payload.RegisterBlock(buildSnapshot(registers))
                 else Payload.Unknown(bytes, bytes.toHexString())
             }
         }
@@ -958,7 +961,22 @@ object MobilePowerProtocolManager {
         f(CmdConstant.FunctionCode.CODE_F7, "版本号", OperationType.EVENT, "16bytes字符串")
 
         // UM3506 V2.0 移除了天气、歌词、微信与表情协议，以下仅保留新协议定义。
-        listOf("60", "61", "B0", "C3", "C4", "C5", "C6", "E0", "E1", "E2", "E3", "E4", "E5", "E6").forEach(result::remove)
+        listOf(
+            CmdConstant.FunctionCode.CODE_60,
+            CmdConstant.FunctionCode.CODE_61,
+            CmdConstant.FunctionCode.CODE_B0,
+            CmdConstant.FunctionCode.CODE_C3,
+            CmdConstant.FunctionCode.CODE_C4,
+            CmdConstant.FunctionCode.CODE_C5,
+            CmdConstant.FunctionCode.CODE_C6,
+            CmdConstant.FunctionCode.CODE_E0,
+            CmdConstant.FunctionCode.CODE_E1,
+            CmdConstant.FunctionCode.CODE_E2,
+            CmdConstant.FunctionCode.CODE_E3,
+            CmdConstant.FunctionCode.CODE_E4,
+            CmdConstant.FunctionCode.CODE_E5,
+            CmdConstant.FunctionCode.CODE_E6,
+        ).forEach(result::remove)
         f(CmdConstant.FunctionCode.CODE_3B, "C1充电模式", OperationType.READ_WRITE, "0智能模式，1 idle模式，2自定义模式")
         f(CmdConstant.FunctionCode.CODE_3C, "C2充电模式", OperationType.READ_WRITE, "0智能模式，1 idle模式，2自定义模式")
         f(CmdConstant.FunctionCode.CODE_3D, "恢复出厂设置", OperationType.WRITE_ONLY, "写入0xFF恢复出厂设置")

@@ -39,13 +39,22 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
         }
     }
 
-    override fun initData() = Unit
+    override fun initData() {
+        viewModel.bindDevice(intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.refresh()
+    }
 
     private fun renderBatteryInfo(data: BatteryInfoUiData) = with(mBinding) {
         val health = data.healthPercent?.coerceIn(0, 100)
         textHealthPercent.text =
             health?.let { getString(R.string.battery_health_percent, it) } ?: emptyValue()
         progressHealth.progress = health ?: 0
+        // 协议只提供健康百分比，未定义“优秀”等等级。
+        textHealthLevel.visibility = android.view.View.GONE
         textHealthCycle.text = data.cycleCount?.let {
             getString(R.string.battery_cycle_format, it)
         } ?: emptyValue()
@@ -66,9 +75,9 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
         infoRatedPower.setRightTextValue(formatPower(data.ratedPowerW))
         infoMaxCharge.setRightTextValue(formatPower(data.maxChargePowerW))
         infoMaxDischarge.setRightTextValue(formatPower(data.maxDischargePowerW))
-        infoDischargeTime.setRightTextValue(data.totalDischargeHours?.let {
+        infoDischargeTime.setRightTextValue(data.totalDischargeMinutes?.let {
             getString(
-                R.string.battery_hours_format, it
+                R.string.battery_duration_format, it / 60, it % 60
             )
         } ?: emptyValue())
         infoDischargeCapacity.setRightTextValue(data.totalDischargeCapacityMah?.let {

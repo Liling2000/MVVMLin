@@ -50,6 +50,7 @@ open class DeviceCommandViewModel : BaseViewModel() {
                         onDeviceReconnected()
                     }
                     is com.jiyi.power.app.ble.BleConnectionEvent.Disconnected -> if (matches(event.sn)) {
+                        onDeviceDisconnected()
                         _commandEvents.tryEmit(CommandEvent.Disconnected)
                     }
                 }
@@ -61,6 +62,7 @@ open class DeviceCommandViewModel : BaseViewModel() {
     fun bindDevice(sn: String?) { deviceSn = sn ?: BleDeviceStore.getDevices().lastOrNull()?.bluetoothSn }
 
     protected open fun onDeviceReconnected() = Unit
+    protected open fun onDeviceDisconnected() = Unit
 
     protected fun sendDeviceCommand(functionCode: String, command: String?): Boolean {
         val sn = deviceSn ?: BleDeviceStore.getDevices().lastOrNull()?.bluetoothSn ?: return false

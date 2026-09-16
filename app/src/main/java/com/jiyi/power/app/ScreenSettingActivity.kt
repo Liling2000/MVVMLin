@@ -1,5 +1,6 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.utils.CmdConstant
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -100,7 +101,7 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
                 launch {
                     viewModel.commandEvents.collect { event ->
                         when (event) {
-                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == "C2")
+                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == CmdConstant.FunctionCode.CODE_C2)
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.screen_send_success)
                             is DeviceCommandViewModel.CommandEvent.WriteFailed,
                             DeviceCommandViewModel.CommandEvent.Disconnected ->

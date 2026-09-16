@@ -13,6 +13,6 @@ data class BatteryInfoUiData(
     val ratedPowerW: Int? = null,
     val maxChargePowerW: Int? = null,
     val maxDischargePowerW: Int? = null,
-    val totalDischargeHours: Long? = null,
+    val totalDischargeMinutes: Long? = null,
     val totalDischargeCapacityMah: Long? = null
 )

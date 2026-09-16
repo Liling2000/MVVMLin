@@ -72,6 +72,9 @@ data class RegisterValue(
  * 字符串类命令会去掉尾部的 0x00 和空白字符。
  */
 sealed class Payload {
+    /** D2/D4：第一个字节为最大电流(A)，第二个字节为最大功率(W)。 */
+    data class CableInfo(val maxCurrentA: Int, val maxPowerW: Int) : Payload()
+
     /** 无数据区或空 payload。 */
     object Empty : Payload()
 
@@ -267,6 +270,11 @@ data class PortMetrics(
 
 /** 首页展示的端口类型。 */
 enum class MobilePowerPortType { C1, C2, USB_A }
+
+data class MobilePowerPortDetails(
+    val cable: Payload.CableInfo? = null,
+    val deviceInfo: String? = null,
+)
 
 /** 端口当前能量方向；卡片是否置灰只能由该字段决定。 */
 enum class PortDirection { INPUT, OUTPUT, NONE }

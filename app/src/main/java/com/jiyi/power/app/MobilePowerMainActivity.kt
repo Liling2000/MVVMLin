@@ -1,5 +1,6 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.utils.CmdConstant
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -56,6 +57,12 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         flowLaunch {
             viewModel.homeInfo.collect(::render)
         }
+        flowLaunch {
+            viewModel.portDetails.collect { renderPortDetails(viewModel.homeInfo.value) }
+        }
+        flowLaunch {
+            viewModel.ratedCapacity.collect(::renderRatedCapacity)
+        }
     }
 
     override fun initData() {
@@ -72,7 +79,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         setupPortCard(cardA1, R.string.power_port_a1)
 
         detailCable.textLabel.setText(R.string.power_cable_info)
-        detailCable.textValue.setText(R.string.power_cable_value)
+        detailCable.textValue.setText(R.string.power_unknown_value)
         detailCable.imageIcon.setImageResource(R.mipmap.ic_charging_cable)
         detailProtocol.textLabel.setText(R.string.power_charge_protocol)
         detailProtocol.imageIcon.setImageResource(R.mipmap.ic_lightning)
@@ -117,7 +124,8 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             ARouter.getInstance().build(ROUTE_THEME).navigation()
         }
         cardBatteryInfo.setOnClickListener {
-            startActivity(android.content.Intent(this@MobilePowerMainActivity, BatteryInfoActivity::class.java))
+            startActivity(android.content.Intent(this@MobilePowerMainActivity, BatteryInfoActivity::class.java)
+                .putExtra(EXTRA_DEVICE_SN, deviceSn))
         }
     }
 
@@ -131,13 +139,13 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
                 // 原始 BLE 数据已由 ViewModel 处理；Activity 仅消费业务级的写入/连接结果。
                 viewModel.commandEvents.collect { event ->
                     when (event) {
-                        is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == "34") {
+                        is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == CmdConstant.FunctionCode.CODE_34) {
                             // 等设备应用新配置后重新读取寄存器，以设备回包为最终状态。
                             delay(150L)
                             viewModel.requestDashboard(deviceSn)
                             mBinding.switchLowCurrent.isEnabled = true
                         }
-                        is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (event.functionCode == "34") {
+                        is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (event.functionCode == CmdConstant.FunctionCode.CODE_34) {
                             pendingLowCurrentMode = null
                             mBinding.switchLowCurrent.isEnabled = true
                             ToastUtils.showShort(R.string.power_command_failed)
@@ -200,12 +208,18 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
                 pendingLowCurrentMode = null
             }
         }
-        textBatteryHealth.setTvContent((battery?.healthPercent ?: 0).toString())
-        detailCycleCount.textValue.text = getString(
-            R.string.power_cycle_count_value,
-            battery?.cycleCount ?: 0,
-        )
-        detailCapacity.textValue.text = getString(R.string.power_capacity_value, 25000)
+        textBatteryHealth.setTvContent(battery?.healthPercent?.toString() ?: getString(R.string.power_unknown_value))
+        detailCycleCount.textValue.text = battery?.cycleCount?.let {
+            getString(R.string.power_cycle_count_value, it)
+        } ?: getString(R.string.power_unknown_value)
+        renderRatedCapacity(viewModel.ratedCapacity.value)
+    }
+
+    private fun renderRatedCapacity(value: String?) {
+        // F4 为字符串；纯数值补充 mAh，设备已带单位时直接显示。
+        mBinding.detailCapacity.textValue.text = value?.let {
+            it.toIntOrNull()?.let { capacity -> getString(R.string.power_capacity_value, capacity) } ?: it
+        } ?: getString(R.string.power_unknown_value)
     }
 
     private fun renderPortCard(binding: ItemPowerPortBinding, port: MobilePowerPortInfo?) {
@@ -295,11 +309,15 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
         detailProtocol.textValue.text =
             metrics?.protocol?.text ?: getString(R.string.power_unknown_value)
-        detailModel.textValue.text = when (selectedPort) {
-            Port.C1 -> getString(R.string.power_model_c1)
-            Port.C2 -> getString(R.string.power_model_c2)
-            Port.A1 -> getString(R.string.power_unknown_value)
+        val details = when (selectedPort) {
+            Port.C1 -> viewModel.portDetails.value[MobilePowerPortType.C1]
+            Port.C2 -> viewModel.portDetails.value[MobilePowerPortType.C2]
+            Port.A1 -> null
         }
+        detailCable.textValue.text = details?.cable?.let {
+            "${it.maxCurrentA}A-${it.maxPowerW}W"
+        } ?: getString(R.string.power_unknown_value)
+        detailModel.textValue.text = details?.deviceInfo ?: getString(R.string.power_unknown_value)
     }
 
     private fun MobilePowerHomeInfoBean?.port(type: MobilePowerPortType): MobilePowerPortInfo? =

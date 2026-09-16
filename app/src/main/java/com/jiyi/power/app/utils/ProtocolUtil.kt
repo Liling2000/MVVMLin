@@ -74,6 +74,13 @@ object ProtocolUtil {
         )
     }
 
+    fun buildBlockReadCommand(functionCode: String): String? = buildCommand(
+        commandType = CmdConstant.CommandType.READ,
+        functionCode = functionCode,
+        dataHex = "",
+        isBlock = true,
+    )
+
     private fun buildCommand(
         commandType: Int,
         functionCode: String,
