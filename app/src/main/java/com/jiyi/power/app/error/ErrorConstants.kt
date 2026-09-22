@@ -22,10 +22,10 @@ fun protectionTitleResource(type: Int): Int = when (type) {
 
 @DrawableRes
 fun protectionIconResource(type: Int): Int = when (type) {
-    0x02, 0x07, 0x08 -> R.mipmap.ic_temperature_control
-    0x09 -> R.mipmap.ic_common_lightning_slanted
-    0x05, 0x06 -> R.mipmap.ic_power_cable
-    0x01, 0x03, 0x04 -> R.mipmap.ic_mobile_device_filled
+    0x02, 0x07, 0x08 -> R.mipmap.ic_error_temperature
+    0x09 -> R.mipmap.ic_error_lightning
+    0x05, 0x06 -> R.mipmap.ic_error_power_cable
+    0x01, 0x03, 0x04 -> R.mipmap.ic_error_mobile
     else -> R.mipmap.ic_warning_outline
 }
 
