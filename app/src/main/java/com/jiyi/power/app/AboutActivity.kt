@@ -13,7 +13,7 @@ import com.jiyi.power.databinding.ActivityAboutBinding
 class AboutActivity : BaseActivity<ActivityAboutBinding>() {
 
     override fun initSystemBars() {
-        setSystemBars(statusBarColorRes = R.color.about_page_background)
+        setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
     }
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {

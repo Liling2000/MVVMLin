@@ -174,7 +174,7 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/custom_time_title</item>
+        <item name="android:textColor">@color/color_17181c</item>
         <item name="android:textSize">@dimen/sp_13</item>
         <item name="android:textStyle">bold</item>
     </style>

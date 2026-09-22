@@ -17,7 +17,7 @@ import com.jiyi.power.databinding.ActivityAccountInformationBinding
 class AccountInformationActivity : BaseActivity<ActivityAccountInformationBinding>() {
 
     override fun initSystemBars() {
-        setSystemBars(statusBarColorRes = R.color.account_page_background)
+        setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
     }
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {

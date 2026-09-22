@@ -25,7 +25,7 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
     private val viewModel: CustomTimeViewModel by viewModels()
 
     override fun initSystemBars() {
-        setSystemBars(statusBarColorRes = R.color.custom_time_page_background)
+        setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
     }
 
     override fun initView(savedInstanceState: Bundle?) {

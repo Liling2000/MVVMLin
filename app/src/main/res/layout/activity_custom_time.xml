@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/custom_time_page_background">
+        android:background="@color/color_f6f7f9">
 
     <com.aleyn.mvvm.widget.ComToolBar
             android:id="@+id/toolbar"
@@ -36,7 +36,7 @@
                     android:id="@+id/text_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/custom_time_value"
+                    android:textColor="@color/color_0752ae"
                     android:textSize="@dimen/custom_time_value_size"
                     android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                     android:layout_marginStart="@dimen/custom_time_unit_margin"
                     android:layout_marginBottom="@dimen/custom_time_unit_bottom_margin"
                     android:text="@string/custom_time_hour"
-                    android:textColor="@color/custom_time_unit"
+                    android:textColor="@color/color_45475a"
                     android:textSize="@dimen/custom_time_unit_size" />
 
             <TextView
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/custom_time_value_gap"
-                    android:textColor="@color/custom_time_value"
+                    android:textColor="@color/color_0752ae"
                     android:textSize="@dimen/custom_time_value_size"
                     android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                     android:layout_marginStart="@dimen/custom_time_unit_margin"
                     android:layout_marginBottom="@dimen/custom_time_unit_bottom_margin"
                     android:text="@string/custom_time_minute"
-                    android:textColor="@color/custom_time_unit"
+                    android:textColor="@color/color_45475a"
                     android:textSize="@dimen/custom_time_unit_size" />
         </LinearLayout>
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/custom_time_hint_margin_top"
                 android:text="@string/custom_time_hint"
-                android:textColor="@color/custom_time_hint"
+                android:textColor="@color/color_9a9da7"
                 android:textSize="@dimen/custom_time_hint_size" />
 
         <FrameLayout
@@ -102,7 +102,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/custom_time_hour"
-                            android:textColor="@color/custom_time_title"
+                            android:textColor="@color/color_17181c"
                             android:textSize="@dimen/custom_time_picker_label_size"
                             android:textStyle="bold" />
 
@@ -112,7 +112,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/custom_time_minute"
-                            android:textColor="@color/custom_time_title"
+                            android:textColor="@color/color_17181c"
                             android:textSize="@dimen/custom_time_picker_label_size"
                             android:textStyle="bold" />
                 </LinearLayout>
@@ -143,9 +143,9 @@
                                 app:wv_curved="false"
                                 app:wv_cyclic="false"
                                 app:wv_lineSpacing="@dimen/custom_time_wheel_line_spacing"
-                                app:wv_normalTextColor="@color/custom_time_wheel_normal"
+                                app:wv_normalTextColor="@color/color_9a9da7"
                                 app:wv_refractRatio="0.62"
-                                app:wv_selectedTextColor="@color/custom_time_value"
+                                app:wv_selectedTextColor="@color/color_0752ae"
                                 app:wv_selectedTextFakeBold="true"
                                 app:wv_textSize="@dimen/custom_time_wheel_text_size"
                                 app:wv_visibleItems="5" />
@@ -153,7 +153,7 @@
                         <View
                                 android:layout_width="@dimen/custom_time_picker_divider_width"
                                 android:layout_height="match_parent"
-                                android:background="@color/custom_time_picker_divider" />
+                                android:background="@color/color_eef0f3" />
 
                         <com.base.baseus.widget.wheelview.PickWheelView
                                 android:id="@+id/minute_picker"
@@ -164,9 +164,9 @@
                                 app:wv_curved="false"
                                 app:wv_cyclic="false"
                                 app:wv_lineSpacing="@dimen/custom_time_wheel_line_spacing"
-                                app:wv_normalTextColor="@color/custom_time_wheel_normal"
+                                app:wv_normalTextColor="@color/color_9a9da7"
                                 app:wv_refractRatio="0.62"
-                                app:wv_selectedTextColor="@color/custom_time_value"
+                                app:wv_selectedTextColor="@color/color_0752ae"
                                 app:wv_selectedTextFakeBold="true"
                                 app:wv_textSize="@dimen/custom_time_wheel_text_size"
                                 app:wv_visibleItems="5" />
@@ -181,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/custom_time_preset_title_margin"
                 android:text="@string/custom_time_quick_preset"
-                android:textColor="@color/custom_time_hint"
+                android:textColor="@color/color_9a9da7"
                 android:textSize="@dimen/custom_time_hint_size" />
 
         <LinearLayout
@@ -227,7 +227,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/custom_time_confirm"
-            android:textColor="@color/custom_time_confirm_text"
+            android:textColor="@color/color_ffffff"
             android:textSize="@dimen/custom_time_confirm_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

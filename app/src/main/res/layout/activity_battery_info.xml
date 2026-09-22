@@ -61,7 +61,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/battery_health_excellent"
-                            android:textColor="@color/battery_health_progress"
+                            android:textColor="@color/color_12b82f"
                             android:textSize="14sp" />
 
                     <TextView
@@ -69,7 +69,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:textColor="@color/battery_health_progress"
+                            android:textColor="@color/color_12b82f"
                             android:textSize="14sp" />
                 </LinearLayout>
 

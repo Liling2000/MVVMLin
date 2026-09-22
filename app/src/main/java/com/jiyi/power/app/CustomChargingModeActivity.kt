@@ -25,7 +25,7 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
     private var modeId: Long? = null
 
     override fun initSystemBars() {
-        setSystemBars(statusBarColorRes = R.color.custom_mode_page_background)
+        setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
     }
 
     override fun initView(savedInstanceState: Bundle?) {

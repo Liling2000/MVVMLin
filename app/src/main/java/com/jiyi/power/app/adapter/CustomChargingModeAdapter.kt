@@ -45,7 +45,7 @@ class CustomChargingModeAdapter(
             checkMode.setImageResource(if (selected) R.mipmap.ic_check_blue else 0)
             ImageViewCompat.setImageTintList(
                 checkMode,
-                if (selected) ContextCompat.getColorStateList(root.context, R.color.custom_mode_card_background) else null,
+                if (selected) ContextCompat.getColorStateList(root.context, R.color.color_ffffff) else null,
             )
             checkMode.setOnClickListener { onSelect(mode) }
             root.setOnClickListener { onEdit(mode) }

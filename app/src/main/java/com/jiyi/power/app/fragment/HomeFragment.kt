@@ -16,19 +16,26 @@ import com.jiyi.power.app.adapter.HomeDeviceAdapter
 import com.jiyi.power.app.adapter.HomeDeviceItem
 import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.ble.BleConnectionCoordinator
+import com.jiyi.power.app.ble.BleIoEvent
 import com.jiyi.power.app.ble.DeviceConnectionState
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.databinding.HomeFragmentBinding
 import com.jiyi.power.app.MobilePowerMainActivity
 import com.jiyi.power.app.utils.BlePermissionManager
 import com.jiyi.power.app.utils.BlePermissionResult
+import com.jiyi.power.app.utils.CmdConstant
+import com.jiyi.power.app.utils.HomeDeviceBatteryState
+import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import com.jiyi.power.app.widget.popup.AppPopupManager
 import com.blankj.utilcode.util.ToastUtils
 import com.youth.banner.indicator.CircleIndicator
+import com.liling.ble.utils.BleUtils
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private val deviceAdapter = HomeDeviceAdapter(this::openDevice)
+    private val deviceBatteryState = HomeDeviceBatteryState()
     private var permissionExplanationShown = false
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -104,14 +111,48 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun observeConnectionStates() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                BleConnectionCoordinator.connectionStates.collect(::renderDevices)
+                try {
+                    // 先监听回包，再发送查询，避免快速响应丢失。
+                    launch(start = CoroutineStart.UNDISPATCHED) {
+                        BleConnectionCoordinator.ioEvents.collect { event ->
+                            if (event is BleIoEvent.Notification) {
+                                val states = BleConnectionCoordinator.connectionStates.value
+                                val connected = states.any { (sn, state) ->
+                                    sn.equals(event.sn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
+                                }
+                                if (connected) {
+                                    val previous = deviceBatteryState.percent(event.sn)
+                                    deviceBatteryState.accept(event.sn, BleUtils.byteToString(event.data))
+                                    if (previous != deviceBatteryState.percent(event.sn)) renderDevices(states)
+                                }
+                            }
+                        }
+                    }
+                    BleConnectionCoordinator.connectionStates.collect { states ->
+                        val connectedSns = states.filterValues { it == DeviceConnectionState.CONNECTED }.keys
+                        val newConnections = deviceBatteryState.updateConnectedDevices(connectedSns)
+                        renderDevices(states)
+                        val command = MobilePowerProtocolManager.buildReadCommand(CmdConstant.FunctionCode.CODE_16)
+                        if (command != null) {
+                            newConnections.forEach { sn ->
+                                BleConnectionCoordinator.write(sn, BleUtils.hexStringToByte(command))
+                            }
+                        }
+                    }
+                } finally {
+                    // 页面重新可见时重新查询，避免展示离开期间断连前的旧电量。
+                    deviceBatteryState.clear()
+                }
             }
         }
     }
 
     private fun renderDevices(states: Map<String, DeviceConnectionState>) {
         val items = BleDeviceStore.getDevices().map { saved ->
-            val status = when (states[saved.bluetoothSn]) {
+            val connectionState = states.entries.firstOrNull {
+                it.key.equals(saved.bluetoothSn, ignoreCase = true)
+            }?.value
+            val status = when (connectionState) {
                 DeviceConnectionState.CONNECTED -> R.string.home_bluetooth_connected
                 DeviceConnectionState.CONNECTING -> R.string.home_bluetooth_connecting
                 else -> R.string.home_bluetooth_disconnected
@@ -120,7 +161,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 sn = saved.bluetoothSn,
                 name = saved.bluetoothName.ifBlank { getString(R.string.home_device_name) },
                 description = getString(R.string.home_device_description),
-                power = getString(R.string.home_device_power),
+                power = if (connectionState == DeviceConnectionState.CONNECTED) {
+                    deviceBatteryState.percent(saved.bluetoothSn)?.let { getString(R.string.home_device_power, it) }
+                        ?: getString(R.string.power_unknown_value)
+                } else getString(R.string.power_unknown_value),
                 status = getString(status),
                 imageRes = saved.deviceIcon,
             )

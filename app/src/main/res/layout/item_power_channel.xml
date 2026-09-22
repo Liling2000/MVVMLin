@@ -19,14 +19,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/custom_mode_text"
+                android:textColor="@color/color_17181c"
                 android:textSize="22sp" />
 
         <TextView
                 android:id="@+id/text_channel_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/custom_mode_power"
+                android:textColor="@color/color_0752ae"
                 android:textSize="18sp"
                 android:textStyle="bold" />
     </LinearLayout>
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/custom_mode_output"
-            android:textColor="@color/custom_mode_hint"
+            android:textColor="@color/color_b3b7c1"
             android:textSize="12sp" />
 
     <LinearLayout
@@ -85,14 +85,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/custom_mode_range"
+                android:textColor="@color/color_77798d"
                 android:textSize="11sp" />
 
         <TextView
                 android:id="@+id/text_max_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/custom_mode_range"
+                android:textColor="@color/color_77798d"
                 android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>
