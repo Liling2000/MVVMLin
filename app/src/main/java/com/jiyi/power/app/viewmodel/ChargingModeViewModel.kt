@@ -6,6 +6,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withTimeoutOrNull
+import com.jiyi.power.app.utils.MobilePowerProtocolManager
 
 class ChargingModeViewModel : DeviceCommandViewModel() {
     data class UiState(val selectedMode: Int? = null, val isBusy: Boolean = false)
@@ -57,6 +58,22 @@ class ChargingModeViewModel : DeviceCommandViewModel() {
             return readMode()?.selectedMode == mode
         } finally {
             _uiState.value = _uiState.value.copy(isBusy = false)
+        }
+    }
+
+    suspend fun applyCustomPower(c1Power: Int, c2Power: Int): Boolean =
+        writePower(CmdConstant.FunctionCode.CODE_32, c1Power) &&
+            writePower(CmdConstant.FunctionCode.CODE_33, c2Power)
+
+    private suspend fun writePower(code: String, power: Int): Boolean {
+        val result = CompletableDeferred<Boolean>()
+        pendingWrite = code to result
+        return try {
+            sendDeviceCommand(code, MobilePowerProtocolManager.buildWriteByteCommand(code, power)) &&
+                withTimeoutOrNull(5_000) { result.await() } == true
+        } finally {
+            pendingWrite = null
+            result.cancel()
         }
     }
 

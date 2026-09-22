@@ -35,8 +35,6 @@ class CustomChargingModeAdapter(
                 root.context.getString(R.string.custom_mode_channel_output, "C1", mode.c1Power)
             textC2.text =
                 root.context.getString(R.string.custom_mode_channel_output, "C2", mode.c2Power)
-            textA.text =
-                root.context.getString(R.string.custom_mode_channel_output, "A", mode.aPower)
             val selected = mode.id == selectedId
             checkMode.setBackgroundResource(
                 if (selected) R.drawable.bg_custom_mode_selected_indicator

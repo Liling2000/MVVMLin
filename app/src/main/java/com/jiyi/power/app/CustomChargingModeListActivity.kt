@@ -50,7 +50,9 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     private fun selectMode(id: Long) {
         if (viewModel.uiState.value.isBusy) return
         lifecycleScope.launch {
-            if (!viewModel.applyMode(ChargingPreferences.MODE_CUSTOM)) {
+            val mode = CustomChargingModeRepository.findById(id)
+            if (mode == null || !viewModel.applyMode(ChargingPreferences.MODE_CUSTOM) ||
+                !viewModel.applyCustomPower(mode.c1Power, mode.c2Power)) {
                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
                 return@launch
             }
@@ -64,6 +66,7 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
 
     private fun openEditor(id: Long?) {
         startActivity(Intent(this, CustomChargingModeActivity::class.java).apply {
+            putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN, intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
             id?.let { putExtra(CustomChargingModeActivity.EXTRA_MODE_ID, it) }
         })
     }

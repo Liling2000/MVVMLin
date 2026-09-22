@@ -1,61 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/root"
-        android:layout_width="match_parent"
-        android:layout_height="186dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_custom_mode_list_card"
-        android:clickable="true"
-        android:elevation="1dp"
-        android:focusable="true"
-        android:orientation="vertical"
-        android:padding="28dp">
-
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="24dp"
+    android:background="@drawable/bg_custom_mode_list_card"
+    android:clickable="true"
+    android:elevation="1dp"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="28dp">
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
         <TextView
-                android:id="@+id/text_mode_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/color_17181c"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
+            android:id="@+id/text_mode_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/color_17181c"
+            android:textSize="24sp"
+            android:textStyle="bold" />
         <ImageView
-                android:id="@+id/check_mode"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:contentDescription="@string/custom_mode_select"
-                android:focusable="true" />
+            android:id="@+id/check_mode"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:contentDescription="@string/custom_mode_select"
+            android:focusable="true" />
     </LinearLayout>
-
     <TextView
-            android:id="@+id/text_c1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/color_12b82f"
-            android:textSize="18sp" />
-
+        android:id="@+id/text_c1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/color_12b82f"
+        android:textSize="18sp" />
     <TextView
-            android:id="@+id/text_c2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/color_12b82f"
-            android:textSize="18sp" />
-
+        android:id="@+id/text_c2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/color_12b82f"
+        android:textSize="18sp" />
     <TextView
-            android:id="@+id/text_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/color_12b82f"
-            android:textSize="18sp" />
+        android:id="@+id/text_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/color_12b82f"
+        android:textSize="18sp"
+        android:visibility="gone" />
 </LinearLayout>

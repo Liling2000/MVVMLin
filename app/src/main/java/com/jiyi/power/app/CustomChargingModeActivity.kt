@@ -60,8 +60,15 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
             mBinding.editModeName.error = getString(R.string.custom_mode_name_required)
             return
         }
-        CustomChargingModeRepository.save(viewModel.toMode(modeId, name))
-        ToastUtils.showShort(R.string.custom_mode_saved)
-        finish()
+        lifecycleScope.launch {
+            viewModel.bindDevice(intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
+            if (!viewModel.applyPower()) {
+                ToastUtils.showShort(R.string.power_command_failed)
+                return@launch
+            }
+            CustomChargingModeRepository.save(viewModel.toMode(modeId, name))
+            ToastUtils.showShort(R.string.custom_mode_saved)
+            finish()
+        }
     }
 }
