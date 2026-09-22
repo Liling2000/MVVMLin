@@ -467,11 +467,11 @@
     <dimen name="custom_time_confirm_size">18sp</dimen>
     <dimen name="error_toolbar_height">64dp</dimen>
     <dimen name="error_page_margin">24dp</dimen>
-    <dimen name="error_card_radius">28dp</dimen>
-    <dimen name="error_card_spacing">18dp</dimen>
+    <dimen name="error_card_radius">16dp</dimen>
+    <dimen name="error_card_spacing">12dp</dimen>
     <dimen name="error_card_padding">20dp</dimen>
-    <dimen name="error_card_min_height">160dp</dimen>
-    <dimen name="error_icon_size">22dp</dimen>
+    <dimen name="error_card_min_height">74dp</dimen>
+    <dimen name="error_icon_size">20dp</dimen>
     <dimen name="popup_corner_radius">28dp</dimen>
     <dimen name="popup_horizontal_padding">24dp</dimen>
     <dimen name="popup_confirm_top_padding">25dp</dimen>

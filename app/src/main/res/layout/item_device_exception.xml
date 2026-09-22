@@ -5,65 +5,45 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/error_card_spacing"
     android:background="@drawable/bg_error_record_card"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:elevation="1dp"
     android:minHeight="@dimen/error_card_min_height"
-    android:paddingStart="@dimen/error_card_padding"
-    android:paddingTop="@dimen/dp_20"
-    android:paddingEnd="@dimen/error_card_padding"
-    android:paddingBottom="@dimen/dp_18">
+    android:paddingStart="28dp"
+    android:paddingEnd="16dp"
+    android:paddingVertical="20dp">
 
     <ImageView
         android:id="@+id/error_icon"
         android:layout_width="@dimen/error_icon_size"
         android:layout_height="@dimen/error_icon_size"
-        android:contentDescription="@string/error_icon_description"
+        android:importantForAccessibility="no"
+        app:tint="@color/color_77798d"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/error_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_14"
-        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="12dp"
         android:textColor="@color/color_17181c"
-        android:textSize="@dimen/sp_18"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/error_time"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/error_arrow"
         app:layout_constraintStart_toEndOf="@id/error_icon"
-        app:layout_constraintTop_toTopOf="@id/error_icon" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <TextView
-        android:id="@+id/error_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_777b8d"
-        android:textSize="@dimen/sp_11"
-        app:layout_constraintBaseline_toBaselineOf="@id/error_title"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/error_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_14"
-        android:layout_marginTop="@dimen/dp_8"
-        android:lineSpacingExtra="@dimen/dp_5"
-        android:textColor="@color/color_45475a"
-        android:textSize="@dimen/sp_15"
+    <ImageView
+        android:id="@+id/error_arrow"
+        android:layout_width="12dp"
+        android:layout_height="18dp"
+        android:importantForAccessibility="no"
+        android:src="@mipmap/ic_s_arrow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/error_icon"
-        app:layout_constraintTop_toBottomOf="@id/error_title" />
-
-    <TextView
-        android:id="@+id/error_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_18"
-        android:drawablePadding="@dimen/dp_8"
-        android:textColor="@color/color_0752ae"
-        android:textSize="@dimen/sp_13"
-        app:drawableStartCompat="@drawable/ic_error_status_dot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/error_description" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

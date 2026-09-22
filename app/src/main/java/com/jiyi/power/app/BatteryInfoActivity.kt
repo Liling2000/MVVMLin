@@ -21,7 +21,9 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.toolbar.setRightIconClickListener {
-            startActivity(android.content.Intent(this, DeviceExceptionRecordActivity::class.java))
+            startActivity(android.content.Intent(this, DeviceExceptionRecordActivity::class.java)
+                .putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN,
+                    intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)))
         }
         mBinding.recyclerCells.apply {
             layoutManager = LinearLayoutManager(this@BatteryInfoActivity)

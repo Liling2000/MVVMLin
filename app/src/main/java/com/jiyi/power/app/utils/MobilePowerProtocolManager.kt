@@ -4,6 +4,8 @@ import com.jiyi.power.app.bean.BatteryInfo
 import com.jiyi.power.app.bean.CellVoltage
 import com.jiyi.power.app.bean.DeviceSettings
 import com.jiyi.power.app.bean.DeviceStatus
+import com.jiyi.power.app.bean.DeviceExceptionRecord
+import com.jiyi.power.app.bean.DeviceExceptionReply
 import com.jiyi.power.app.bean.DisplayMode
 import com.jiyi.power.app.bean.FastChargeProtocol
 import com.jiyi.power.app.bean.FirmwareInfo
@@ -70,6 +72,37 @@ object MobilePowerProtocolManager {
     /** 连续读取 0x00..0x3A，一次获取设备首页所需的端口、电池、Cell 和设置状态。 */
     fun buildHomeInfoReadCommand(): String? =
         buildReadCommand(CmdConstant.FunctionCode.CODE_00, HOME_INFO_REGISTER_LENGTH)
+
+    fun toExceptionReply(frame: ParsedFrame): DeviceExceptionReply? {
+        val type = frame.raw.commandCode.toInt(16) and 0x0F
+        if (type != CmdConstant.CommandType.RESPONSE) return null
+        val data = frame.raw.dataHex.hexToByteArrayOrNull() ?: return DeviceExceptionReply.Invalid
+        return when (frame.raw.functionCode) {
+            CmdConstant.FunctionCode.CODE_D1 -> {
+                if (data.size != 3 || data[0].u8() !in 0..1) return DeviceExceptionReply.Invalid
+                // 数量沿用本项目多字节字段的小端序；参数和时间戳保留字节顺序，不猜单位。
+                DeviceExceptionReply.Storage(data[0].u8() == 1, data[1].u8() or (data[2].u8() shl 8))
+            }
+            CmdConstant.FunctionCode.CODE_D0 -> {
+                if (data.isEmpty() || data.size > 72 || data.size % 12 != 0) return DeviceExceptionReply.Invalid
+                val records = mutableListOf<DeviceExceptionRecord>()
+                for (offset in data.indices step 12) {
+                    val code = data[offset].u8()
+                    if (code == 0) continue // 无异常及补零槽位。
+                    if (code == 0xFF) return DeviceExceptionReply.Invalid // 枚举上限，不是日志类型。
+                    records += DeviceExceptionRecord(
+                        index = records.size,
+                        typeCode = code,
+                        batteryNumber = data[offset + 1].u8().takeIf { code == 0x01 },
+                        parameterHex = data.copyOfRange(offset + 2, offset + 4).toHexString(),
+                        timestampHex = data.copyOfRange(offset + 4, offset + 12).toHexString(),
+                    )
+                }
+                DeviceExceptionReply.Page(records)
+            }
+            else -> null
+        }
+    }
 
     fun toHomeInfoBean(sn: String, snapshot: MobilePowerSnapshot): MobilePowerHomeInfoBean {
         val status = snapshot.deviceStatus
