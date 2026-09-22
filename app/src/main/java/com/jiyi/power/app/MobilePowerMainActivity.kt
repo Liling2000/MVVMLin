@@ -12,7 +12,6 @@ import com.aleyn.mvvm.R as BaseR
 import com.aleyn.mvvm.extend.flowLaunch
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.BleDeviceStore
@@ -44,9 +43,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_f6f7f9))
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, ContextCompat.getColor(this, R.color.color_f6f7f9))
         setupStaticContent()
         setupClicks()
         setupBleNotifications()

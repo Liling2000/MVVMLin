@@ -7,10 +7,8 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.util.TypedValue
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.utils.MmkvManager
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.LoginBean
@@ -18,11 +16,11 @@ import com.jiyi.power.databinding.ActivityAccountInformationBinding
 
 class AccountInformationActivity : BaseActivity<ActivityAccountInformationBinding>() {
 
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.account_page_background)
+    }
+
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
-        val background = ContextCompat.getColor(this@AccountInformationActivity, R.color.account_page_background)
-        BarUtils.setStatusBarColor(this@AccountInformationActivity, background)
-        BarUtils.setStatusBarLightMode(this@AccountInformationActivity, true)
-        BarUtils.setNavBarColor(this@AccountInformationActivity, background)
         toolbar.setLeftClickListener { finish() }
         itemUserName.setOnClickListener {
             showEditDialog(R.string.account_edit_user_name, itemUserName.getLeftSubTextValue(), InputType.TYPE_CLASS_TEXT, ::updateUserName)

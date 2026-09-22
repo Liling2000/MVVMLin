@@ -5,12 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.CustomTimeUiState
@@ -26,13 +24,12 @@ import kotlinx.coroutines.launch
 class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
     private val viewModel: CustomTimeViewModel by viewModels()
 
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.custom_time_page_background)
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         with(mBinding) {
-            val background =
-                ContextCompat.getColor(this@CustomTimeActivity, R.color.custom_time_page_background)
-            BarUtils.setStatusBarColor(this@CustomTimeActivity, background)
-            BarUtils.setStatusBarLightMode(this@CustomTimeActivity, true)
-            BarUtils.setNavBarColor(this@CustomTimeActivity, background)
         toolbar.setLeftClickListener { finish() }
             hourPicker.configureWheel(
                 CustomTimeViewModel.MIN_HOUR, CustomTimeViewModel.MAX_HOUR

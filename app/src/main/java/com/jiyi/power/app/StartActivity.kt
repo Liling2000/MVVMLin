@@ -15,9 +15,12 @@ class StartActivity : BaseActivity<ActivityStartBinding>() {
     private val handler = Handler(Looper.getMainLooper())
     private val routeTask = Runnable { routeToNextPage() }
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initSystemBars() {
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         BarUtils.setNavBarVisibility(this, false)
+    }
+
+    override fun initView(savedInstanceState: Bundle?) {
         handler.postDelayed(routeTask, START_DELAY_MILLIS)
     }
 

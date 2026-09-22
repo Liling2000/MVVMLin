@@ -3,7 +3,6 @@ package com.jiyi.power.app
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseVMActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.BleDeviceAdapter
@@ -35,9 +33,11 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
     }
     private var scanAnimator: ObjectAnimator? = null
 
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.color_f0f1f4, navBarColorRes = null)
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
-        BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_f0f1f4))
-        BarUtils.setStatusBarLightMode(this, true)
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.toolbar.setRightIconClickListener {
             viewModel.stopScan()

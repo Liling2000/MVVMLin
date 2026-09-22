@@ -3,13 +3,11 @@ package com.jiyi.power.app
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.CustomChargingModeAdapter
 import com.jiyi.power.app.common.ChargingPreferences
@@ -25,13 +23,11 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
         onEdit = { mode -> openEditor(mode.id) },
     )
 
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.custom_mode_page_background)
+    }
+
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
-        val background = ContextCompat.getColor(
-            this@CustomChargingModeListActivity, R.color.custom_mode_page_background
-        )
-        BarUtils.setStatusBarColor(this@CustomChargingModeListActivity, background)
-        BarUtils.setStatusBarLightMode(this@CustomChargingModeListActivity, true)
-        BarUtils.setNavBarColor(this@CustomChargingModeListActivity, background)
         toolbar.setLeftClickListener { finish() }
         recyclerModes.layoutManager = LinearLayoutManager(this@CustomChargingModeListActivity)
         recyclerModes.adapter = modeAdapter

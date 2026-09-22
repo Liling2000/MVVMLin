@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.R as BaseR
 import com.aleyn.mvvm.widget.ContentWithUnitTextView
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.PowerStatistics
 import com.jiyi.power.app.bean.PowerStatisticsMockData
@@ -17,10 +16,6 @@ class PortPowerStatisticsActivity : BaseActivity<ActivityPortPowerStatisticsBind
     private var selectedPort = "C1"
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.toolbar.setLeftClickListener { finish() }
         configureValueViews()
         bindTabs()

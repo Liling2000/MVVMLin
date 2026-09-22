@@ -2,13 +2,11 @@ package com.jiyi.power.app
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.BatteryCellAdapter
 import com.jiyi.power.app.bean.BatteryInfoUiData
@@ -21,10 +19,6 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
     private val cellAdapter = BatteryCellAdapter()
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.toolbar.setRightIconClickListener {
             startActivity(android.content.Intent(this, DeviceExceptionRecordActivity::class.java))

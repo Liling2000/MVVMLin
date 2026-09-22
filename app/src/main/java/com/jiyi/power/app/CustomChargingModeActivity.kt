@@ -2,13 +2,11 @@ package com.jiyi.power.app
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.PowerChannelAdapter
@@ -26,14 +24,12 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
         PowerChannelAdapter { index, delta -> viewModel.adjustPower(index, delta) }
     private var modeId: Long? = null
 
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.custom_mode_page_background)
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         with(mBinding) {
-            val background = ContextCompat.getColor(
-                this@CustomChargingModeActivity, R.color.custom_mode_page_background
-            )
-            BarUtils.setStatusBarColor(this@CustomChargingModeActivity, background)
-            BarUtils.setStatusBarLightMode(this@CustomChargingModeActivity, true)
-            BarUtils.setNavBarColor(this@CustomChargingModeActivity, background)
             modeId = intent.getLongExtra(EXTRA_MODE_ID, -1L).takeIf { it > 0 }
             toolbar.setLeftClickListener { finish() }
             toolbar.setRightIconClickListener { saveMode() }

@@ -3,13 +3,11 @@ package com.jiyi.power.app
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.DeviceExceptionAdapter
 import com.jiyi.power.app.viewmodel.DeviceExceptionUiState
@@ -22,10 +20,6 @@ class DeviceExceptionRecordActivity : BaseActivity<ActivityDeviceExceptionRecord
     private val adapter = DeviceExceptionAdapter()
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.errorList.layoutManager = LinearLayoutManager(this)
         mBinding.errorList.adapter = adapter

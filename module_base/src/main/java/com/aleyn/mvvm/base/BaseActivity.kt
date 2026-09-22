@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -13,6 +15,7 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.aleyn.mvvm.R
 import com.aleyn.mvvm.event.Message
 import com.aleyn.mvvm.extend.flowLaunch
+import com.blankj.utilcode.util.BarUtils
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.ParameterizedType
 
@@ -29,9 +32,28 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(initBinding())
+        initSystemBars()
         initView(savedInstanceState)
         initObserve()
         initData()
+    }
+
+    /** 在绑定视图后、initView 前配置系统栏；特殊页面可重写，无需调用 super。 */
+    protected open fun initSystemBars() {
+        setSystemBars()
+    }
+
+    /** 颜色参数为资源 ID；导航栏默认跟随状态栏，传 null 则保留原导航栏颜色。 */
+    protected fun setSystemBars(
+        @ColorRes statusBarColorRes: Int = R.color.color_f6f7f9,
+        statusBarLightMode: Boolean = true,
+        @ColorRes navBarColorRes: Int? = statusBarColorRes
+    ) {
+        BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, statusBarColorRes))
+        BarUtils.setStatusBarLightMode(this, statusBarLightMode)
+        navBarColorRes?.let {
+            BarUtils.setNavBarColor(this, ContextCompat.getColor(this, it))
+        }
     }
 
     abstract fun initView(savedInstanceState: Bundle?)

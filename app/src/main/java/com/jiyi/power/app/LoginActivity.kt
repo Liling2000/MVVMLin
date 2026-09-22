@@ -4,10 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.utils.MmkvManager
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.LoginBean
 import com.jiyi.power.databinding.ActivityLoginBinding
@@ -24,10 +22,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.imageAvatar.setOnClickListener { avatarPicker.launch(arrayOf("image/*")) }
         mBinding.buttonGuestLogin.setOnClickListener { loginAsGuest() }
     }

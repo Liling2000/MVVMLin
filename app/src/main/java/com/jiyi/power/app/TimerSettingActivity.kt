@@ -8,14 +8,12 @@ import android.view.LayoutInflater
 import android.widget.NumberPicker
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.TimerOptionAdapter
@@ -33,10 +31,6 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
     private val adapter = TimerOptionAdapter(::onOptionClick)
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.timerOptions.layoutManager = GridLayoutManager(this, 2)
         mBinding.timerOptions.adapter = adapter

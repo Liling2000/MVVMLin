@@ -220,12 +220,10 @@
                 <com.aleyn.mvvm.widget.SwitchButtonKotlin
                         android:id="@+id/switch_low_current"
                         android:layout_width="48dp"
-                        android:layout_height="28dp"
+                        android:layout_height="26dp"
                         app:sb_checkedColor="@color/color_0752ae"
-                        app:sb_enableEffect="true"
                         app:sb_thumbColor="@color/color_ffffff"
-                        app:sb_un_thumbColor="@color/color_ffffff"
-                        app:sb_uncheckedColor="@color/color_c4c7cd" />
+                        app:sb_uncheckedColor="@color/color_d7dce2" />
             </LinearLayout>
 
             <LinearLayout

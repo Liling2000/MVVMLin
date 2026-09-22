@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.aleyn.mvvm.R as BaseR
-import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.ScreenSettingUiData
 import com.jiyi.power.app.bean.ScreenTextColor
@@ -48,10 +47,6 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         mBinding.recyclerWallpapers.apply {
             layoutManager = GridLayoutManager(this@ScreenSettingActivity, 2)
             adapter = wallpaperAdapter

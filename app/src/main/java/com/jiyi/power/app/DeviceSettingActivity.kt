@@ -6,11 +6,9 @@ import android.text.InputFilter
 import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.activity.viewModels
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.BleDeviceStore
@@ -28,10 +26,6 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
     private val deviceSn by lazy { intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN) }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val background = ContextCompat.getColor(this, R.color.color_f6f7f9)
-        BarUtils.setStatusBarColor(this, background)
-        BarUtils.setStatusBarLightMode(this, true)
-        BarUtils.setNavBarColor(this, background)
         renderStoredValues()
         setupClicks()
     }

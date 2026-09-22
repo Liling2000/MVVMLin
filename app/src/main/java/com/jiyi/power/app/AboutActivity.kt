@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import com.aleyn.mvvm.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.BuildConfig
 import com.jiyi.power.R
@@ -13,11 +12,11 @@ import com.jiyi.power.databinding.ActivityAboutBinding
 
 class AboutActivity : BaseActivity<ActivityAboutBinding>() {
 
-    override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
-        BarUtils.setStatusBarColor(this@AboutActivity, getColor(R.color.about_page_background))
-        BarUtils.setStatusBarLightMode(this@AboutActivity, true)
-        BarUtils.setNavBarColor(this@AboutActivity, getColor(R.color.about_page_background))
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.about_page_background)
+    }
 
+    override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
         val version = getString(R.string.about_version_format, BuildConfig.VERSION_NAME)
         textVersion.text = version
         itemAppVersion.setRightTextValue(version)
