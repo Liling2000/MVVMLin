@@ -35,7 +35,19 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".app.StartActivity" android:exported="true">
+        <service
+                android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+                android:enabled="false"
+                android:exported="false">
+            <meta-data
+                    android:name="autoStoreLocales"
+                    android:value="true" />
+        </service>
+
+        <activity
+                android:name=".app.StartActivity"
+                android:exported="true"
+                android:theme="@style/AppStartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,6 +56,10 @@
         <activity android:name=".app.LoginActivity" android:exported="false" />
         <activity android:name=".app.MainActivity" android:exported="false" />
         <activity android:name=".app.AboutActivity" android:exported="false" />
+        <activity
+                android:name=".app.LanguageActivity"
+                android:configChanges="locale|layoutDirection"
+                android:exported="false" />
         <activity android:name=".app.CertificationActivity" android:exported="false" />
         <activity android:name=".app.CertificationDetailActivity" android:exported="false" />
         <activity android:name=".app.AccountInformationActivity" android:exported="false" />

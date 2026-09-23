@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="38dp"
                 android:gravity="center"
+                android:id="@+id/text_primary_devices"
                 android:text="@string/home_primary_devices"
                 android:textColor="@color/color_191c1e"
                 android:textSize="20sp"

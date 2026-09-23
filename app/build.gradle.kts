@@ -54,6 +54,10 @@ android {
         compose = true
     }
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -79,6 +83,15 @@ android {
         }
     }
 }
+
+// Keep the explicit English locale synchronized with the default catalog.
+// Without values-en, a Chinese system locale can win Android's fallback matching.
+val generateEnglishResources by tasks.registering(Sync::class) {
+    from("src/main/res/values/strings.xml")
+    into(layout.buildDirectory.dir("generated/res/english/values-en"))
+}
+android.sourceSets.getByName("main").res.srcDir(layout.buildDirectory.dir("generated/res/english"))
+tasks.named("preBuild").configure { dependsOn(generateEnglishResources) }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

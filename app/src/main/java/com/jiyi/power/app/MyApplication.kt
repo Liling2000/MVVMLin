@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.BuildConfig
 import com.jiyi.power.app.ble.BleConnectionCoordinator
+import com.jiyi.power.app.language.LanguageManager
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -31,6 +32,7 @@ class MyApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        LanguageManager.initialize(baseContext)
         MmkvManager.init(this)
         BleConnectionCoordinator.initialize(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

@@ -1,6 +1,7 @@
 package com.jiyi.power.app.common
 
 object RouterPath {
+    const val PAGE_LANGUAGE = "/app/language"
     const val PAGE_START = "/app/start"
     const val PAGE_LOGIN = "/app/login"
     const val PAGE_MAIN = "/app/main"

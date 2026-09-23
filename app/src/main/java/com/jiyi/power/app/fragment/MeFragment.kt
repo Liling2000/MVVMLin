@@ -10,6 +10,8 @@ import android.os.Bundle
 import com.blankj.utilcode.util.ToastUtils
 import com.aleyn.mvvm.base.BaseVMFragment
 import com.jiyi.power.R
+import com.jiyi.power.app.language.AppLanguages
+import com.jiyi.power.app.language.LanguageManager
 import com.jiyi.power.app.viewmodel.MeViewModel
 import com.jiyi.power.databinding.MeFragmentBinding
 
@@ -21,7 +23,7 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
         itemLanguage.setOnClickListener {
-            showUnavailable(R.string.me_switch_language)
+            ARouter.getInstance().build(RouterPath.PAGE_LANGUAGE).navigation(requireActivity())
         }
 
         itemAbout.setOnClickListener {
@@ -37,6 +39,12 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
     }
 
     override fun initObserve() = Unit
+
+    override fun onResume() {
+        super.onResume()
+        val language = AppLanguages.items.first { it.tag == LanguageManager.selectedTag }
+        mBinding.itemLanguage.setRightTextValue(getString(language.label))
+    }
 
     override fun lazyLoadData() = Unit
 

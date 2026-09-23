@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:id="@+id/text_add_device"
             android:text="@string/home_add_new_device"
             android:textColor="@color/color_454558"
             android:textSize="17sp" />

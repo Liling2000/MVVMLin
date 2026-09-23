@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_008577</item>
+        <item name="colorPrimaryDark">@color/color_00574b</item>
+        <item name="colorAccent">@color/color_d81b60</item>
+        <item name="android:windowBackground">@color/color_f7f9fb</item>
+        <item name="android:windowAnimationStyle">@style/AppWindowAnimation</item>
+        <item name="android:fontFamily">sans</item>
+    </style>
+
+    <style name="AppStartTheme" parent="AppTheme">
+        <item name="android:windowSplashScreenBackground">@color/color_f7f9fb</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_window_icon</item>
+    </style>
+</resources>

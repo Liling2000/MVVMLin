@@ -20,6 +20,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         initNavigationBar()
+        mBinding.bottomNavigation.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        mBinding.bottomNavigation.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun initData() = Unit

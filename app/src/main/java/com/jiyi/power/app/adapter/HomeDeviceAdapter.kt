@@ -41,7 +41,10 @@ class HomeDeviceAdapter(private val onItemClick: (HomeDeviceItem.Device?) -> Uni
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is DeviceViewHolder -> holder.bind(getItem(position) as HomeDeviceItem.Device)
-            is AddDeviceViewHolder -> holder.binding.root.setOnClickListener { onItemClick(null) }
+            is AddDeviceViewHolder -> {
+                holder.binding.textAddDevice.setText(R.string.home_add_new_device)
+                holder.binding.root.setOnClickListener { onItemClick(null) }
+            }
         }
     }
 
