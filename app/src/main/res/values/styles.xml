@@ -95,13 +95,13 @@
     </style>
 
     <style name="PowerPortTab">
-        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:layout_height">32dp</item>
-        <item name="android:background">@drawable/bg_power_chip_normal</item>
+        <item name="android:background">@drawable/selector_power_port_tab</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/color_77798d</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="ChargingModeTag">

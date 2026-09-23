@@ -403,4 +403,6 @@
     <string name="certification_recycling_description">采用锂离子电池，支持 Call2Recycle 全球循环回收项目。</string>
     <string name="certification_ccc_title">中国强制性认证 (CCC)</string>
     <string name="certification_ccc_description">已通过国家强制性产品认证，符合中国安全与质量标准。</string>
+    <string name="power_port_tab_a1">A1</string>
+    <string name="power_unit_percent">%</string>
 </resources>

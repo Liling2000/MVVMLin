@@ -8,7 +8,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleyn.mvvm.base.BaseActivity
-import com.aleyn.mvvm.R as BaseR
 import com.aleyn.mvvm.extend.flowLaunch
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -33,6 +32,10 @@ import java.util.Locale
 
 @Route(path = RouterPath.PAGE_MOBILE_POWER_MAIN)
 class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
+    override fun initSystemBars() {
+        setSystemBars(statusBarColorRes = R.color.color_f7f9fb)
+    }
+
     private val viewModel: MainFragmentViewModel by viewModels()
     private var selectedPort = Port.C1
     private var renderingSwitch = false
@@ -224,7 +227,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         val isActive = direction == PortDirection.INPUT || direction == PortDirection.OUTPUT
         val metrics = port?.metrics
 
-        // 卡片状态只服从协议层给出的方向。即使保留上一帧功率，NONE 也必须完整置灰。
+        // 未连接端口保留白底，以浅色标签和占位数据区分状态。
         binding.root.setBackgroundResource(
             if (isActive) R.drawable.bg_power_port_active else R.drawable.bg_power_port_inactive,
         )
@@ -235,7 +238,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
         binding.textStatus.setTextColor(
             ContextCompat.getColor(
-                this, if (isActive) R.color.color_0752ae else R.color.color_9a9da7
+                this, if (isActive) R.color.color_0752ae else R.color.color_77798d
             ),
         )
         binding.textPort.setBackgroundResource(
@@ -243,11 +246,11 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         )
         binding.textPort.setTextColor(
             ContextCompat.getColor(
-                this, if (isActive) R.color.color_0752ae else R.color.color_9a9da7
+                this, if (isActive) R.color.color_0752ae else R.color.color_ffffff
             ),
         )
         val powerColor = ContextCompat.getColor(
-            this, if (isActive) R.color.color_191c1e else R.color.color_9a9da7
+            this, R.color.color_191c1e
         )
         binding.textPower.setContentTextColor(powerColor)
         binding.textPower.setUnitTextColor(powerColor)
@@ -286,13 +289,11 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             Port.A1 to tabA1,
         ).forEach { (port, tab) ->
             val selected = port == selectedPort
-            tab.setBackgroundResource(
-                if (selected) R.drawable.bg_power_chip_selected else R.drawable.bg_power_chip_normal,
-            )
+            tab.isSelected = selected
             tab.setTextColor(
                 ContextCompat.getColor(
                     this@MobilePowerMainActivity,
-                    if (selected) BaseR.color.color_ffffff else R.color.color_77798d,
+                    if (selected) R.color.color_004098 else R.color.color_454558,
                 ),
             )
         }

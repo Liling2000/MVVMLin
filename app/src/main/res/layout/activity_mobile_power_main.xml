@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_f6f7f9"
+        android:background="@color/color_f7f9fb"
 
         android:orientation="vertical">
 
@@ -18,7 +18,7 @@
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
             android:fillViewport="true"
@@ -43,17 +43,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:contentDescription="@null"
-                        android:src="@mipmap/ic_device_time_bg" />
+                        android:src="@drawable/bg_power_battery_ring" />
 
                 <com.aleyn.mvvm.widget.ContentWithUnitTextView
                         android:id="@+id/text_battery_percent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:tv_content="78"
+                        tools:tv_content="78"
                         app:tv_content_color="@color/color_191c1e"
                         app:tv_content_size="46sp"
-                        app:tv_unit="%"
+                        app:tv_unit="@string/power_unit_percent"
                         app:tv_unit_color="@color/color_191c1e"
                         app:tv_unit_size="20sp" />
             </FrameLayout>
@@ -140,7 +140,7 @@
                         android:layout_width="0dp"
                         android:layout_height="125dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_custom_mode_add" />
+                        android:background="@drawable/bg_power_port_placeholder" />
             </LinearLayout>
 
             <LinearLayout
@@ -157,7 +157,10 @@
 
                 <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="36dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/bg_power_chip_normal"
+                        android:padding="5dp"
+                        android:layout_marginBottom="10dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -169,23 +172,31 @@
                     <TextView
                             android:id="@+id/tab_c2"
                             style="@style/PowerPortTab"
-                            android:layout_marginStart="10dp"
                             android:text="@string/power_port_c2" />
 
                     <TextView
                             android:id="@+id/tab_a1"
                             style="@style/PowerPortTab"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/power_port_a1" />
+                            android:text="@string/power_port_tab_a1" />
                 </LinearLayout>
 
                 <include
                         android:id="@+id/detail_cable"
                         layout="@layout/item_power_detail" />
 
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/color_f7f9fb" />
+
                 <include
                         android:id="@+id/detail_protocol"
                         layout="@layout/item_power_detail" />
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/color_f7f9fb" />
 
                 <include
                         android:id="@+id/detail_model"
@@ -221,7 +232,7 @@
                         android:id="@+id/switch_low_current"
                         android:layout_width="48dp"
                         android:layout_height="26dp"
-                        app:sb_checkedColor="@color/color_0752ae"
+                        app:sb_checkedColor="@color/color_004098"
                         app:sb_thumbColor="@color/color_ffffff"
                         app:sb_uncheckedColor="@color/color_d7dce2" />
             </LinearLayout>
@@ -286,7 +297,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/power_battery_info"
-                            android:textColor="@color/color_191c1e"
+                            android:textColor="@color/color_77798d"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -312,18 +323,19 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:contentDescription="@null"
-                                android:src="@mipmap/ic_device_info_bg" />
+                                android:src="@mipmap/ic_device_info_bg"
+                                app:tint="@color/color_28c335" />
 
                         <com.aleyn.mvvm.widget.ContentWithUnitTextView
                                 android:id="@+id/text_battery_health"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                app:tv_content="100"
-                                app:tv_content_color="@color/color_191c1e"
-                                app:tv_content_size="24sp"
-                                app:tv_unit="%"
-                                app:tv_unit_color="@color/color_191c1e"
+                                tools:tv_content="100"
+                                app:tv_content_color="@color/color_28c335"
+                                app:tv_content_size="20sp"
+                                app:tv_unit="@string/power_unit_percent"
+                                app:tv_unit_color="@color/color_28c335"
                                 app:tv_unit_size="14sp" />
                     </FrameLayout>
 
@@ -337,6 +349,11 @@
                         <include
                                 android:id="@+id/detail_cycle_count"
                                 layout="@layout/item_power_battery_detail" />
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="@color/color_f7f9fb" />
 
                         <include
                                 android:id="@+id/detail_capacity"
