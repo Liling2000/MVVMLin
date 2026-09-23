@@ -1,5 +1,9 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.os.Bundle
 import com.aleyn.mvvm.base.BaseActivity
 import com.aleyn.mvvm.widget.NavigateTabBar
@@ -8,6 +12,7 @@ import com.jiyi.power.app.fragment.HomeFragment
 import com.jiyi.power.app.fragment.MeFragment
 import com.jiyi.power.databinding.ActivityMainBinding
 
+@Route(path = RouterPath.PAGE_MAIN)
 class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun initSystemBars() {
         setSystemBars(statusBarColorRes = R.color.color_f7f8fa)

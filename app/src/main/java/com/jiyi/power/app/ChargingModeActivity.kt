@@ -14,11 +14,11 @@ import com.jiyi.power.R
 import com.jiyi.power.app.adapter.ChargingModeAdapter
 import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
-import com.jiyi.power.app.common.RouterPath.ROUTE_MODE_LIST
+import com.jiyi.power.app.common.RouterPath.PAGE_ROUTE_MODE_LIST
 import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.databinding.ActivityChargingModeBinding
 
-@Route(path = RouterPath.ROUTE_CHARGING_MODE)
+@Route(path = RouterPath.PAGE_ROUTE_CHARGING_MODE)
 class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
     private val viewModel by viewModels<ChargingModeViewModel>()
     private val preferences by lazy { getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE) }
@@ -30,8 +30,9 @@ class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
 
     private val modeAdapter = ChargingModeAdapter { mode ->
         if (mode == ChargingPreferences.MODE_CUSTOM) {
-            ARouter.getInstance().build(ROUTE_MODE_LIST)
-                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn).navigation()
+            ARouter.getInstance().build(PAGE_ROUTE_MODE_LIST)
+                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)
+                .navigation(this@ChargingModeActivity)
         } else {
             selectMode(mode)
         }

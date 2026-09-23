@@ -23,7 +23,7 @@ import com.jiyi.power.databinding.ActivityBleDeviceScanBinding
 import com.jiyi.power.app.MobilePowerMainActivity
 import kotlinx.coroutines.launch
 
-@Route(path = RouterPath.BLE_SCAN)
+@Route(path = RouterPath.PAGE_BLE_SCAN)
 class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScanBinding>() {
 
     private val deviceAdapter = BleDeviceAdapter { device ->
@@ -62,10 +62,10 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
                     when (event) {
                         is BleConnectEvent.Success -> {
                             ToastUtils.showShort(R.string.scan_connect_success)
-                            ARouter.getInstance().build(RouterPath.MOBILE_POWER_MAIN).withString(
+                            ARouter.getInstance().build(RouterPath.PAGE_MOBILE_POWER_MAIN).withString(
                                 MobilePowerMainActivity.EXTRA_DEVICE_SN,
                                 event.device.bluetoothSn,
-                            ).navigation()
+                            ).navigation(this@BleDeviceScanActivity)
                             finish()
                         }
 

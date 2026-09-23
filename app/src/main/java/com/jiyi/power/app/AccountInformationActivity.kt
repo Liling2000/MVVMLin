@@ -1,5 +1,11 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -14,6 +20,7 @@ import com.jiyi.power.R
 import com.jiyi.power.app.bean.LoginBean
 import com.jiyi.power.databinding.ActivityAccountInformationBinding
 
+@Route(path = RouterPath.PAGE_ACCOUNT_INFORMATION)
 class AccountInformationActivity : BaseActivity<ActivityAccountInformationBinding>() {
 
     override fun initSystemBars() {
@@ -100,9 +107,9 @@ class AccountInformationActivity : BaseActivity<ActivityAccountInformationBindin
         MmkvManager.remove(LoginBean.LOGIN_INFO_KEY)
         MmkvManager.remove(KEY_PHONE)
         MmkvManager.remove(KEY_EMAIL)
-        startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        ARouter.getInstance().build(RouterPath.PAGE_LOGIN)
+            .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .navigation(this)
         finish()
     }
 

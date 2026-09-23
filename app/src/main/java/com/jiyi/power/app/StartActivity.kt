@@ -1,5 +1,11 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +17,7 @@ import com.blankj.utilcode.util.BarUtils
 import com.jiyi.power.app.bean.LoginBean
 import com.jiyi.power.databinding.ActivityStartBinding
 
+@Route(path = RouterPath.PAGE_START)
 class StartActivity : BaseActivity<ActivityStartBinding>() {
     private val handler = Handler(Looper.getMainLooper())
     private val routeTask = Runnable { routeToNextPage() }
@@ -28,10 +35,10 @@ class StartActivity : BaseActivity<ActivityStartBinding>() {
 
     private fun routeToNextPage() {
         val loginInfo = MmkvManager.getObject<LoginBean>(LoginBean.LOGIN_INFO_KEY)
-        val destination = if (loginInfo == null) LoginActivity::class.java else MainActivity::class.java
-        startActivity(Intent(this, destination).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        val destination = if (loginInfo == null) RouterPath.PAGE_LOGIN else RouterPath.PAGE_MAIN
+        ARouter.getInstance().build(destination)
+            .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .navigation(this)
         finish()
     }
 

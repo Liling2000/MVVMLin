@@ -174,7 +174,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun openDeviceScanner() {
-        ARouter.getInstance().build(RouterPath.BLE_SCAN).navigation()
+        ARouter.getInstance().build(RouterPath.PAGE_BLE_SCAN).navigation(requireActivity())
     }
 
     private fun openDevice(item: HomeDeviceItem.Device?) {
@@ -183,8 +183,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             openDeviceScanner()
             return
         }
-        ARouter.getInstance().build(RouterPath.MOBILE_POWER_MAIN)
+        ARouter.getInstance().build(RouterPath.PAGE_MOBILE_POWER_MAIN)
             .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, item.sn)
-            .navigation()
+            .navigation(requireActivity())
     }
 }

@@ -1,8 +1,13 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import com.jiyi.power.app.utils.CmdConstant
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -21,6 +26,7 @@ import com.base.baseus.widget.wheelview.OnItemSelectedListener
 import com.base.baseus.widget.wheelview.PickWheelView
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.PAGE_CUSTOM_TIME)
 class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
     private val viewModel: CustomTimeViewModel by viewModels()
 
@@ -102,10 +108,10 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
         private const val RESET_DISABLED_ALPHA = 0.45f
 
         fun start(context: Context, type: TimerSettingType, minutes: Int) {
-            context.startActivity(Intent(context, CustomTimeActivity::class.java).apply {
-                putExtra(EXTRA_TYPE, type.name)
-                putExtra(EXTRA_MINUTES, minutes)
-            })
+            ARouter.getInstance().build(RouterPath.PAGE_CUSTOM_TIME)
+                .withString(EXTRA_TYPE, type.name)
+                .withInt(EXTRA_MINUTES, minutes)
+                .navigation(context)
         }
     }
 }

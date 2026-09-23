@@ -1,5 +1,9 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -19,6 +23,7 @@ import com.jiyi.power.app.viewmodel.DeviceExceptionViewModel
 import com.jiyi.power.databinding.ActivityDeviceExceptionRecordBinding
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.PAGE_DEVICE_EXCEPTION_RECORD)
 class DeviceExceptionRecordActivity : BaseActivity<ActivityDeviceExceptionRecordBinding>() {
     private val viewModel by viewModels<DeviceExceptionViewModel>()
     private val adapter = DeviceExceptionAdapter(::showProtectionDetail)

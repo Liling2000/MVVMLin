@@ -1,5 +1,11 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -14,6 +20,7 @@ import com.jiyi.power.app.viewmodel.BatteryInfoViewModel
 import com.jiyi.power.databinding.ActivityBatteryInfoBinding
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.PAGE_BATTERY_INFO)
 class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
     private val viewModel by viewModels<BatteryInfoViewModel>()
     private val cellAdapter = BatteryCellAdapter()
@@ -21,9 +28,10 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.toolbar.setLeftClickListener { finish() }
         mBinding.toolbar.setRightIconClickListener {
-            startActivity(android.content.Intent(this, DeviceExceptionRecordActivity::class.java)
-                .putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN,
-                    intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)))
+            ARouter.getInstance().build(RouterPath.PAGE_DEVICE_EXCEPTION_RECORD)
+                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN,
+                    intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
+                .navigation(this)
         }
         mBinding.recyclerCells.apply {
             layoutManager = LinearLayoutManager(this@BatteryInfoActivity)

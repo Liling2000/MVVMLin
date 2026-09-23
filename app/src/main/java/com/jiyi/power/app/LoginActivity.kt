@@ -1,5 +1,11 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +16,7 @@ import com.jiyi.power.R
 import com.jiyi.power.app.bean.LoginBean
 import com.jiyi.power.databinding.ActivityLoginBinding
 
+@Route(path = RouterPath.PAGE_LOGIN)
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     private var avatarUri: Uri? = null
     private val avatarPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -36,9 +43,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
             avatarUrl = avatarUri?.toString().orEmpty()
         )
         MmkvManager.putObject(LoginBean.LOGIN_INFO_KEY, loginInfo)
-        startActivity(Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        ARouter.getInstance().build(RouterPath.PAGE_MAIN)
+            .withFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .navigation(this)
         finish()
     }
 }

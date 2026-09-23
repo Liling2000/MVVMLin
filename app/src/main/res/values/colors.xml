@@ -100,4 +100,9 @@
     <color name="color_dce7f5">#DCE7F5</color>
     <color name="color_eef4fb">#EEF4FB</color>
     <color name="color_f7f9fb">#F7F9FB</color>
+    <color name="color_404040">#404040</color>
+    <color name="color_f6f8fa">#f6f8fa</color>
+    <color name="color_1a1c1e">#1A1C1E</color>
+    <color name="color_98a2b3">#98a2b3</color>
+    <color name="color_1498a2b3">#1498a2b3</color>
 </resources>

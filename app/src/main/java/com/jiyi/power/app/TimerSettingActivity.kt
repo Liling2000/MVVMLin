@@ -1,8 +1,10 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+import com.jiyi.power.app.common.RouterPath
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.jiyi.power.app.utils.CmdConstant
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.NumberPicker
@@ -26,6 +28,7 @@ import com.jiyi.power.databinding.ActivityTimerSettingBinding
 import com.jiyi.power.databinding.DialogCustomTimerBinding
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.PAGE_TIMER_SETTING)
 class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
     private val viewModel by viewModels<TimerSettingViewModel>()
     private val adapter = TimerOptionAdapter(::onOptionClick)
@@ -128,7 +131,9 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         private const val MAX_HOURS = 99
 
         fun start(context: Context, type: TimerSettingType) {
-            context.startActivity(Intent(context, TimerSettingActivity::class.java).putExtra(EXTRA_TYPE, type.name))
+            ARouter.getInstance().build(RouterPath.PAGE_TIMER_SETTING)
+                .withString(EXTRA_TYPE, type.name)
+                .navigation(context)
         }
     }
 }

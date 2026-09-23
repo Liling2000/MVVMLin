@@ -1,5 +1,9 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.os.Bundle
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -12,6 +16,7 @@ import com.jiyi.power.app.bean.PowerStatisticsMockData
 import com.jiyi.power.app.widget.PowerLineChartView
 import com.jiyi.power.databinding.ActivityPortPowerStatisticsBinding
 
+@Route(path = RouterPath.PAGE_PORT_POWER_STATISTICS)
 class PortPowerStatisticsActivity : BaseActivity<ActivityPortPowerStatisticsBinding>() {
     private var selectedPort = "C1"
 

@@ -24,14 +24,14 @@ import com.jiyi.power.app.bean.MobilePowerPortType
 import com.jiyi.power.app.bean.PortDirection
 import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.ble.DeviceConnectionState
-import com.jiyi.power.app.common.RouterPath.ROUTE_THEME
+import com.jiyi.power.app.common.RouterPath.PAGE_ROUTE_THEME
 import com.jiyi.power.app.viewmodel.MainFragmentViewModel
 import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import java.util.Locale
 
-@Route(path = RouterPath.MOBILE_POWER_MAIN)
+@Route(path = RouterPath.PAGE_MOBILE_POWER_MAIN)
 class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     private val viewModel: MainFragmentViewModel by viewModels()
     private var selectedPort = Port.C1
@@ -89,8 +89,8 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
         toolbar.setRightIconClickListener {
-            ARouter.getInstance().build(RouterPath.DEVICE_SETTING)
-                .withString(EXTRA_DEVICE_SN, deviceSn).navigation()
+            ARouter.getInstance().build(RouterPath.PAGE_DEVICE_SETTING)
+                .withString(EXTRA_DEVICE_SN, deviceSn).navigation(this@MobilePowerMainActivity)
         }
         cardC1.root.setOnClickListener { selectPort(Port.C1) }
         cardC2.root.setOnClickListener { selectPort(Port.C2) }
@@ -117,11 +117,12 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
 
         buttonScreenSettings.setOnClickListener {
-            ARouter.getInstance().build(ROUTE_THEME).navigation()
+            ARouter.getInstance().build(PAGE_ROUTE_THEME).navigation(this@MobilePowerMainActivity)
         }
         cardBatteryInfo.setOnClickListener {
-            startActivity(android.content.Intent(this@MobilePowerMainActivity, BatteryInfoActivity::class.java)
-                .putExtra(EXTRA_DEVICE_SN, deviceSn))
+            ARouter.getInstance().build(RouterPath.PAGE_BATTERY_INFO)
+                .withString(EXTRA_DEVICE_SN, deviceSn)
+                .navigation(this@MobilePowerMainActivity)
         }
     }
 

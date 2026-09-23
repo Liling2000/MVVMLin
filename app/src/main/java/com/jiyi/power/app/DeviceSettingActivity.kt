@@ -1,5 +1,7 @@
 package com.jiyi.power.app
 
+import com.alibaba.android.arouter.launcher.ARouter
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
@@ -17,7 +19,7 @@ import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.DeviceSettingViewModel
 import com.jiyi.power.databinding.ActivityDeviceSettingBinding
 
-@Route(path = RouterPath.DEVICE_SETTING)
+@Route(path = RouterPath.PAGE_DEVICE_SETTING)
 class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
 
     private val viewModel by viewModels<DeviceSettingViewModel>()
@@ -51,15 +53,15 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
 
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
-        rowChargeMode.setOnClickListener { startActivity(Intent(this@DeviceSettingActivity, ChargingModeActivity::class.java)
-            .putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)) }
+        rowChargeMode.setOnClickListener {
+            ARouter.getInstance().build(RouterPath.PAGE_ROUTE_CHARGING_MODE)
+                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)
+                .navigation(this@DeviceSettingActivity)
+        }
         rowDeviceName.setOnClickListener { showRenameDialog() }
         rowCertification.setOnClickListener {
-            AlertDialog.Builder(this@DeviceSettingActivity)
-                .setTitle(R.string.device_setting_certification)
-                .setMessage(R.string.device_setting_certification_detail)
-                .setPositiveButton(R.string.device_setting_confirm, null)
-                .show()
+            ARouter.getInstance().build(RouterPath.PAGE_CERTIFICATION)
+                .navigation(this@DeviceSettingActivity)
         }
         rowFactoryReset.setOnClickListener { showFactoryResetDialog() }
         buttonDeleteDevice.setOnClickListener { showDeleteDialog() }
@@ -119,9 +121,9 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
                 BleDeviceStore.removeDevice(deviceSn)
                 preferences.edit().clear().apply()
                 ToastUtils.showShort(R.string.device_setting_delete_success)
-                startActivity(Intent(this, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                })
+                ARouter.getInstance().build(RouterPath.PAGE_MAIN)
+                    .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .navigation(this)
                 finish()
             }.show()
     }

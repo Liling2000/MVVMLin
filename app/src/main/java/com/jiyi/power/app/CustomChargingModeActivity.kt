@@ -1,5 +1,9 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -14,6 +18,7 @@ import com.jiyi.power.app.viewmodel.CustomChargingModeViewModel
 import com.jiyi.power.databinding.ActivityCustomChargingModeBinding
 import kotlinx.coroutines.launch
 
+@Route(path = RouterPath.PAGE_CUSTOM_CHARGING_MODE)
 class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBinding>() {
     companion object {
         const val EXTRA_MODE_ID = "extra_custom_mode_id"

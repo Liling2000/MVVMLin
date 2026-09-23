@@ -29,7 +29,7 @@ import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
 import com.jiyi.power.databinding.ActivityScreenSettingBinding
 import kotlinx.coroutines.launch
 
-@Route(path = RouterPath.ROUTE_THEME)
+@Route(path = RouterPath.PAGE_ROUTE_THEME)
 class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
     private val viewModel by viewModels<ScreenSettingViewModel>()
     // 不在 Activity 构造阶段解引用 by viewModels()；点击发生时页面已完成挂载。

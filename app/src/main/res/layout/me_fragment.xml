@@ -53,20 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:background="@drawable/bg_me_card"
-            android:elevation="2dp"
             android:orientation="vertical"
             android:paddingTop="2dp"
             android:paddingBottom="2dp">
-
-            <com.aleyn.mvvm.widget.MyInformationView
-                android:id="@+id/item_account"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:is_show_line="true"
-                app:left_icon="@mipmap/ic_security_shield"
-                app:left_text="@string/me_account_management"
-                app:left_text_color="@color/color_17181c"
-                app:right_arrow_icon="@mipmap/ic_chevron_right" />
 
             <com.aleyn.mvvm.widget.MyInformationView
                 android:id="@+id/item_language"
@@ -81,26 +70,6 @@
                 app:right_text_color="@color/color_17181c" />
 
             <com.aleyn.mvvm.widget.MyInformationView
-                android:id="@+id/item_notifications"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:is_show_line="true"
-                app:left_icon="@mipmap/ic_notification"
-                app:left_text="@string/me_notifications"
-                app:left_text_color="@color/color_17181c"
-                app:right_arrow_icon="@mipmap/ic_chevron_right" />
-
-            <com.aleyn.mvvm.widget.MyInformationView
-                android:id="@+id/item_feedback"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:is_show_line="true"
-                app:left_icon="@mipmap/ic_alert_message"
-                app:left_text="@string/me_feedback"
-                app:left_text_color="@color/color_17181c"
-                app:right_arrow_icon="@mipmap/ic_chevron_right" />
-
-            <com.aleyn.mvvm.widget.MyInformationView
                 android:id="@+id/item_about"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -112,15 +81,6 @@
                 app:right_text="@string/me_app_version"
                 app:right_text_color="@color/color_17181c" />
 
-            <com.aleyn.mvvm.widget.MyInformationView
-                android:id="@+id/item_customer_service"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:is_show_line="false"
-                app:left_icon="@mipmap/ic_customer_support"
-                app:left_text="@string/me_customer_service"
-                app:left_text_color="@color/color_17181c"
-                app:right_arrow_icon="@mipmap/ic_chevron_right" />
         </LinearLayout>
 
         <LinearLayout

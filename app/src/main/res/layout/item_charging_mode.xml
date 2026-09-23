@@ -29,8 +29,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:text="@string/charging_mode_smart"
-                android:textColor="@color/color_17181c"
-                android:textSize="23sp"
+                android:textColor="@color/color_191c1e"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:id="@+id/text_title" />
         <ImageView
@@ -49,7 +49,7 @@
             android:layout_marginTop="20dp"
             android:lineSpacingExtra="6dp"
             android:text="@string/charging_mode_smart_desc"
-            android:textColor="@color/color_45475a"
+            android:textColor="@color/color_454558"
             android:textSize="16sp"
             android:id="@+id/text_description" />
     <LinearLayout

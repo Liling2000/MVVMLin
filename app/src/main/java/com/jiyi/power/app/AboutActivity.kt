@@ -1,5 +1,9 @@
 package com.jiyi.power.app
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.facade.annotation.Route
+
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +14,7 @@ import com.jiyi.power.BuildConfig
 import com.jiyi.power.R
 import com.jiyi.power.databinding.ActivityAboutBinding
 
+@Route(path = RouterPath.PAGE_ABOUT)
 class AboutActivity : BaseActivity<ActivityAboutBinding>() {
 
     override fun initSystemBars() {

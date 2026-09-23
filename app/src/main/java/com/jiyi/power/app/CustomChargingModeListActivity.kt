@@ -1,6 +1,7 @@
 package com.jiyi.power.app
 
-import android.content.Intent
+import com.alibaba.android.arouter.launcher.ARouter
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,7 @@ import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.databinding.ActivityCustomChargingModeListBinding
 
-@Route(path = RouterPath.ROUTE_MODE_LIST)
+@Route(path = RouterPath.PAGE_ROUTE_MODE_LIST)
 class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeListBinding>() {
     private val viewModel by viewModels<ChargingModeViewModel>()
     private val modeAdapter = CustomChargingModeAdapter(
@@ -65,9 +66,9 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     }
 
     private fun openEditor(id: Long?) {
-        startActivity(Intent(this, CustomChargingModeActivity::class.java).apply {
-            putExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN, intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
-            id?.let { putExtra(CustomChargingModeActivity.EXTRA_MODE_ID, it) }
-        })
+        ARouter.getInstance().build(RouterPath.PAGE_CUSTOM_CHARGING_MODE)
+            .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
+            .apply { id?.let { withLong(CustomChargingModeActivity.EXTRA_MODE_ID, it) } }
+            .navigation(this)
     }
 }

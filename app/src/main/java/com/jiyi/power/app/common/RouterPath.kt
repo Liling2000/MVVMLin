@@ -1,13 +1,24 @@
 package com.jiyi.power.app.common
 
-import com.alibaba.android.arouter.facade.annotation.Route
-
 object RouterPath {
-    const val DEVICE_HOME = "/device/home"
-    const val BLE_SCAN = "/ble/scan"
-    const val MOBILE_POWER_MAIN = "/mobilepower/main"
-    const val DEVICE_SETTING = "/device/setting"
-    const val ROUTE_THEME = "/mobilepower/theme_choose"
-    const val ROUTE_CHARGING_MODE = "/mobilepower/charging_mode"
-    const val ROUTE_MODE_LIST = "/mobilepower/mode_list"
+    const val PAGE_START = "/app/start"
+    const val PAGE_LOGIN = "/app/login"
+    const val PAGE_MAIN = "/app/main"
+    const val PAGE_ABOUT = "/app/about"
+    const val PAGE_ACCOUNT_INFORMATION = "/account/information"
+    const val PAGE_CERTIFICATION = "/device/certification"
+    const val PAGE_CERTIFICATION_DETAIL = "/device/certification_detail"
+    const val PAGE_BATTERY_INFO = "/device/battery_info"
+    const val PAGE_DEVICE_EXCEPTION_RECORD = "/device/exception_record"
+    const val PAGE_CUSTOM_CHARGING_MODE = "/mobilepower/custom_charging_mode"
+    const val PAGE_PORT_POWER_STATISTICS = "/mobilepower/port_power_statistics"
+    const val PAGE_TIMER_SETTING = "/mobilepower/timer_setting"
+    const val PAGE_CUSTOM_TIME = "/mobilepower/custom_time"
+    const val PAGE_DEVICE_HOME = "/device/home"
+    const val PAGE_BLE_SCAN = "/ble/scan"
+    const val PAGE_MOBILE_POWER_MAIN = "/mobilepower/main"
+    const val PAGE_DEVICE_SETTING = "/device/setting"
+    const val PAGE_ROUTE_THEME = "/mobilepower/theme_choose"
+    const val PAGE_ROUTE_CHARGING_MODE = "/mobilepower/charging_mode"
+    const val PAGE_ROUTE_MODE_LIST = "/mobilepower/mode_list"
 }

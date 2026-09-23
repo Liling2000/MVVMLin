@@ -388,4 +388,19 @@
     <string name="protection_log_parameter">参数原始值：%1$s</string>
     <string name="protection_log_timestamp">时间戳原始值：%1$s</string>
     <string name="protection_log_raw_notice">参数和时间戳的显示格式尚未明确，暂按设备返回的原始值展示。</string>
+    <string name="certification_introduction">Beillen始终致力于提供安全、环保且符合国际标准的产品。以下是我们产品通过的各项全球权威认证与规范。</string>
+    <string name="certification_back">返回</string>
+    <string name="certification_detail_title">认证说明</string>
+    <string name="certification_iata_title">航空安全认证 (IATA)</string>
+    <string name="certification_iata_description">符合国际航空运输协会安全标准，支持乘机携带。</string>
+    <string name="certification_rohs_title">环保使用期限 (RoHS)</string>
+    <string name="certification_rohs_description">产品包含环保使用期限为 5 年的受限物质，符合绿色制造。</string>
+    <string name="certification_weee_title">电子废弃物回收 (WEEE)</string>
+    <string name="certification_weee_description">符合欧盟 WEEE 指令，请勿随生活垃圾丢弃，应专门回收。</string>
+    <string name="certification_iec_title">热安全规范 (IEC)</string>
+    <string name="certification_iec_description">通过 IEC 国际热安全标准测试，确保设备在高负荷下运行稳定。</string>
+    <string name="certification_recycling_title">锂电池回收计划</string>
+    <string name="certification_recycling_description">采用锂离子电池，支持 Call2Recycle 全球循环回收项目。</string>
+    <string name="certification_ccc_title">中国强制性认证 (CCC)</string>
+    <string name="certification_ccc_description">已通过国家强制性产品认证，符合中国安全与质量标准。</string>
 </resources>

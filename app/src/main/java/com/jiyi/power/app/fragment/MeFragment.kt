@@ -1,13 +1,15 @@
 package com.jiyi.power.app.fragment
 
+import com.jiyi.power.app.common.RouterPath
+
+import com.alibaba.android.arouter.launcher.ARouter
+
 import android.content.Intent
 import android.provider.Settings
 import android.os.Bundle
 import com.blankj.utilcode.util.ToastUtils
 import com.aleyn.mvvm.base.BaseVMFragment
 import com.jiyi.power.R
-import com.jiyi.power.app.AboutActivity
-import com.jiyi.power.app.AccountInformationActivity
 import com.jiyi.power.app.viewmodel.MeViewModel
 import com.jiyi.power.databinding.MeFragmentBinding
 
@@ -18,24 +20,14 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
-        itemAccount.setOnClickListener {
-            startActivity(Intent(requireContext(), AccountInformationActivity::class.java))
-        }
         itemLanguage.setOnClickListener {
             showUnavailable(R.string.me_switch_language)
         }
-        itemNotifications.setOnClickListener {
-            openNotificationSettings()
-        }
-        itemFeedback.setOnClickListener {
-            showUnavailable(R.string.me_feedback)
-        }
+
         itemAbout.setOnClickListener {
-            startActivity(Intent(requireContext(), AboutActivity::class.java))
+            ARouter.getInstance().build(RouterPath.PAGE_ABOUT).navigation(requireActivity())
         }
-        itemCustomerService.setOnClickListener {
-            showUnavailable(R.string.me_customer_service)
-        }
+
         textUserAgreement.setOnClickListener {
             showUnavailable(R.string.me_user_agreement)
         }
