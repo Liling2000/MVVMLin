@@ -80,7 +80,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:singleLine="true"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textColorHint="@color/color_c9cae0"
                 android:textSize="15sp" />
     </LinearLayout>

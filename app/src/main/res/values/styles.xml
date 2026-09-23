@@ -26,7 +26,7 @@
         <item name="android:layout_height">32dp</item>
         <item name="android:background">@drawable/selector_power_port_tab</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/color_77798d</item>
+        <item name="android:textColor">@color/color_757589</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -49,7 +49,7 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/color_17181c</item>
+        <item name="android:textColor">@color/color_191c1e</item>
         <item name="android:textSize">@dimen/sp_13</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -82,8 +82,8 @@
     <style name="ScreenSettingTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/color_17181c</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/color_191c1e</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -91,8 +91,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:textColor">@color/color_56596b</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_454558</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="BatteryInformationRow">
@@ -100,7 +100,7 @@
         <item name="android:layout_height">65dp</item>
         <item name="left_text_size">15sp</item>
         <item name="right_text_size">15sp</item>
-        <item name="left_text_color">@color/color_17181c</item>
+        <item name="left_text_color">@color/color_191c1e</item>
         <item name="right_text_color">@color/color_55596a</item>
     </style>
 </resources>

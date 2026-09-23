@@ -57,7 +57,7 @@
                     android:minWidth="76dp"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:textColor="@color/color_77798d"
+                    android:textColor="@color/color_757589"
                     android:textSize="14sp" />
 
             <LinearLayout
@@ -78,7 +78,7 @@
                         app:left_text="@string/about_app_version"
                         app:left_text_size="16sp"
                         app:right_arrow_icon="@mipmap/ic_chevron_right"
-                        app:right_text_color="@color/color_77798d"
+                        app:right_text_color="@color/color_757589"
                         app:right_text_size="14sp" />
 
                 <com.aleyn.mvvm.widget.MyInformationView
@@ -106,7 +106,7 @@
                         app:left_text_size="16sp"
                         app:right_arrow_icon="@mipmap/ic_chevron_right"
                         app:right_text="@string/about_phone_number"
-                        app:right_text_color="@color/color_77798d"
+                        app:right_text_color="@color/color_757589"
                         app:right_text_size="14sp" />
 
                 <com.aleyn.mvvm.widget.MyInformationView
@@ -120,7 +120,7 @@
                         app:left_text_size="16sp"
                         app:right_arrow_icon="@mipmap/ic_chevron_right"
                         app:right_text="@string/about_email_address"
-                        app:right_text_color="@color/color_77798d"
+                        app:right_text_color="@color/color_757589"
                         app:right_text_size="14sp" />
 
                 <com.aleyn.mvvm.widget.MyInformationView
@@ -134,7 +134,7 @@
                         app:left_text_size="16sp"
                         app:right_arrow_icon="@mipmap/ic_chevron_right"
                         app:right_text="@string/about_filing_number"
-                        app:right_text_color="@color/color_77798d"
+                        app:right_text_color="@color/color_757589"
                         app:right_text_size="13sp" />
             </LinearLayout>
 

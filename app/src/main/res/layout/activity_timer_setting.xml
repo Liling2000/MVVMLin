@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_26"
                 android:text="@string/timer_select_time"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textSize="@dimen/sp_28"
                 android:textStyle="bold" />
 

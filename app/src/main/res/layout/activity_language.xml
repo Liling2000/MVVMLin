@@ -25,7 +25,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginBottom="18dp"
         android:text="@string/language_choose_hint"
-        android:textColor="@color/color_77798d"
+        android:textColor="@color/color_757589"
         android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView

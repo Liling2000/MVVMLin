@@ -238,7 +238,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
         binding.textStatus.setTextColor(
             ContextCompat.getColor(
-                this, if (isActive) R.color.color_0752ae else R.color.color_77798d
+                this, if (isActive) R.color.color_0752ae else R.color.color_757589
             ),
         )
         binding.textPort.setBackgroundResource(

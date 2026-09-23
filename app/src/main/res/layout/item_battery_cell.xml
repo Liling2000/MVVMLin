@@ -4,8 +4,8 @@
     <ImageView android:id="@+id/image_cell" android:layout_width="18dp" android:layout_height="22dp" android:src="@mipmap/ic_common_lightning_blue"
         android:contentDescription="@null" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
     <TextView android:id="@+id/text_cell_name" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="8dp"
-        android:textColor="@color/color_17181c" android:textSize="15sp" app:layout_constraintStart_toEndOf="@id/image_cell" app:layout_constraintEnd_toStartOf="@id/text_cell_voltage" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
-    <TextView android:id="@+id/text_cell_voltage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/color_17181c"
+        android:textColor="@color/color_191c1e" android:textSize="15sp" app:layout_constraintStart_toEndOf="@id/image_cell" app:layout_constraintEnd_toStartOf="@id/text_cell_voltage" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
+    <TextView android:id="@+id/text_cell_voltage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/color_191c1e"
         android:textSize="15sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
     <View android:id="@+id/divider" android:layout_width="0dp" android:layout_height="1dp" android:background="@color/color_eceef2"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent" />

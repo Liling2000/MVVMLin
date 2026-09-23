@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
-                    android:textColor="@color/color_77798d"
+                    android:textColor="@color/color_757589"
                     android:textSize="12sp"
                     tools:text="@string/power_preview_remaining" />
 
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:text="@string/power_temperature"
-                        android:textColor="@color/color_77798d"
+                        android:textColor="@color/color_757589"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -225,7 +225,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:text="@string/power_low_current_mode"
-                        android:textColor="@color/color_77798d"
+                        android:textColor="@color/color_757589"
                         android:textSize="15sp" />
 
                 <com.aleyn.mvvm.widget.SwitchButtonKotlin
@@ -263,7 +263,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:text="@string/power_screen_settings"
-                        android:textColor="@color/color_77798d"
+                        android:textColor="@color/color_757589"
                         android:textSize="15sp" />
 
                 <ImageView
@@ -297,7 +297,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/power_battery_info"
-                            android:textColor="@color/color_77798d"
+                            android:textColor="@color/color_757589"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 

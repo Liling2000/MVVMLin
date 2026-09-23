@@ -37,6 +37,6 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/custom_mode_add"
-            android:textColor="@color/color_77798d"
+            android:textColor="@color/color_757589"
             android:textSize="16sp" />
 </LinearLayout>

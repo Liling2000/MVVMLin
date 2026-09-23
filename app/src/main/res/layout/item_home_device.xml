@@ -35,7 +35,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_191c1e"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             <TextView
                     android:id="@+id/text_device_desc"
@@ -81,8 +82,8 @@
             android:orientation="horizontal">
 
         <ImageView
-                android:layout_width="13dp"
-                android:layout_height="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:contentDescription="@null"
                 android:src="@mipmap/ic_home_bluetooth" />
 
@@ -93,7 +94,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:textColor="@color/color_454558"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         <TextView
                 android:layout_width="wrap_content"

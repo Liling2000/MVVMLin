@@ -21,34 +21,34 @@
                     android:layout_width="match_parent" android:layout_height="81dp" app:is_show_line="true"
                     app:left_icon="@mipmap/ic_user_profile" app:left_text="@string/account_user_name"
                     app:left_text_color="@color/color_56596b" app:left_text_size="14sp"
-                    app:left_sub_text="@string/account_default_user_name" app:left_sub_text_color="@color/color_17181c"
+                    app:left_sub_text="@string/account_default_user_name" app:left_sub_text_color="@color/color_191c1e"
                     app:left_sub_text_size="16sp" app:right_arrow_icon="@mipmap/ic_chevron_right" />
 
                 <com.aleyn.mvvm.widget.MyInformationView android:id="@+id/item_phone"
                     android:layout_width="match_parent" android:layout_height="81dp" app:is_show_line="true"
                     app:left_icon="@mipmap/ic_phone_outline_dark" app:left_text="@string/account_bound_phone"
                     app:left_text_color="@color/color_56596b" app:left_text_size="14sp"
-                    app:left_sub_text="@string/account_default_phone" app:left_sub_text_color="@color/color_17181c"
+                    app:left_sub_text="@string/account_default_phone" app:left_sub_text_color="@color/color_191c1e"
                     app:left_sub_text_size="16sp" app:right_arrow_icon="@mipmap/ic_chevron_right" />
 
                 <com.aleyn.mvvm.widget.MyInformationView android:id="@+id/item_email"
                     android:layout_width="match_parent" android:layout_height="81dp" app:is_show_line="true"
                     app:left_icon="@mipmap/ic_email" app:left_text="@string/account_email"
                     app:left_text_color="@color/color_56596b" app:left_text_size="14sp"
-                    app:left_sub_text="@string/account_default_email" app:left_sub_text_color="@color/color_17181c"
+                    app:left_sub_text="@string/account_default_email" app:left_sub_text_color="@color/color_191c1e"
                     app:left_sub_text_size="16sp" app:right_arrow_icon="@mipmap/ic_chevron_right" />
 
                 <com.aleyn.mvvm.widget.MyInformationView android:id="@+id/item_password"
                     android:layout_width="match_parent" android:layout_height="81dp" app:is_show_line="true"
                     app:left_icon="@mipmap/ic_lock" app:left_text="@string/account_login_password"
                     app:left_text_color="@color/color_56596b" app:left_text_size="14sp"
-                    app:left_sub_text="@string/account_password_mask" app:left_sub_text_color="@color/color_17181c"
+                    app:left_sub_text="@string/account_password_mask" app:left_sub_text_color="@color/color_191c1e"
                     app:left_sub_text_size="16sp" app:right_arrow_icon="@mipmap/ic_chevron_right" />
 
                 <com.aleyn.mvvm.widget.MyInformationView android:id="@+id/item_cancellation"
                     android:layout_width="match_parent" android:layout_height="71dp" app:is_show_line="false"
                     app:left_icon="@mipmap/ic_user_disabled" app:left_text="@string/account_cancellation"
-                    app:left_text_color="@color/color_17181c" app:left_text_size="17sp"
+                    app:left_text_color="@color/color_191c1e" app:left_text_size="17sp"
                     app:right_arrow_icon="@mipmap/ic_chevron_right" />
             </LinearLayout>
         </LinearLayout>

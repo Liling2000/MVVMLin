@@ -102,7 +102,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/custom_time_hour"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="@dimen/custom_time_picker_label_size"
                             android:textStyle="bold" />
 
@@ -112,7 +112,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/custom_time_minute"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="@dimen/custom_time_picker_label_size"
                             android:textStyle="bold" />
                 </LinearLayout>

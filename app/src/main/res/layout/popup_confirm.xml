@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/color_17181c"
+        android:textColor="@color/color_191c1e"
         android:textSize="@dimen/popup_title_text_size" />
 
     <TextView

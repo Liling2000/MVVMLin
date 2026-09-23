@@ -52,7 +52,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/battery_health"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -164,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/battery_cycle_count"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="16sp" />
 
                     <TextView

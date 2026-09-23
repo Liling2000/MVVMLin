@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dp_16"
         android:text="@string/timer_hour"
-        android:textColor="@color/color_17181c"
+        android:textColor="@color/color_191c1e"
         android:textSize="@dimen/sp_16" />
 
     <NumberPicker
@@ -28,6 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/timer_minute"
-        android:textColor="@color/color_17181c"
+        android:textColor="@color/color_191c1e"
         android:textSize="@dimen/sp_16" />
 </LinearLayout>

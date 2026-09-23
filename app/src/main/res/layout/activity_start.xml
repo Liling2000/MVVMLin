@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="42dp"
                 android:text="@string/login_brand_name"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textSize="48sp"
                 android:textStyle="bold" />
 

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:textColor="@color/color_77798d"
+            android:textColor="@color/color_757589"
             android:textSize="14sp"
             tools:text="@string/power_cable_info" />
 

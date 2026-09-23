@@ -64,10 +64,10 @@
                 app:is_show_line="true"
                 app:left_icon="@mipmap/ic_globe"
                 app:left_text="@string/me_switch_language"
-                app:left_text_color="@color/color_17181c"
+                app:left_text_color="@color/color_191c1e"
                 app:right_arrow_icon="@mipmap/ic_chevron_right"
                 app:right_text="@string/me_language_simplified_chinese"
-                app:right_text_color="@color/color_17181c" />
+                app:right_text_color="@color/color_191c1e" />
 
             <com.aleyn.mvvm.widget.MyInformationView
                 android:id="@+id/item_about"
@@ -76,10 +76,10 @@
                 app:is_show_line="true"
                 app:left_icon="@mipmap/ic_information"
                 app:left_text="@string/me_about_app"
-                app:left_text_color="@color/color_17181c"
+                app:left_text_color="@color/color_191c1e"
                 app:right_arrow_icon="@mipmap/ic_chevron_right"
                 app:right_text="@string/me_app_version"
-                app:right_text_color="@color/color_17181c" />
+                app:right_text_color="@color/color_191c1e" />
 
         </LinearLayout>
 
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="@string/me_user_agreement"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textSize="13sp" />
 
             <View
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="@string/me_privacy_policy"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textSize="13sp" />
         </LinearLayout>
 

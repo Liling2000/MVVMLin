@@ -203,7 +203,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/screen_color_white"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="14sp" />
 
                     <TextView
@@ -213,7 +213,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/screen_color_dark"
-                            android:textColor="@color/color_17181c"
+                            android:textColor="@color/color_191c1e"
                             android:textSize="14sp" />
                 </LinearLayout>
 
@@ -240,7 +240,7 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_17181c"
+                        android:textColor="@color/color_191c1e"
                         android:textColorHint="@color/color_9a9da9"
                         android:textSize="14sp" />
             </LinearLayout>

@@ -34,7 +34,7 @@
                 android:layout_marginHorizontal="@dimen/error_page_margin"
                 android:layout_marginBottom="16dp"
                 android:text="@string/protection_log_history_notice"
-                android:textColor="@color/color_77798d"
+                android:textColor="@color/color_757589"
                 android:textSize="14sp" />
 
             <TextView
@@ -97,7 +97,7 @@
                 android:layout_marginTop="16dp"
                 android:accessibilityLiveRegion="polite"
                 android:gravity="center"
-                android:textColor="@color/color_77798d"
+                android:textColor="@color/color_757589"
                 android:textSize="14sp"
                 android:visibility="gone" />
         </LinearLayout>

@@ -19,7 +19,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/color_17181c"
+                android:textColor="@color/color_191c1e"
                 android:textSize="22sp" />
 
         <TextView
@@ -85,14 +85,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/color_77798d"
+                android:textColor="@color/color_757589"
                 android:textSize="11sp" />
 
         <TextView
                 android:id="@+id/text_max_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/color_77798d"
+                android:textColor="@color/color_757589"
                 android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>
