@@ -37,11 +37,8 @@
                 android:id="@+id/indicator_mode"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@drawable/bg_charge_selected"
                 android:contentDescription="@string/charging_mode_smart"
-                android:padding="6dp"
-                android:src="@mipmap/ic_check_blue"
-                app:tint="@color/color_ffffff" />
+                android:src="@mipmap/ic_check_pre" />
     </LinearLayout>
     <TextView
             android:layout_width="match_parent"

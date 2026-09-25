@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.bean.BleSavedDevice
+import com.jiyi.power.app.common.MobilePowerConfig
 import com.jiyi.power.app.utils.BlePermissionManager
 import com.jiyi.power.app.viewmodel.BleScanDevice
 import com.liling.ble.callback.BleScanDeviceCallBack
@@ -147,6 +148,23 @@ object BleConnectionCoordinator {
         if (withQueue) bleApi.writeDataWithQueue(data, sn) else bleApi.writeDataNoQueue(data, sn)
     }
 
+    /** 解绑设备并主动断开 BLE，避免设备仍被本机占用而无法被其他手机发现。 */
+    fun disconnectAndRemoveDevice(sn: String?) {
+        if (sn.isNullOrBlank()) return
+        val savedDevice = BleDeviceStore.getDevices().firstOrNull {
+            it.bluetoothSn.equals(sn, ignoreCase = true)
+        }
+        val model = savedDevice?.bluetoothName.orEmpty()
+
+        clearConnectionTracking(sn)
+        BleDeviceStore.removeDevice(sn)
+        refreshBoundDevices()
+        reconcileScan()
+
+        // 即使协调器中的状态尚未同步为 CONNECTED，也让底层按 SN 尝试断连。
+        bleApi.disconnectBle(sn, model)
+    }
+
     private fun reconcileScan() {
         val hasReconnectTarget = autoReconnectEnabled && _connectionStates.value.any {
             it.value != DeviceConnectionState.CONNECTED
@@ -166,7 +184,7 @@ object BleConnectionCoordinator {
         restartJob?.cancel()
         scanRunning = true
         _isScanning.value = true
-        bleApi.scanDevice(true)
+        bleApi.scanDevice(MobilePowerConfig.BLUETOOTH_DEVICE_NAME)
         // 底层一轮扫描默认 10 秒；结束回调后重新开始，形成前台持续扫描。
         bleApi.stopScanDelay(true)
     }
@@ -191,6 +209,7 @@ object BleConnectionCoordinator {
         val device = result.device ?: return
         val name =
             result.scanRecord?.deviceName ?: runCatching { device.name }.getOrNull() ?: return
+        if (name != MobilePowerConfig.BLUETOOTH_DEVICE_NAME) return
         val item = BleScanDevice(name, device.address, result.rssi, result)
         _scanDevices.update { current ->
             current.toMutableList().apply {
@@ -215,6 +234,14 @@ object BleConnectionCoordinator {
 
     private fun handleConnectFailure(sn: String) {
         connectTimeoutJobs.remove(sn)?.cancel()
+        if (BleDeviceStore.getDevices().none {
+                it.bluetoothSn.equals(sn, ignoreCase = true)
+            }
+        ) {
+            clearConnectionTracking(sn)
+            reconcileScan()
+            return
+        }
         if (_connectionStates.value[sn] == DeviceConnectionState.DISCONNECTED) return
         setConnectionState(sn, DeviceConnectionState.DISCONNECTED)
         manuallyConnecting.remove(sn)
@@ -225,6 +252,21 @@ object BleConnectionCoordinator {
         retryAfter[sn] = System.currentTimeMillis() + delayMs
         _connectionEvents.tryEmit(BleConnectionEvent.Disconnected(sn))
         reconcileScan()
+    }
+
+    private fun clearConnectionTracking(sn: String) {
+        connectTimeoutJobs.entries.firstOrNull {
+            it.key.equals(sn, ignoreCase = true)
+        }?.let { (key, job) ->
+            job.cancel()
+            connectTimeoutJobs.remove(key)
+        }
+        manuallyConnecting.removeAll { it.equals(sn, ignoreCase = true) }
+        retryCount.keys.removeAll { it.equals(sn, ignoreCase = true) }
+        retryAfter.keys.removeAll { it.equals(sn, ignoreCase = true) }
+        _connectionStates.update { states ->
+            states.filterKeys { !it.equals(sn, ignoreCase = true) }
+        }
     }
 
     private fun startConnectTimeout(sn: String, model: String) {

@@ -3,6 +3,7 @@ package com.jiyi.power.app
 import com.alibaba.android.arouter.launcher.ARouter
 
 import com.jiyi.power.app.common.RouterPath
+import com.jiyi.power.app.common.MobilePowerConfig
 
 import com.alibaba.android.arouter.facade.annotation.Route
 
@@ -62,23 +63,27 @@ class BatteryInfoActivity : BaseActivity<ActivityBatteryInfoBinding>() {
         textHealthCycle.text = data.cycleCount?.let {
             getString(R.string.battery_cycle_format, it)
         } ?: emptyValue()
-        infoManufacturer.setRightTextValue(data.manufacturer ?: emptyValue())
-        infoModel.setRightTextValue(data.model ?: emptyValue())
+        infoManufacturer.setRightTextValue(
+            data.manufacturer?.takeIf { it.isNotBlank() }
+                ?: MobilePowerConfig.BATTERY_MANUFACTURER,
+        )
+        infoModel.setRightTextValue(MobilePowerConfig.BATTERY_MODEL)
         infoCycle.setRightTextValue(data.cycleCount?.let {
             getString(
                 R.string.battery_cycle_format, it
             )
         } ?: emptyValue())
-        infoRecommended.setRightTextValue(data.recommendedYears?.let {
+        infoRecommended.setRightTextValue(
             getString(
-                R.string.battery_year_format, it
-            )
-        } ?: emptyValue())
+                R.string.battery_year_format,
+                MobilePowerConfig.BATTERY_RECOMMENDED_YEARS,
+            ),
+        )
         infoSeries.setRightTextValue(data.batterySeries ?: emptyValue())
         cellAdapter.submitList(data.cells)
-        infoRatedPower.setRightTextValue(formatPower(data.ratedPowerW))
-        infoMaxCharge.setRightTextValue(formatPower(data.maxChargePowerW))
-        infoMaxDischarge.setRightTextValue(formatPower(data.maxDischargePowerW))
+        infoRatedPower.setRightTextValue(formatPower(MobilePowerConfig.BATTERY_RATED_POWER_W))
+        infoMaxCharge.setRightTextValue(formatPower(MobilePowerConfig.BATTERY_MAX_CHARGE_POWER_W))
+        infoMaxDischarge.setRightTextValue(formatPower(MobilePowerConfig.BATTERY_MAX_DISCHARGE_POWER_W))
         infoDischargeTime.setRightTextValue(data.totalDischargeMinutes?.let {
             getString(
                 R.string.battery_duration_format, it / 60, it % 60

@@ -13,12 +13,15 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.BleDeviceAdapter
+import com.jiyi.power.app.bean.BleDeviceStore
+import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.utils.BlePermissionManager
 import com.jiyi.power.app.utils.BlePermissionResult
 import com.jiyi.power.app.viewmodel.BleConnectEvent
 import com.jiyi.power.app.viewmodel.BleUiState
 import com.jiyi.power.app.viewmodel.BleViewModel
+import com.jiyi.power.app.widget.popup.AppPopupManager
 import com.jiyi.power.databinding.ActivityBleDeviceScanBinding
 import com.jiyi.power.app.MobilePowerMainActivity
 import kotlinx.coroutines.launch
@@ -61,6 +64,10 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
                 viewModel.connectEvent.collect { event ->
                     when (event) {
                         is BleConnectEvent.Success -> {
+                            // 添加成功的语义包含“已绑定并持久化”，完成后才进入设备主页。
+                            // 底层已保存时这里是一次幂等更新。
+                            BleDeviceStore.saveDevice(event.device)
+                            BleConnectionCoordinator.refreshBoundDevices()
                             ToastUtils.showShort(R.string.scan_connect_success)
                             ARouter.getInstance().build(RouterPath.PAGE_MOBILE_POWER_MAIN).withString(
                                 MobilePowerMainActivity.EXTRA_DEVICE_SN,
@@ -88,6 +95,17 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
     }
 
     private fun requestAndStartScan() {
+        if (BlePermissionManager.hasBluetoothPermissions()) {
+            viewModel.startScan()
+            return
+        }
+        AppPopupManager.showPermissionRequest(
+            context = this,
+            onAgree = { requestBluetoothPermissions() },
+        )
+    }
+
+    private fun requestBluetoothPermissions() {
         BlePermissionManager.requestBluetoothPermissions(this) { result ->
             when (result) {
                 BlePermissionResult.Granted -> viewModel.startScan()

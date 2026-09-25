@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.common.RouterPath
+import com.jiyi.power.app.common.MobilePowerConfig
 import com.jiyi.power.databinding.ActivityMobilePowerMainBinding
 import com.jiyi.power.databinding.ItemPowerPortBinding
 import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
@@ -23,6 +24,7 @@ import com.jiyi.power.app.bean.MobilePowerPortType
 import com.jiyi.power.app.bean.PortDirection
 import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.ble.DeviceConnectionState
+import com.jiyi.power.app.ble.launchDevicePolling
 import com.jiyi.power.app.common.RouterPath.PAGE_ROUTE_THEME
 import com.jiyi.power.app.viewmodel.MainFragmentViewModel
 import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
@@ -49,6 +51,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         setupStaticContent()
         setupClicks()
         setupBleNotifications()
+        setupDevicePolling()
         render(null)
     }
 
@@ -60,16 +63,30 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             viewModel.portDetails.collect { renderPortDetails(viewModel.homeInfo.value) }
         }
         flowLaunch {
-            viewModel.ratedCapacity.collect(::renderRatedCapacity)
+            viewModel.ratedCapacityMah.collect { ratedCapacityMah ->
+                renderCurrentCapacity(
+                    batteryPercent = viewModel.homeInfo.value?.battery?.percent,
+                    ratedCapacityMah = ratedCapacityMah,
+                )
+            }
         }
     }
 
     override fun initData() {
         viewModel.bindDevice(deviceSn)
-        val connected = BleConnectionCoordinator.connectionStates.value.any { (sn, state) ->
-            sn.equals(deviceSn, ignoreCase = true) && state == DeviceConnectionState.CONNECTED
+    }
+
+    private fun setupDevicePolling() {
+        launchDevicePolling(
+            deviceSn = deviceSn,
+            intervalMs = DASHBOARD_POLL_INTERVAL_MS,
+        ) { firstPoll ->
+            if (firstPoll) {
+                viewModel.requestDashboard(deviceSn)
+            } else {
+                viewModel.requestDashboardSnapshot(deviceSn)
+            }
         }
-        if (connected) viewModel.requestDashboard(deviceSn)
     }
 
     private fun setupStaticContent() = with(mBinding) {
@@ -142,7 +159,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
                         is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == CmdConstant.FunctionCode.CODE_34) {
                             // 等设备应用新配置后重新读取寄存器，以设备回包为最终状态。
                             delay(150L)
-                            viewModel.requestDashboard(deviceSn)
+                            viewModel.requestDashboardSnapshot(deviceSn)
                             mBinding.switchLowCurrent.isEnabled = true
                         }
                         is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (event.functionCode == CmdConstant.FunctionCode.CODE_34) {
@@ -212,13 +229,18 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         detailCycleCount.textValue.text = battery?.cycleCount?.let {
             getString(R.string.power_cycle_count_value, it)
         } ?: getString(R.string.power_unknown_value)
-        renderRatedCapacity(viewModel.ratedCapacity.value)
+        renderCurrentCapacity(
+            batteryPercent = battery?.percent,
+            ratedCapacityMah = viewModel.ratedCapacityMah.value,
+        )
     }
 
-    private fun renderRatedCapacity(value: String?) {
-        // F4 为字符串；纯数值补充 mAh，设备已带单位时直接显示。
-        mBinding.detailCapacity.textValue.text = value?.let {
-            it.toIntOrNull()?.let { capacity -> getString(R.string.power_capacity_value, capacity) } ?: it
+    private fun renderCurrentCapacity(batteryPercent: Int?, ratedCapacityMah: Int?) {
+        mBinding.detailCapacity.textValue.text = batteryPercent?.let { percent ->
+            getString(
+                R.string.power_capacity_value,
+                MobilePowerConfig.currentCapacityMah(percent, ratedCapacityMah),
+            )
         } ?: getString(R.string.power_unknown_value)
     }
 
@@ -325,5 +347,6 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
 
     companion object {
         const val EXTRA_DEVICE_SN = "device_sn"
+        private const val DASHBOARD_POLL_INTERVAL_MS = 1_000L
     }
 }

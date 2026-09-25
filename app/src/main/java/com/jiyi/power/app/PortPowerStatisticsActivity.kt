@@ -35,7 +35,7 @@ class PortPowerStatisticsActivity : BaseActivity<ActivityPortPowerStatisticsBind
             view.setTvUnit(getString(R.string.statistics_power_unit))
             view.setContentTextSize(25f)
             view.setUnitTextSize(12f)
-            view.setContentTextColor(ContextCompat.getColor(this, BaseR.color.color_191c1e))
+            view.setContentTextColor(ContextCompat.getColor(this, R.color.color_191c1e))
             view.setUnitTextColor(ContextCompat.getColor(this, R.color.color_666a7c))
         }
     }

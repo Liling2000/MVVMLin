@@ -15,6 +15,7 @@ import com.jiyi.power.app.adapter.HomeBannerAdapter
 import com.jiyi.power.app.adapter.HomeDeviceAdapter
 import com.jiyi.power.app.adapter.HomeDeviceItem
 import com.jiyi.power.app.bean.BleDeviceStore
+import com.jiyi.power.app.bean.BleSavedDevice
 import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.ble.BleIoEvent
 import com.jiyi.power.app.ble.DeviceConnectionState
@@ -31,6 +32,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.youth.banner.indicator.CircleIndicator
 import com.liling.ble.utils.BleUtils
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -66,7 +68,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         mBinding.recyclerDevices.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = deviceAdapter
-            setHasFixedSize(true)
+            // 列表位于 NestedScrollView 中且高度为 wrap_content；设备增删后必须重新测量。
+            setHasFixedSize(false)
             // 连接状态更新只替换文字，禁用默认的整卡淡入淡出，避免多设备回连时连续闪烁。
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         }
@@ -86,8 +89,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun refreshHomeDevices() {
         val devices = BleDeviceStore.getDevices()
         BleConnectionCoordinator.refreshBoundDevices()
-        // BleDeviceStore 不是可观察数据源；每次首页可见都必须主动重建列表。
-        renderDevices(BleConnectionCoordinator.connectionStates.value)
+        // 返回首页时主动重建列表，避免依赖状态流是否产生了新值。
+        renderDevices(devices, BleConnectionCoordinator.connectionStates.value)
         if (devices.isEmpty()) return
         if (BlePermissionManager.hasBluetoothPermissions()) {
             BleConnectionCoordinator.startAutoReconnect()
@@ -128,17 +131,25 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                             }
                         }
                     }
-                    BleConnectionCoordinator.connectionStates.collect { states ->
-                        val connectedSns = states.filterValues { it == DeviceConnectionState.CONNECTED }.keys
-                        val newConnections = deviceBatteryState.updateConnectedDevices(connectedSns)
-                        renderDevices(states)
-                        val command = MobilePowerProtocolManager.buildReadCommand(CmdConstant.FunctionCode.CODE_16)
-                        if (command != null) {
-                            newConnections.forEach { sn ->
-                                BleConnectionCoordinator.write(sn, BleUtils.hexStringToByte(command))
+                    combine(
+                        BleDeviceStore.devices,
+                        BleConnectionCoordinator.connectionStates,
+                    ) { devices, states -> devices to states }
+                        .collect { (devices, states) ->
+                            val connectedSns = states
+                                .filterValues { it == DeviceConnectionState.CONNECTED }
+                                .keys
+                            val newConnections = deviceBatteryState.updateConnectedDevices(connectedSns)
+                            renderDevices(devices, states)
+                            val command = MobilePowerProtocolManager.buildReadCommand(
+                                CmdConstant.FunctionCode.CODE_16,
+                            )
+                            if (command != null) {
+                                newConnections.forEach { sn ->
+                                    BleConnectionCoordinator.write(sn, BleUtils.hexStringToByte(command))
+                                }
                             }
                         }
-                    }
                 } finally {
                     // 页面重新可见时重新查询，避免展示离开期间断连前的旧电量。
                     deviceBatteryState.clear()
@@ -147,8 +158,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun renderDevices(states: Map<String, DeviceConnectionState>) {
-        val items = BleDeviceStore.getDevices().map { saved ->
+    private fun renderDevices(
+        devices: List<BleSavedDevice>,
+        states: Map<String, DeviceConnectionState>,
+    ) {
+        val items = devices.map { saved ->
             val connectionState = states.entries.firstOrNull {
                 it.key.equals(saved.bluetoothSn, ignoreCase = true)
             }?.value
@@ -171,6 +185,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }.toMutableList<HomeDeviceItem>()
         items += HomeDeviceItem.AddDevice
         deviceAdapter.submitList(items)
+    }
+
+    private fun renderDevices(states: Map<String, DeviceConnectionState>) {
+        renderDevices(BleDeviceStore.devices.value, states)
     }
 
     private fun openDeviceScanner() {

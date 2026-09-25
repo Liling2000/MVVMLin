@@ -29,9 +29,9 @@ class BatteryInfoProtocolTest {
         assertEquals(97, state.healthPercent)
         assertEquals(0x1234, state.cycleCount)
         assertEquals((4000..4006).toList(), state.cells.map { it.voltageMv })
+        assertEquals("7", state.batterySeries)
         assertEquals(61L, state.totalDischargeMinutes)
         assertEquals(65535L, state.totalDischargeCapacityMah)
-        assertNull(state.batterySeries)
         assertNull(state.model)
         assertNull(state.ratedPowerW)
     }
@@ -46,7 +46,22 @@ class BatteryInfoProtocolTest {
         assertEquals(268, state.cycleCount)
         assertEquals(88, state.healthPercent)
         assertEquals("电池厂商", state.manufacturer)
-        assertTrue(state.cells.all { it.voltageMv == null })
+        assertTrue(state.cells.isEmpty())
+        assertNull(state.batterySeries)
+    }
+
+    @Test
+    fun onlyCellsWithValidVoltageAreShownAndCounted() {
+        val protocol = BatteryInfoProtocol()
+
+        protocol.accept(frame(CmdConstant.FunctionCode.CODE_23, littleEndian(4012)))
+        protocol.accept(frame(CmdConstant.FunctionCode.CODE_25, littleEndian(0)))
+        protocol.accept(frame(CmdConstant.FunctionCode.CODE_27, littleEndian(0xFFFF)))
+        val state = protocol.accept(frame(CmdConstant.FunctionCode.CODE_2B, littleEndian(3988)))
+
+        assertEquals(listOf(1, 5), state.cells.map { it.index })
+        assertEquals(listOf(4012, 3988), state.cells.map { it.voltageMv })
+        assertEquals("2", state.batterySeries)
     }
 
     @Test
@@ -78,4 +93,6 @@ class BatteryInfoProtocolTest {
         return (byteArrayOf(0xAA.toByte()) + body + byteArrayOf(checksum, 0x55))
             .joinToString("") { "%02X".format(it.toInt() and 0xFF) }
     }
+
+    private fun littleEndian(value: Int) = byteArrayOf(value.toByte(), (value shr 8).toByte())
 }

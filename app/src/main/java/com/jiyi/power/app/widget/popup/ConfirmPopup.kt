@@ -25,7 +25,7 @@ class ConfirmPopup internal constructor(
 
     override fun onCreate() {
         super.onCreate()
-        val binding = PopupConfirmBinding.bind(popupContentView)
+        val binding = PopupConfirmBinding.bind(contentView)
         binding.popupTitle.setText(config.titleRes)
         binding.popupMessage.setText(config.messageRes)
         binding.positiveButton.setText(config.positiveRes)

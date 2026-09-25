@@ -27,7 +27,7 @@ class PrivacyAgreementPopup internal constructor(
 
     override fun onCreate() {
         super.onCreate()
-        val binding = PopupPrivacyAgreementBinding.bind(popupContentView)
+        val binding = PopupPrivacyAgreementBinding.bind(contentView)
         binding.agreementIntroduction.text = buildIntroduction()
         binding.agreementIntroduction.movementMethod = LinkMovementMethod.getInstance()
         binding.agreeButton.setOnClickListener {

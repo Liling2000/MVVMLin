@@ -16,7 +16,7 @@ class PermissionRequestPopup internal constructor(
 
     override fun onCreate() {
         super.onCreate()
-        val binding = PopupPermissionRequestBinding.bind(popupContentView)
+        val binding = PopupPermissionRequestBinding.bind(contentView)
         binding.agreeButton.setOnClickListener {
             dismiss()
             onAgree()

@@ -6,7 +6,6 @@
         <item name="colorAccent">@color/color_d81b60</item>
         <item name="android:windowBackground">@color/color_f7f9fb</item>
         <item name="android:windowAnimationStyle">@style/AppWindowAnimation</item>
-        <item name="android:fontFamily">sans</item>
     </style>
 
     <style name="AppStartTheme" parent="AppTheme">

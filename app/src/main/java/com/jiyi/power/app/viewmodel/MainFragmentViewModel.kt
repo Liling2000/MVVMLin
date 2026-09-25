@@ -6,6 +6,7 @@ import com.jiyi.power.app.bean.MobilePowerSnapshot
 import com.jiyi.power.app.bean.MobilePowerHomeInfoBean
 import com.jiyi.power.app.bean.MobilePowerPortDetails
 import com.jiyi.power.app.bean.MobilePowerPortType
+import com.jiyi.power.app.common.MobilePowerConfig
 import com.jiyi.power.app.utils.ProtocolUtil
 import com.jiyi.power.app.utils.MobilePowerProtocolManager
 import com.jiyi.power.app.utils.CmdConstant
@@ -63,7 +64,7 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
     val c1PortMetrics = MutableStateFlow(C1PortMetricsUiState())
     val dashboardSnapshot = MutableStateFlow<MobilePowerSnapshot?>(null)
     val homeInfo = MutableStateFlow<MobilePowerHomeInfoBean?>(null)
-    val ratedCapacity = MutableStateFlow<String?>(null)
+    val ratedCapacityMah = MutableStateFlow<Int?>(null)
     val portDetails = MutableStateFlow<Map<MobilePowerPortType, MobilePowerPortDetails>>(emptyMap())
     private var currentDeviceSn: String? = null
 
@@ -120,7 +121,9 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
         val parsedFrame = data?.let { MobilePowerProtocolManager.parseFrame(it) } ?: return
         val code = parsedFrame.raw.functionCode
         if (code == CmdConstant.FunctionCode.CODE_F4) {
-            ratedCapacity.value = (parsedFrame.payload as? Payload.Text)?.value?.takeIf { it.isNotBlank() }
+            ratedCapacityMah.value = MobilePowerConfig.parseRatedCapacityMah(
+                (parsedFrame.payload as? Payload.Text)?.value,
+            )
             return
         }
         val portType = when (code) {
@@ -235,11 +238,9 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
     fun requestDashboard(sn: String?): Boolean {
         bindDevice(sn)
         if (deviceSn.isNullOrBlank()) return false
-        val command = MobilePowerProtocolManager.buildHomeInfoReadCommand() ?: return false
         currentDeviceSn = deviceSn
         portDetails.value = emptyMap()
-        ratedCapacity.value = null
-        val sent = sendDeviceCommand(CmdConstant.FunctionCode.CODE_00, command)
+        val sent = requestDashboardSnapshot(sn)
         if (sent) {
             requestPortDetails(MobilePowerPortType.C1)
             requestPortDetails(MobilePowerPortType.C2)
@@ -249,6 +250,15 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
             )
         }
         return sent
+    }
+
+    /** Poll only the changing dashboard registers; static port/device details are kept. */
+    fun requestDashboardSnapshot(sn: String?): Boolean {
+        bindDevice(sn)
+        if (deviceSn.isNullOrBlank()) return false
+        val command = MobilePowerProtocolManager.buildHomeInfoReadCommand() ?: return false
+        currentDeviceSn = deviceSn
+        return sendDeviceCommand(CmdConstant.FunctionCode.CODE_00, command)
     }
 
     private fun requestPortDetails(type: MobilePowerPortType) {
@@ -293,13 +303,11 @@ class MainFragmentViewModel : DeviceCommandViewModel() {
         return c1 && c2
     }
 
-    override fun onDeviceReconnected() { requestDashboard(deviceSn) }
-
     override fun onDeviceDisconnected() {
         receiveBuffer = ""
         dashboardSnapshot.value = null
         portDetails.value = emptyMap()
-        ratedCapacity.value = null
+        ratedCapacityMah.value = null
     }
 
     private fun setTimer(code: String, value: String, enabled: Boolean): Boolean {

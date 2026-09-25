@@ -13,10 +13,11 @@ import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
-import com.jiyi.power.app.bean.BleDeviceStore
+import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.DeviceSettingViewModel
+import com.jiyi.power.app.widget.popup.AppPopupManager
 import com.jiyi.power.databinding.ActivityDeviceSettingBinding
 
 @Route(path = RouterPath.PAGE_DEVICE_SETTING)
@@ -98,34 +99,32 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
     }
 
     private fun showFactoryResetDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.device_setting_factory_reset)
-            .setMessage(R.string.device_setting_factory_reset_message)
-            .setNegativeButton(R.string.device_setting_cancel, null)
-            .setPositiveButton(R.string.device_setting_confirm) { _, _ ->
+        AppPopupManager.showRestoreFactorySettings(
+            context = this,
+            onConfirm = {
                 viewModel.bindDevice(deviceSn)
                 if (viewModel.restoreFactorySettings()) {
                     preferences.edit().clear().apply()
                     renderStoredValues()
                     ToastUtils.showShort(R.string.device_setting_factory_reset_success)
                 } else ToastUtils.showShort(R.string.power_command_failed)
-            }.show()
+            },
+        )
     }
 
     private fun showDeleteDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.device_setting_delete)
-            .setMessage(R.string.device_setting_delete_message)
-            .setNegativeButton(R.string.device_setting_cancel, null)
-            .setPositiveButton(R.string.device_setting_delete) { _, _ ->
-                BleDeviceStore.removeDevice(deviceSn)
+        AppPopupManager.showDeleteDevice(
+            context = this,
+            onConfirm = {
+                BleConnectionCoordinator.disconnectAndRemoveDevice(deviceSn)
                 preferences.edit().clear().apply()
                 ToastUtils.showShort(R.string.device_setting_delete_success)
                 ARouter.getInstance().build(RouterPath.PAGE_MAIN)
                     .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     .navigation(this)
                 finish()
-            }.show()
+            },
+        )
     }
 
     companion object {

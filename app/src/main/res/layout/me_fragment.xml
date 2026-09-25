@@ -73,7 +73,6 @@
                 android:id="@+id/item_about"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:is_show_line="true"
                 app:left_icon="@mipmap/ic_information"
                 app:left_text="@string/me_about_app"
                 app:left_text_color="@color/color_191c1e"

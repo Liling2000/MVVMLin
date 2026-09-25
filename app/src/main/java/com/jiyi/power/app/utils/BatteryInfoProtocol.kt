@@ -7,6 +7,19 @@ import com.jiyi.power.app.bean.Payload
 
 /** 电池页的通知组帧和增量回填；不将缺失字段替换成示例值。 */
 class BatteryInfoProtocol {
+    companion object {
+        /** 协议允许探测的电芯电压寄存器；实际显示数量由有效回包决定。 */
+        val CELL_VOLTAGE_REGISTER_PAIRS = listOf(
+            CmdConstant.FunctionCode.CODE_23 to CmdConstant.FunctionCode.CODE_24,
+            CmdConstant.FunctionCode.CODE_25 to CmdConstant.FunctionCode.CODE_26,
+            CmdConstant.FunctionCode.CODE_27 to CmdConstant.FunctionCode.CODE_28,
+            CmdConstant.FunctionCode.CODE_29 to CmdConstant.FunctionCode.CODE_2A,
+            CmdConstant.FunctionCode.CODE_2B to CmdConstant.FunctionCode.CODE_2C,
+            CmdConstant.FunctionCode.CODE_2D to CmdConstant.FunctionCode.CODE_2E,
+            CmdConstant.FunctionCode.CODE_30 to CmdConstant.FunctionCode.CODE_31,
+        )
+    }
+
     private var buffer = ""
     private val registers = mutableMapOf<String, Int>()
     var state = BatteryInfoUiData()
@@ -62,19 +75,16 @@ class BatteryInfoProtocol {
             val hi = registers[highCode] ?: return null
             return lo or (hi shl 8)
         }
+        val cells = CELL_VOLTAGE_REGISTER_PAIRS.mapIndexedNotNull { index, (low, high) ->
+            u16(low, high)
+                ?.takeIf { it in 1 until 0xFFFF }
+                ?.let { BatteryCellInfo(index + 1, it) }
+        }
         state = state.copy(
             healthPercent = registers[CmdConstant.FunctionCode.CODE_1E]?.takeIf { it in 0..100 },
             cycleCount = u16(CmdConstant.FunctionCode.CODE_1C, CmdConstant.FunctionCode.CODE_1D),
-            // 没有串数和未安装电芯的判定规则，保留全部七路原始读数。
-            cells = listOf(
-                CmdConstant.FunctionCode.CODE_23 to CmdConstant.FunctionCode.CODE_24,
-                CmdConstant.FunctionCode.CODE_25 to CmdConstant.FunctionCode.CODE_26,
-                CmdConstant.FunctionCode.CODE_27 to CmdConstant.FunctionCode.CODE_28,
-                CmdConstant.FunctionCode.CODE_29 to CmdConstant.FunctionCode.CODE_2A,
-                CmdConstant.FunctionCode.CODE_2B to CmdConstant.FunctionCode.CODE_2C,
-                CmdConstant.FunctionCode.CODE_2D to CmdConstant.FunctionCode.CODE_2E,
-                CmdConstant.FunctionCode.CODE_30 to CmdConstant.FunctionCode.CODE_31,
-            ).mapIndexed { index, (low, high) -> BatteryCellInfo(index + 1, u16(low, high)) },
+            batterySeries = cells.size.takeIf { it > 0 }?.toString(),
+            cells = cells,
             totalDischargeMinutes = u16(CmdConstant.FunctionCode.CODE_40, CmdConstant.FunctionCode.CODE_41)?.toLong(),
             totalDischargeCapacityMah = u16(CmdConstant.FunctionCode.CODE_42, CmdConstant.FunctionCode.CODE_43)?.toLong(),
         )

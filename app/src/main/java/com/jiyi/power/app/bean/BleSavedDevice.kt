@@ -3,6 +3,9 @@ package com.jiyi.power.app.bean
 import androidx.annotation.DrawableRes
 import com.aleyn.mvvm.utils.MmkvManager
 import com.jiyi.power.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class BleSavedDevice(
     val bluetoothName: String,
@@ -13,8 +16,11 @@ data class BleSavedDevice(
 object BleDeviceStore {
     private const val KEY_DEVICE_LIST = "key_ble_device_list"
 
+    private val _devices = MutableStateFlow<List<BleSavedDevice>>(readDevices())
+    val devices: StateFlow<List<BleSavedDevice>> = _devices.asStateFlow()
+
     fun getDevices(): MutableList<BleSavedDevice> {
-        return MmkvManager.getList(KEY_DEVICE_LIST)
+        return _devices.value.toMutableList()
     }
 
     fun saveDevice(device: BleSavedDevice) {
@@ -25,12 +31,20 @@ object BleDeviceStore {
         } else {
             devices.add(device)
         }
-        MmkvManager.putList(KEY_DEVICE_LIST, devices)
+        updateDevices(devices)
     }
 
     fun removeDevice(bluetoothSn: String?) {
         val devices = getDevices()
         if (bluetoothSn.isNullOrBlank()) devices.clear() else devices.removeAll { it.bluetoothSn == bluetoothSn }
-        MmkvManager.putList(KEY_DEVICE_LIST, devices)
+        updateDevices(devices)
     }
+
+    private fun updateDevices(devices: List<BleSavedDevice>) {
+        val snapshot = devices.toList()
+        MmkvManager.putList(KEY_DEVICE_LIST, snapshot)
+        _devices.value = snapshot
+    }
+
+    private fun readDevices(): List<BleSavedDevice> = MmkvManager.getList(KEY_DEVICE_LIST)
 }

@@ -40,8 +40,12 @@ class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.toolbar.setLeftClickListener { finish() }
-        mBinding.recyclerModes.layoutManager = LinearLayoutManager(this)
-        mBinding.recyclerModes.adapter = modeAdapter
+        mBinding.recyclerModes.apply {
+            layoutManager = LinearLayoutManager(this@ChargingModeActivity)
+            adapter = modeAdapter
+            // 模式刷新只更新选中/未选中内容，不使用默认的透明度交叉动画。
+            itemAnimator = null
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
