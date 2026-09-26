@@ -9,7 +9,9 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
@@ -19,6 +21,8 @@ import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.DeviceSettingViewModel
 import com.jiyi.power.app.viewmodel.ChargingModeViewModel
+import com.jiyi.power.app.viewmodel.DeviceCommandViewModel
+import com.jiyi.power.app.utils.CmdConstant
 import com.jiyi.power.app.widget.popup.AppPopupManager
 import com.jiyi.power.databinding.ActivityDeviceSettingBinding
 import kotlinx.coroutines.launch
@@ -31,10 +35,12 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE) }
     private val deviceSn by lazy { intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN) }
+    private var factoryResetPending = false
 
     override fun initView(savedInstanceState: Bundle?) {
         renderStoredValues()
         setupClicks()
+        observeDeviceCommands()
     }
 
     override fun initData() = Unit
@@ -109,12 +115,44 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
             onConfirm = {
                 viewModel.bindDevice(deviceSn)
                 if (viewModel.restoreFactorySettings()) {
-                    preferences.edit().clear().apply()
-                    renderStoredValues()
-                    ToastUtils.showShort(R.string.device_setting_factory_reset_success)
+                    factoryResetPending = true
+                    showLoading(getString(R.string.setting_in_progress))
                 } else ToastUtils.showShort(R.string.power_command_failed)
             },
         )
+    }
+
+    private fun observeDeviceCommands() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.commandEvents.collect { event ->
+                    when (event) {
+                        is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (
+                            factoryResetPending && event.functionCode == CmdConstant.FunctionCode.CODE_3D
+                        ) {
+                            factoryResetPending = false
+                            dismissLoading()
+                            preferences.edit().clear().apply()
+                            renderStoredValues()
+                            ToastUtils.showShort(R.string.device_setting_factory_reset_success)
+                        }
+                        is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (
+                            factoryResetPending && event.functionCode == CmdConstant.FunctionCode.CODE_3D
+                        ) {
+                            factoryResetPending = false
+                            dismissLoading()
+                            ToastUtils.showShort(R.string.power_command_failed)
+                        }
+                        DeviceCommandViewModel.CommandEvent.Disconnected -> if (factoryResetPending) {
+                            factoryResetPending = false
+                            dismissLoading()
+                            ToastUtils.showShort(R.string.power_command_failed)
+                        }
+                        else -> Unit
+                    }
+                }
+            }
+        }
     }
 
     private fun refreshChargingMode() {

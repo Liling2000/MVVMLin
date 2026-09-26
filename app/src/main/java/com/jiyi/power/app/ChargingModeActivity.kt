@@ -69,8 +69,13 @@ class ChargingModeActivity : BaseActivity<ActivityChargingModeBinding>() {
     private fun selectMode(mode: Int) {
         if (viewModel.uiState.value.isBusy) return
         lifecycleScope.launch {
-            if (!viewModel.applyMode(mode)) {
-                com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+            showLoading(getString(R.string.setting_in_progress))
+            try {
+                if (!viewModel.applyMode(mode)) {
+                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+                }
+            } finally {
+                dismissLoading()
             }
         }
     }

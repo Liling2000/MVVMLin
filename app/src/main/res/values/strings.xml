@@ -59,6 +59,7 @@
     <string name="power_enabled">enabled</string>
     <string name="power_disabled">disabled</string>
     <string name="power_command_failed">Device is not connected; settings were not sent</string>
+    <string name="setting_in_progress">Applying settings…</string>
     <string name="power_device_disconnected_notice">Device connection lost</string>
     <string name="power_preview_remaining">剩余可输出时间：10 H 30 M</string>
     <string name="power_preview_temperature">32.4°C</string>

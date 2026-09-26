@@ -102,9 +102,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             .also {
                 dialog = it
             }).apply {
-            if (tips.isNotBlank()) {
-                getCustomView().findViewById<TextView>(R.id.tvTip).text = tips
-            }
+            getCustomView().findViewById<TextView>(R.id.tvTip).text =
+                tips.ifBlank { getString(R.string.now_loading) }
             if (!isShowing) show()
         }
     }
@@ -150,6 +149,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     }
 
     override fun onDestroyView() {
+        dismissLoading()
+        dialog = null
         super.onDestroyView()
         _binding = null
     }

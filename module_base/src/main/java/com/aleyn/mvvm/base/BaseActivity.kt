@@ -121,9 +121,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             .maxWidth(R.dimen.dialog_width).also {
                 dialog = it
             }).apply {
-            if (tips.isNotBlank()) {
-                getCustomView().findViewById<TextView>(R.id.tvTip).text = tips
-            }
+            getCustomView().findViewById<TextView>(R.id.tvTip).text =
+                tips.ifBlank { getString(R.string.now_loading) }
             if (!isShowing) show()
         }
     }
@@ -133,6 +132,12 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      */
     protected fun dismissLoading() {
         dialog?.run { if (isShowing) dismiss() }
+    }
+
+    override fun onDestroy() {
+        dismissLoading()
+        dialog = null
+        super.onDestroy()
     }
 
 }

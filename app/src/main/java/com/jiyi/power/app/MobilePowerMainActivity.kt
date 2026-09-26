@@ -131,6 +131,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             if (sent) {
                 pendingLowCurrentMode = checked
                 switchLowCurrent.isEnabled = false
+                showLoading(getString(R.string.setting_in_progress))
             } else {
                 renderingSwitch = true
                 switchLowCurrent.setEnableEffect(false)
@@ -171,11 +172,15 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
                         }
                         is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (event.functionCode == CmdConstant.FunctionCode.CODE_34) {
                             pendingLowCurrentMode = null
+                            dismissLoading()
                             mBinding.switchLowCurrent.isEnabled = true
                             ToastUtils.showShort(R.string.power_command_failed)
                         }
-                        DeviceCommandViewModel.CommandEvent.Disconnected ->
+                        DeviceCommandViewModel.CommandEvent.Disconnected -> {
+                            if (pendingLowCurrentMode != null) dismissLoading()
+                            pendingLowCurrentMode = null
                             ToastUtils.showShort(R.string.power_device_disconnected_notice)
+                        }
                         else -> Unit
                     }
                 }
@@ -230,6 +235,7 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
                     ToastUtils.showShort(R.string.power_command_failed)
                 }
                 pendingLowCurrentMode = null
+                dismissLoading()
             }
         }
         textBatteryHealth.setTvContent(battery?.healthPercent?.toString() ?: getString(R.string.power_unknown_value))

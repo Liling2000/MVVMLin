@@ -66,17 +66,22 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     private fun selectMode(id: Long) {
         if (viewModel.uiState.value.isBusy) return
         lifecycleScope.launch {
-            val mode = CustomChargingModeRepository.findById(id)
-            if (mode == null || !viewModel.applyMode(ChargingPreferences.MODE_CUSTOM) ||
-                !viewModel.applyCustomPower(mode.c1Power, mode.c2Power)) {
-                com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
-                return@launch
+            showLoading(getString(R.string.setting_in_progress))
+            try {
+                val mode = CustomChargingModeRepository.findById(id)
+                if (mode == null || !viewModel.applyMode(ChargingPreferences.MODE_CUSTOM) ||
+                    !viewModel.applyCustomPower(mode.c1Power, mode.c2Power)) {
+                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+                    return@launch
+                }
+                CustomChargingModeRepository.select(id)
+                getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE).edit()
+                    .putInt(ChargingPreferences.KEY_MODE, ChargingPreferences.MODE_CUSTOM)
+                    .putBoolean(ChargingPreferences.KEY_LEGACY_SMART_MODE, false).apply()
+                modeAdapter.submitList(CustomChargingModeRepository.getAll(), id)
+            } finally {
+                dismissLoading()
             }
-            CustomChargingModeRepository.select(id)
-            getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE).edit()
-                .putInt(ChargingPreferences.KEY_MODE, ChargingPreferences.MODE_CUSTOM)
-                .putBoolean(ChargingPreferences.KEY_LEGACY_SMART_MODE, false).apply()
-            modeAdapter.submitList(CustomChargingModeRepository.getAll(), id)
         }
     }
 

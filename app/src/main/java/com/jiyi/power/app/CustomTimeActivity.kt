@@ -52,7 +52,11 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
             buttonConfirm.setOnClickListener {
                 val sent = viewModel.confirm()
                 confirmPending = sent
-                if (!sent) ToastUtils.showShort(R.string.power_command_failed)
+                if (sent) {
+                    showLoading(getString(R.string.setting_in_progress))
+                } else {
+                    ToastUtils.showShort(R.string.power_command_failed)
+                }
             }
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -67,6 +71,7 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
                                     )
                                 ) {
                                     confirmPending = false
+                                    dismissLoading()
                                     ToastUtils.showShort(R.string.timer_setting_success)
                                     returnToScreenSettings()
                                 }
@@ -77,10 +82,12 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
                                     )
                                 ) {
                                     confirmPending = false
+                                    dismissLoading()
                                     ToastUtils.showShort(R.string.power_command_failed)
                                 }
                                 DeviceCommandViewModel.CommandEvent.Disconnected -> if (confirmPending) {
                                     confirmPending = false
+                                    dismissLoading()
                                     ToastUtils.showShort(R.string.power_command_failed)
                                 }
                                 else -> Unit

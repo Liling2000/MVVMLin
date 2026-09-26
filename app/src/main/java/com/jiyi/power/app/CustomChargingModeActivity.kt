@@ -76,13 +76,18 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
             val shouldApplyToDevice = isCreating || isEditingSelectedMode
 
             if (shouldApplyToDevice) {
-                val deviceSn = intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)
-                viewModel.bindDevice(deviceSn)
-                chargingModeViewModel.bindDevice(deviceSn)
-                if (!viewModel.applyPower() ||
-                    !chargingModeViewModel.applyMode(ChargingPreferences.MODE_CUSTOM)) {
-                    ToastUtils.showShort(R.string.power_command_failed)
-                    return@launch
+                showLoading(getString(R.string.setting_in_progress))
+                try {
+                    val deviceSn = intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)
+                    viewModel.bindDevice(deviceSn)
+                    chargingModeViewModel.bindDevice(deviceSn)
+                    if (!viewModel.applyPower() ||
+                        !chargingModeViewModel.applyMode(ChargingPreferences.MODE_CUSTOM)) {
+                        ToastUtils.showShort(R.string.power_command_failed)
+                        return@launch
+                    }
+                } finally {
+                    dismissLoading()
                 }
             }
 

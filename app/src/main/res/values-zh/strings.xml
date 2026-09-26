@@ -63,6 +63,7 @@
     <string name="power_enabled">开启</string>
     <string name="power_disabled">关闭</string>
     <string name="power_command_failed">设备未连接，设置未发送</string>
+    <string name="setting_in_progress">正在设置…</string>
     <string name="power_device_disconnected_notice">设备连接已断开</string>
     <string name="power_preview_remaining">剩余可输出时间：10 H 30 M</string>
     <string name="power_preview_temperature">32.4°C</string>

@@ -112,14 +112,17 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
                                 submitPending && event.functionCode == CmdConstant.FunctionCode.CODE_C2
                             ) {
                                 submitPending = false
+                                dismissLoading()
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.screen_send_success)
                             }
                             is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (submitPending) {
                                 submitPending = false
+                                dismissLoading()
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
                             }
-                            DeviceCommandViewModel.CommandEvent.Disconnected -> {
+                            DeviceCommandViewModel.CommandEvent.Disconnected -> if (submitPending) {
                                 submitPending = false
+                                dismissLoading()
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
                             }
                             else -> Unit
@@ -156,7 +159,11 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         ScreenWallpaperRepository.select(viewModel.uiState.value.wallpaper)
         val sent = viewModel.submit()
         submitPending = sent
-        if (!sent) com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+        if (sent) {
+            showLoading(getString(R.string.setting_in_progress))
+        } else {
+            com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+        }
     }
 
     /** 两列壁纸的间距交由 RecyclerView 处理，item 本身只负责图片与选中图标。 */

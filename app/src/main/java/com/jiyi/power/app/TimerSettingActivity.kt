@@ -43,7 +43,11 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         mBinding.buttonConfirm.setOnClickListener {
             val sent = viewModel.confirm()
             confirmPending = sent
-            if (!sent) ToastUtils.showShort(R.string.power_command_failed)
+            if (sent) {
+                showLoading(getString(R.string.setting_in_progress))
+            } else {
+                ToastUtils.showShort(R.string.power_command_failed)
+            }
         }
         observeState()
     }
@@ -72,6 +76,7 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
                                 )
                             ) {
                                 confirmPending = false
+                                dismissLoading()
                                 ToastUtils.showShort(R.string.timer_setting_success)
                                 finish()
                             }
@@ -82,10 +87,12 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
                                 )
                             ) {
                                 confirmPending = false
+                                dismissLoading()
                                 ToastUtils.showShort(R.string.power_command_failed)
                             }
                             DeviceCommandViewModel.CommandEvent.Disconnected -> if (confirmPending) {
                                 confirmPending = false
+                                dismissLoading()
                                 ToastUtils.showShort(R.string.power_command_failed)
                             }
                             else -> Unit
