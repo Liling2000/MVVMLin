@@ -15,6 +15,7 @@ import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.databinding.ActivityCustomChargingModeListBinding
+import kotlinx.coroutines.Job
 
 @Route(path = RouterPath.PAGE_ROUTE_MODE_LIST)
 class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeListBinding>() {
@@ -23,6 +24,7 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
         onSelect = { mode -> selectMode(mode.id) },
         onEdit = { mode -> openEditor(mode.id) },
     )
+    private var refreshJob: Job? = null
 
     override fun initSystemBars() {
         setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
@@ -45,21 +47,32 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     }
 
     private fun refreshModes() {
-        modeAdapter.submitList(CustomChargingModeRepository.getAll(), -1L)
-        lifecycleScope.launch {
+        val modes = CustomChargingModeRepository.getAll()
+        val cachedSelectedId = CustomChargingModeRepository.selectedId()
+            .takeIf { selectedId -> modes.any { it.id == selectedId } }
+            ?: -1L
+        // 查询期间保留上一次已确认的选中项，避免先清空再恢复造成勾选闪烁。
+        modeAdapter.submitList(modes, cachedSelectedId)
+        refreshJob?.cancel()
+        refreshJob = lifecycleScope.launch {
             val state = viewModel.readDeviceState()
-            val selected = if (state?.mode == ChargingPreferences.MODE_CUSTOM) {
-                state.customPower?.let {
-                    CustomChargingModeRepository.resolveSelected(it.c1Power, it.c2Power)
-                } ?: run {
-                    CustomChargingModeRepository.clearSelection()
-                    null
+            val selectedId = when (state?.mode) {
+                ChargingPreferences.MODE_CUSTOM -> if (state.customPower != null) {
+                    CustomChargingModeRepository.resolveSelected(
+                        state.customPower.c1Power,
+                        state.customPower.c2Power,
+                    )?.id ?: -1L
+                } else {
+                    // 功率查询失败时不抹掉旧选择，等待下次成功查询再校准。
+                    cachedSelectedId
                 }
-            } else {
-                if (state?.mode != null) CustomChargingModeRepository.clearSelection()
-                null
+                null -> cachedSelectedId
+                else -> {
+                    CustomChargingModeRepository.clearSelection()
+                    -1L
+                }
             }
-            modeAdapter.submitList(CustomChargingModeRepository.getAll(), selected?.id ?: -1L)
+            modeAdapter.submitList(CustomChargingModeRepository.getAll(), selectedId)
         }
     }
 
