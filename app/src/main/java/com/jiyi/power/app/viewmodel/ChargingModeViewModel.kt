@@ -2,6 +2,7 @@ package com.jiyi.power.app.viewmodel
 
 import com.jiyi.power.app.utils.ChargingModeProtocol
 import com.jiyi.power.app.utils.CmdConstant
+import com.jiyi.power.app.utils.CustomPowerProtocol
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,11 +11,17 @@ import com.jiyi.power.app.utils.MobilePowerProtocolManager
 
 class ChargingModeViewModel : DeviceCommandViewModel() {
     data class UiState(val selectedMode: Int? = null, val isBusy: Boolean = false)
+    data class DeviceState(
+        val mode: Int?,
+        val customPower: CustomPowerProtocol.Reading? = null,
+    )
 
     private val protocol = ChargingModeProtocol()
+    private val powerProtocol = CustomPowerProtocol()
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
     private var pendingRead: CompletableDeferred<ChargingModeProtocol.Reading?>? = null
+    private var pendingPowerRead: CompletableDeferred<CustomPowerProtocol.Reading?>? = null
     private var pendingWrite: Pair<String, CompletableDeferred<Boolean>>? = null
 
     init {
@@ -24,8 +31,13 @@ class ChargingModeViewModel : DeviceCommandViewModel() {
                     pendingWrite?.takeIf { it.first == event.functionCode }?.second?.complete(true)
                 }
                 if (event is CommandEvent.WriteFailed && event.functionCode in listOf("3B", "3C")) {
-                    pendingWrite?.takeIf { it.first == event.functionCode }?.second?.complete(false)
                     pendingRead?.complete(null)
+                }
+                if (event is CommandEvent.WriteFailed) {
+                    pendingWrite?.takeIf { it.first == event.functionCode }?.second?.complete(false)
+                    if (event.functionCode == CmdConstant.FunctionCode.CODE_32) {
+                        pendingPowerRead?.complete(null)
+                    }
                 }
             }
         }
@@ -56,6 +68,21 @@ class ChargingModeViewModel : DeviceCommandViewModel() {
             }
             // Both BLE writes have completed before requesting device readback.
             return readMode()?.selectedMode == mode
+        } finally {
+            _uiState.value = _uiState.value.copy(isBusy = false)
+        }
+    }
+
+    /** Reads the real device mode and only queries custom power when both ports are custom. */
+    suspend fun readDeviceState(): DeviceState? {
+        if (_uiState.value.isBusy) return null
+        _uiState.value = _uiState.value.copy(isBusy = true)
+        return try {
+            val mode = readMode()?.selectedMode ?: return DeviceState(mode = null)
+            DeviceState(
+                mode = mode,
+                customPower = if (mode == 2) readCustomPower() else null,
+            )
         } finally {
             _uiState.value = _uiState.value.copy(isBusy = false)
         }
@@ -105,17 +132,34 @@ class ChargingModeViewModel : DeviceCommandViewModel() {
         }
     }
 
+    private suspend fun readCustomPower(): CustomPowerProtocol.Reading? {
+        powerProtocol.reset()
+        val reply = CompletableDeferred<CustomPowerProtocol.Reading?>()
+        pendingPowerRead = reply
+        return try {
+            if (sendDeviceCommand(CmdConstant.FunctionCode.CODE_32, powerProtocol.readCommand())) {
+                withTimeoutOrNull(5_000) { reply.await() }
+            } else null
+        } finally {
+            pendingPowerRead = null
+            reply.cancel()
+        }
+    }
+
     override fun onBleDataReceive(data: String?) {
         super.onBleDataReceive(data)
         protocol.accept(data).forEach { reading -> pendingRead?.complete(reading) }
+        powerProtocol.accept(data).forEach { reading -> pendingPowerRead?.complete(reading) }
     }
 
     override fun onDeviceReconnected() = refresh()
 
     override fun onDeviceDisconnected() {
         protocol.reset()
+        powerProtocol.reset()
         pendingWrite?.second?.complete(false)
         pendingRead?.complete(null)
+        pendingPowerRead?.complete(null)
         _uiState.value = _uiState.value.copy(selectedMode = null)
     }
 }

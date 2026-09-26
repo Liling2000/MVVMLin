@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 
 import com.jiyi.power.app.utils.CmdConstant
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 @Route(path = RouterPath.PAGE_CUSTOM_TIME)
 class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
     private val viewModel: CustomTimeViewModel by viewModels()
+    private var confirmPending = false
 
     override fun initSystemBars() {
         setSystemBars(statusBarColorRes = R.color.color_f6f7f9)
@@ -48,7 +50,9 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
             buttonAddHour.setOnClickListener { viewModel.addMinutes(60) }
             buttonReset.setOnClickListener { viewModel.reset() }
             buttonConfirm.setOnClickListener {
-                if (!viewModel.confirm()) ToastUtils.showShort(R.string.power_command_failed)
+                val sent = viewModel.confirm()
+                confirmPending = sent
+                if (!sent) ToastUtils.showShort(R.string.power_command_failed)
             }
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -56,12 +60,29 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
                     launch {
                         viewModel.commandEvents.collect { event ->
                             when (event) {
-                                is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf(CmdConstant.FunctionCode.CODE_C0, CmdConstant.FunctionCode.CODE_C1)) {
+                                is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (
+                                    confirmPending && event.functionCode in setOf(
+                                        CmdConstant.FunctionCode.CODE_C0,
+                                        CmdConstant.FunctionCode.CODE_C1,
+                                    )
+                                ) {
+                                    confirmPending = false
                                     ToastUtils.showShort(R.string.timer_setting_success)
-                                    finish()
+                                    returnToScreenSettings()
                                 }
-                                is DeviceCommandViewModel.CommandEvent.WriteFailed,
-                                DeviceCommandViewModel.CommandEvent.Disconnected -> ToastUtils.showShort(R.string.power_command_failed)
+                                is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (
+                                    confirmPending && event.functionCode in setOf(
+                                        CmdConstant.FunctionCode.CODE_C0,
+                                        CmdConstant.FunctionCode.CODE_C1,
+                                    )
+                                ) {
+                                    confirmPending = false
+                                    ToastUtils.showShort(R.string.power_command_failed)
+                                }
+                                DeviceCommandViewModel.CommandEvent.Disconnected -> if (confirmPending) {
+                                    confirmPending = false
+                                    ToastUtils.showShort(R.string.power_command_failed)
+                                }
                                 else -> Unit
                             }
                         }
@@ -77,7 +98,11 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
                 intent.getStringExtra(EXTRA_TYPE).orEmpty()
             )
         }.getOrDefault(TimerSettingType.SHUTDOWN)
-        viewModel.initialize(type, intent.getIntExtra(EXTRA_MINUTES, 0))
+        viewModel.initialize(
+            type,
+            intent.getIntExtra(EXTRA_MINUTES, 0),
+            intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN),
+        )
     }
 
     private fun render(state: CustomTimeUiState) = with(mBinding) {
@@ -102,15 +127,32 @@ class CustomTimeActivity : BaseActivity<ActivityCustomTimeBinding>() {
 
     private fun formatTime(value: Int): String = value.toString().padStart(2, '0')
 
+    private fun returnToScreenSettings() {
+        ARouter.getInstance().build(RouterPath.PAGE_ROUTE_THEME)
+            .withString(
+                MobilePowerMainActivity.EXTRA_DEVICE_SN,
+                intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN),
+            )
+            .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            .navigation(this)
+        finish()
+    }
+
     companion object {
         private const val EXTRA_TYPE = "custom_time_type"
         private const val EXTRA_MINUTES = "custom_time_minutes"
         private const val RESET_DISABLED_ALPHA = 0.45f
 
-        fun start(context: Context, type: TimerSettingType, minutes: Int) {
+        fun start(
+            context: Context,
+            type: TimerSettingType,
+            minutes: Int,
+            deviceSn: String? = null,
+        ) {
             ARouter.getInstance().build(RouterPath.PAGE_CUSTOM_TIME)
                 .withString(EXTRA_TYPE, type.name)
                 .withInt(EXTRA_MINUTES, minutes)
+                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)
                 .navigation(context)
         }
     }

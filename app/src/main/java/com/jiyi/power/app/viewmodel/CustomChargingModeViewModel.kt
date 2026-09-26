@@ -32,14 +32,24 @@ class CustomChargingModeViewModel : DeviceCommandViewModel() {
         _channels.value = if (mode == null) defaultChannels() else listOf(
             PowerChannel("C1", mode.c1Power, 20, 140),
             PowerChannel("C2", mode.c2Power, 20, 140),
+            PowerChannel("A", normalizeAPower(mode.aPower), A_MIN_POWER, A_MAX_POWER, discrete = true),
         )
     }
 
     fun adjustPower(index: Int, delta: Int) {
         _channels.value = _channels.value.mapIndexed { currentIndex, channel ->
-            if (currentIndex != index) channel else channel.copy(
-                power = (channel.power + delta).coerceIn(channel.minPower, channel.maxPower),
-            )
+            if (currentIndex != index) channel else {
+                val power = if (channel.discrete) {
+                    when {
+                        delta < 0 -> channel.minPower
+                        delta > 0 -> channel.maxPower
+                        else -> channel.power
+                    }
+                } else {
+                    (channel.power + delta).coerceIn(channel.minPower, channel.maxPower)
+                }
+                channel.copy(power = power)
+            }
         }
     }
 
@@ -52,7 +62,7 @@ class CustomChargingModeViewModel : DeviceCommandViewModel() {
             name,
             current[0].power,
             current[1].power,
-            id?.let(CustomChargingModeRepository::findById)?.aPower ?: 18
+            current.first { it.name == "A" }.power,
         )
     }
 
@@ -78,5 +88,14 @@ class CustomChargingModeViewModel : DeviceCommandViewModel() {
     private fun defaultChannels() = listOf(
         PowerChannel("C1", 20, 20, 140),
         PowerChannel("C2", 20, 20, 140),
+        PowerChannel("A", A_MIN_POWER, A_MIN_POWER, A_MAX_POWER, discrete = true),
     )
+
+    private fun normalizeAPower(power: Int) =
+        if (power > (A_MIN_POWER + A_MAX_POWER) / 2) A_MAX_POWER else A_MIN_POWER
+
+    private companion object {
+        const val A_MIN_POWER = 18
+        const val A_MAX_POWER = 22
+    }
 }

@@ -31,20 +31,12 @@ class CustomChargingModeAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(mode: CustomChargingMode) = with(binding) {
             textModeName.text = mode.name
-            textC1.text =
-                root.context.getString(R.string.custom_mode_channel_output, "C1", mode.c1Power)
-            textC2.text =
-                root.context.getString(R.string.custom_mode_channel_output, "C2", mode.c2Power)
+            textC1Power.text = root.context.getString(R.string.custom_mode_output_power, mode.c1Power)
+            textC2Power.text = root.context.getString(R.string.custom_mode_output_power, mode.c2Power)
+            textAPower.text = root.context.getString(R.string.custom_mode_output_power, mode.aPower)
+
             val selected = mode.id == selectedId
-            checkMode.setBackgroundResource(
-                if (selected) R.drawable.bg_custom_mode_selected_indicator
-                else R.drawable.bg_custom_mode_unselected_indicator,
-            )
-            checkMode.setImageResource(if (selected) R.mipmap.ic_check_blue else 0)
-            ImageViewCompat.setImageTintList(
-                checkMode,
-                if (selected) ContextCompat.getColorStateList(root.context, R.color.color_ffffff) else null,
-            )
+            checkMode.setImageResource(if (selected) R.mipmap.ic_check_pre else R.drawable.bg_charge_unselected)
             checkMode.setOnClickListener { onSelect(mode) }
             root.setOnClickListener { onEdit(mode) }
         }

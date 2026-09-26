@@ -9,6 +9,7 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.aleyn.mvvm.base.BaseActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
@@ -17,13 +18,16 @@ import com.jiyi.power.app.ble.BleConnectionCoordinator
 import com.jiyi.power.app.common.ChargingPreferences
 import com.jiyi.power.app.common.RouterPath
 import com.jiyi.power.app.viewmodel.DeviceSettingViewModel
+import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.app.widget.popup.AppPopupManager
 import com.jiyi.power.databinding.ActivityDeviceSettingBinding
+import kotlinx.coroutines.launch
 
 @Route(path = RouterPath.PAGE_DEVICE_SETTING)
 class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
 
     private val viewModel by viewModels<DeviceSettingViewModel>()
+    private val chargingModeViewModel by viewModels<ChargingModeViewModel>()
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE) }
     private val deviceSn by lazy { intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN) }
@@ -38,6 +42,7 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
     override fun onResume() {
         super.onResume()
         renderStoredValues()
+        refreshChargingMode()
     }
 
     private fun renderStoredValues() = with(mBinding) {
@@ -110,6 +115,37 @@ class DeviceSettingActivity : BaseActivity<ActivityDeviceSettingBinding>() {
                 } else ToastUtils.showShort(R.string.power_command_failed)
             },
         )
+    }
+
+    private fun refreshChargingMode() {
+        chargingModeViewModel.bindDevice(deviceSn)
+        lifecycleScope.launch {
+            val state = chargingModeViewModel.readDeviceState() ?: return@launch
+            val mode = state.mode ?: return@launch
+            if (mode != ChargingPreferences.MODE_CUSTOM) {
+                CustomChargingModeRepository.clearSelection()
+            }
+            preferences.edit()
+                .putInt(ChargingPreferences.KEY_MODE, mode)
+                .putBoolean(
+                    ChargingPreferences.KEY_LEGACY_SMART_MODE,
+                    mode == ChargingPreferences.MODE_SMART,
+                )
+                .apply()
+            val label = when (mode) {
+                ChargingPreferences.MODE_STANDARD -> getString(R.string.charging_mode_standard)
+                ChargingPreferences.MODE_CUSTOM -> state.customPower
+                    ?.let {
+                        CustomChargingModeRepository.resolveSelected(it.c1Power, it.c2Power)?.name
+                    }
+                    ?: run {
+                        CustomChargingModeRepository.clearSelection()
+                        getString(R.string.charging_mode_custom)
+                    }
+                else -> getString(R.string.charging_mode_smart)
+            }
+            mBinding.rowChargeMode.setRightTextValue(label)
+        }
     }
 
     private fun showDeleteDialog() {

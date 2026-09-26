@@ -23,6 +23,11 @@ class HomeDeviceBatteryState {
 
     fun percent(sn: String): Int? = devices[sn.uppercase(Locale.ROOT)]?.percent
 
+    /** 开始新一轮查询时丢弃未完成的通知数据，但保留上一次已确认的电量。 */
+    fun prepareRefresh() {
+        devices.values.forEach { it.buffer = "" }
+    }
+
     fun clear() = devices.clear()
 
     /** 按设备组帧，兼容分包、粘包及包含电量寄存器的连续读取响应。 */

@@ -76,6 +76,11 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         viewModel.bindDevice(deviceSn)
     }
 
+    override fun onResume() {
+        super.onResume()
+        mBinding.ivScreen.setImageResource(ScreenWallpaperRepository.selected().wallpaperRes)
+    }
+
     private fun setupDevicePolling() {
         launchDevicePolling(
             deviceSn = deviceSn,
@@ -137,7 +142,9 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         }
 
         buttonScreenSettings.setOnClickListener {
-            ARouter.getInstance().build(PAGE_ROUTE_THEME).navigation(this@MobilePowerMainActivity)
+            ARouter.getInstance().build(PAGE_ROUTE_THEME)
+                .withString(EXTRA_DEVICE_SN, deviceSn)
+                .navigation(this@MobilePowerMainActivity)
         }
         cardBatteryInfo.setOnClickListener {
             ARouter.getInstance().build(RouterPath.PAGE_BATTERY_INFO)

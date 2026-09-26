@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
     private val viewModel by viewModels<TimerSettingViewModel>()
     private val adapter = TimerOptionAdapter(::onOptionClick)
+    private var confirmPending = false
 
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.toolbar.setLeftClickListener { finish() }
@@ -40,7 +41,9 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         mBinding.timerOptions.isNestedScrollingEnabled = false
         mBinding.timerOptions.addItemDecoration(GridSpacingDecoration(resources.getDimensionPixelSize(R.dimen.timer_grid_spacing)))
         mBinding.buttonConfirm.setOnClickListener {
-            if (!viewModel.confirm()) ToastUtils.showShort(R.string.power_command_failed)
+            val sent = viewModel.confirm()
+            confirmPending = sent
+            if (!sent) ToastUtils.showShort(R.string.power_command_failed)
         }
         observeState()
     }
@@ -49,7 +52,10 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         val typeName = intent.getStringExtra(EXTRA_TYPE)
         val type = runCatching { TimerSettingType.valueOf(typeName.orEmpty()) }
             .getOrDefault(TimerSettingType.SHUTDOWN)
-        viewModel.initialize(type)
+        viewModel.initialize(
+            type,
+            intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN),
+        )
     }
 
     private fun observeState() {
@@ -59,12 +65,29 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
                 launch {
                     viewModel.commandEvents.collect { event ->
                         when (event) {
-                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode in setOf(CmdConstant.FunctionCode.CODE_C0, CmdConstant.FunctionCode.CODE_C1)) {
+                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (
+                                confirmPending && event.functionCode in setOf(
+                                    CmdConstant.FunctionCode.CODE_C0,
+                                    CmdConstant.FunctionCode.CODE_C1,
+                                )
+                            ) {
+                                confirmPending = false
                                 ToastUtils.showShort(R.string.timer_setting_success)
                                 finish()
                             }
-                            is DeviceCommandViewModel.CommandEvent.WriteFailed,
-                            DeviceCommandViewModel.CommandEvent.Disconnected -> ToastUtils.showShort(R.string.power_command_failed)
+                            is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (
+                                confirmPending && event.functionCode in setOf(
+                                    CmdConstant.FunctionCode.CODE_C0,
+                                    CmdConstant.FunctionCode.CODE_C1,
+                                )
+                            ) {
+                                confirmPending = false
+                                ToastUtils.showShort(R.string.power_command_failed)
+                            }
+                            DeviceCommandViewModel.CommandEvent.Disconnected -> if (confirmPending) {
+                                confirmPending = false
+                                ToastUtils.showShort(R.string.power_command_failed)
+                            }
                             else -> Unit
                         }
                     }
@@ -83,7 +106,12 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         if (option.isCustom) {
             val typeName = intent.getStringExtra(EXTRA_TYPE)
             val type = runCatching { TimerSettingType.valueOf(typeName.orEmpty()) }.getOrDefault(TimerSettingType.SHUTDOWN)
-            CustomTimeActivity.start(this, type, option.time)
+            CustomTimeActivity.start(
+                this,
+                type,
+                option.time,
+                intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN),
+            )
         } else viewModel.select(option)
     }
 
@@ -130,9 +158,10 @@ class TimerSettingActivity : BaseActivity<ActivityTimerSettingBinding>() {
         const val EXTRA_TYPE = "timer_setting_type"
         private const val MAX_HOURS = 99
 
-        fun start(context: Context, type: TimerSettingType) {
+        fun start(context: Context, type: TimerSettingType, deviceSn: String? = null) {
             ARouter.getInstance().build(RouterPath.PAGE_TIMER_SETTING)
                 .withString(EXTRA_TYPE, type.name)
+                .withString(MobilePowerMainActivity.EXTRA_DEVICE_SN, deviceSn)
                 .navigation(context)
         }
     }

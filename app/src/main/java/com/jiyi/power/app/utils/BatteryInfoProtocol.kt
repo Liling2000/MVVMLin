@@ -31,6 +31,11 @@ class BatteryInfoProtocol {
         state = BatteryInfoUiData()
     }
 
+    /** Starts a new query round without discarding the last confirmed values shown by the UI. */
+    fun prepareRefresh() {
+        buffer = ""
+    }
+
     fun accept(data: String?): BatteryInfoUiData {
         val chunk = data?.filterNot(Char::isWhitespace)?.uppercase() ?: return state
         if (chunk.length % 2 != 0 || chunk.any { it !in "0123456789ABCDEF" }) return state

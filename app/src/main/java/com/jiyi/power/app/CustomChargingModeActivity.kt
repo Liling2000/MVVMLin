@@ -14,6 +14,8 @@ import com.aleyn.mvvm.base.BaseActivity
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.adapter.PowerChannelAdapter
+import com.jiyi.power.app.common.ChargingPreferences
+import com.jiyi.power.app.viewmodel.ChargingModeViewModel
 import com.jiyi.power.app.viewmodel.CustomChargingModeViewModel
 import com.jiyi.power.databinding.ActivityCustomChargingModeBinding
 import kotlinx.coroutines.launch
@@ -25,6 +27,7 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
     }
 
     private val viewModel: CustomChargingModeViewModel by viewModels()
+    private val chargingModeViewModel: ChargingModeViewModel by viewModels()
     private val channelAdapter =
         PowerChannelAdapter { index, delta -> viewModel.adjustPower(index, delta) }
     private var modeId: Long? = null
@@ -66,14 +69,36 @@ class CustomChargingModeActivity : BaseActivity<ActivityCustomChargingModeBindin
             return
         }
         lifecycleScope.launch {
-            viewModel.bindDevice(intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
-            if (!viewModel.applyPower()) {
-                ToastUtils.showShort(R.string.power_command_failed)
-                return@launch
+            val editingModeId = modeId
+            val isCreating = editingModeId == null
+            val isEditingSelectedMode = editingModeId != null &&
+                CustomChargingModeRepository.selectedId() == editingModeId
+            val shouldApplyToDevice = isCreating || isEditingSelectedMode
+
+            if (shouldApplyToDevice) {
+                val deviceSn = intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)
+                viewModel.bindDevice(deviceSn)
+                chargingModeViewModel.bindDevice(deviceSn)
+                if (!viewModel.applyPower() ||
+                    !chargingModeViewModel.applyMode(ChargingPreferences.MODE_CUSTOM)) {
+                    ToastUtils.showShort(R.string.power_command_failed)
+                    return@launch
+                }
             }
-            CustomChargingModeRepository.save(viewModel.toMode(modeId, name))
+
+            val mode = viewModel.toMode(editingModeId, name)
+            CustomChargingModeRepository.save(mode)
+            if (isCreating) CustomChargingModeRepository.select(mode.id)
+            if (shouldApplyToDevice) saveCustomModePreference()
             ToastUtils.showShort(R.string.custom_mode_saved)
             finish()
         }
+    }
+
+    private fun saveCustomModePreference() {
+        getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE).edit()
+            .putInt(ChargingPreferences.KEY_MODE, ChargingPreferences.MODE_CUSTOM)
+            .putBoolean(ChargingPreferences.KEY_LEGACY_SMART_MODE, false)
+            .apply()
     }
 }

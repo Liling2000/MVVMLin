@@ -116,6 +116,7 @@
     <string name="custom_mode_add">+ Custom mode</string>
     <string name="custom_mode_select">Select custom mode</string>
     <string name="custom_mode_channel_output">%1$s  OUT:%2$dW</string>
+    <string name="custom_mode_output_power">OUT:%1$dW</string>
     <string name="login_brand_name">Beillen</string>
     <string name="login_add_avatar">Add avatar</string>
     <string name="login_name_hint">Enter your name</string>

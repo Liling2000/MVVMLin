@@ -58,6 +58,23 @@ class HomeDeviceBatteryStateTest {
     }
 
     @Test
+    fun refreshKeepsConfirmedValueAndDropsPartialReply() {
+        val state = HomeDeviceBatteryState()
+        state.updateConnectedDevices(setOf("aa"))
+        state.accept("aa", frame(0x16, byteArrayOf(50)))
+        val updated = frame(0x16, byteArrayOf(80))
+        state.accept("aa", updated.take(8))
+
+        state.prepareRefresh()
+
+        assertEquals(50, state.percent("aa"))
+        state.accept("aa", updated.drop(8))
+        assertEquals(50, state.percent("aa"))
+        state.accept("aa", updated)
+        assertEquals(80, state.percent("aa"))
+    }
+
+    @Test
     fun corruptFramesWriteEchoesAndInvalidPercentAreNotDisplayed() {
         val state = HomeDeviceBatteryState()
         state.updateConnectedDevices(setOf("aa"))

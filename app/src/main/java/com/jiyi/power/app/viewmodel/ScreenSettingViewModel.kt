@@ -1,23 +1,24 @@
 package com.jiyi.power.app.viewmodel
 
-import com.jiyi.power.R
+import com.jiyi.power.app.ScreenWallpaperRepository
 import com.jiyi.power.app.bean.ScreenSettingUiData
 import com.jiyi.power.app.bean.ScreenTextColor
 import com.jiyi.power.app.bean.WallpaperItem
 import com.jiyi.power.app.utils.CmdConstant
 import com.jiyi.power.app.utils.MobilePowerProtocolManager
+import com.jiyi.power.app.utils.ScreenTextProtocol
+import com.jiyi.power.app.utils.TimerReminderProtocol
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class ScreenSettingViewModel : DeviceCommandViewModel() {
-    val wallpapers = listOf(
-        WallpaperItem(1, R.mipmap.ic_power_banner_space, R.mipmap.ic_power_banner_space),
-        WallpaperItem(2, R.mipmap.ic_power_banner_panther, R.mipmap.ic_power_banner_panther),
-        WallpaperItem(3, R.mipmap.ic_power_banner_deer, R.mipmap.ic_power_banner_deer),
-        WallpaperItem(4, R.mipmap.ic_power_banner_flower, R.mipmap.ic_power_banner_flower)
+    private val reminderProtocol = TimerReminderProtocol()
+    private val textProtocol = ScreenTextProtocol()
+    val wallpapers = ScreenWallpaperRepository.wallpapers
+    private val _uiState = MutableStateFlow(
+        ScreenSettingUiData(wallpaper = ScreenWallpaperRepository.selected())
     )
-    private val _uiState = MutableStateFlow(ScreenSettingUiData(wallpaper = wallpapers.first()))
     val uiState = _uiState.asStateFlow()
 
     fun setShowTime(value: Boolean) = update { copy(showTime = value) }
@@ -26,6 +27,22 @@ class ScreenSettingViewModel : DeviceCommandViewModel() {
     fun setCustomText(value: String) = update { copy(customText = value) }
     fun setWallpaper(value: WallpaperItem) = update { copy(wallpaper = value) }
     fun setCustomWallpaper(uri: String) = update { copy(wallpaper = WallpaperItem(100, 0, 0, uri)) }
+    fun refreshReminder() {
+        reminderProtocol.reset()
+        sendDeviceCommand(
+            CmdConstant.FunctionCode.CODE_C1,
+            reminderProtocol.readCommand(),
+        )
+    }
+
+    fun refreshCustomText() {
+        textProtocol.reset()
+        sendDeviceCommand(
+            CmdConstant.FunctionCode.CODE_C2,
+            textProtocol.readCommand(),
+        )
+    }
+
     fun submit(): Boolean {
         val state = _uiState.value
         // 0x3E：bit2~3 为文字颜色，bit1 为成就互动，bit0 为时间显示。
@@ -43,5 +60,27 @@ class ScreenSettingViewModel : DeviceCommandViewModel() {
         )
         return lcdSent && textSent
     }
+
+    override fun onBleDataReceive(data: String?) {
+        super.onBleDataReceive(data)
+        reminderProtocol.accept(data).forEach { minutes ->
+            update { copy(reminderMinutes = minutes) }
+        }
+        textProtocol.accept(data).forEach { text ->
+            update { copy(customText = text) }
+        }
+    }
+
+    override fun onDeviceReconnected() {
+        refreshReminder()
+        refreshCustomText()
+    }
+
+    override fun onDeviceDisconnected() {
+        reminderProtocol.reset()
+        textProtocol.reset()
+        update { copy(reminderMinutes = null) }
+    }
+
     private fun update(block: ScreenSettingUiData.() -> ScreenSettingUiData) { _uiState.update(block) }
 }

@@ -11,13 +11,27 @@ object CustomChargingModeRepository {
     fun findById(id: Long): CustomChargingMode? = getAll().firstOrNull { it.id == id }
     fun selectedId(): Long = MmkvManager.getString(KEY_SELECTED_ID).toLongOrNull() ?: -1L
 
+    /** Prefer the cached selection, then reconcile it with the first mode matching device power. */
+    fun resolveSelected(c1Power: Int, c2Power: Int): CustomChargingMode? {
+        val modes = getAll()
+        val matchesPower: (CustomChargingMode) -> Boolean = {
+            it.c1Power == c1Power && it.c2Power == c2Power
+        }
+        modes.firstOrNull { it.id == selectedId() && matchesPower(it) }?.let { return it }
+        return modes.firstOrNull(matchesPower)?.also { select(it.id) }
+            ?: run {
+                clearSelection()
+                null
+            }
+    }
+
     fun save(mode: CustomChargingMode) {
         val modes = getAll().toMutableList()
         val index = modes.indexOfFirst { it.id == mode.id }
         if (index >= 0) modes[index] = mode else modes += mode
         MmkvManager.putList(KEY_MODES, modes)
-        if (selectedId() <= 0) select(mode.id)
     }
 
     fun select(id: Long) = MmkvManager.putString(KEY_SELECTED_ID, id.toString())
+    fun clearSelection() = MmkvManager.remove(KEY_SELECTED_ID)
 }

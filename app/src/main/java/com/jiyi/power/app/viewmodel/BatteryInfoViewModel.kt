@@ -12,8 +12,8 @@ class BatteryInfoViewModel : DeviceCommandViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun refresh() {
-        protocol.reset()
-        _uiState.value = protocol.state
+        // Keep the last confirmed snapshot visible while a new query round is in flight.
+        protocol.prepareRefresh()
         // 循环次数和健康度连续读取；电芯逐路探测，只展示实际返回有效电压的路数。
         sendDeviceCommand(
             CmdConstant.FunctionCode.CODE_1C,

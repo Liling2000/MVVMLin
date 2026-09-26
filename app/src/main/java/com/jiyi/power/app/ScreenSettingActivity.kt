@@ -32,9 +32,13 @@ import kotlinx.coroutines.launch
 @Route(path = RouterPath.PAGE_ROUTE_THEME)
 class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
     private val viewModel by viewModels<ScreenSettingViewModel>()
+    private val deviceSn by lazy {
+        intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN)
+    }
     // 不在 Activity 构造阶段解引用 by viewModels()；点击发生时页面已完成挂载。
     private val wallpaperAdapter = ScreenWallpaperAdapter { viewModel.setWallpaper(it) }
     private var rendering = false
+    private var submitPending = false
     private val wallpaperPicker =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri ?: return@registerForActivityResult
@@ -57,14 +61,22 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         observeState()
     }
 
-    override fun initData() = Unit
+    override fun initData() {
+        viewModel.bindDevice(deviceSn)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshReminder()
+        viewModel.refreshCustomText()
+    }
 
     private fun setupClicks() = with(mBinding) {
         toolbar.setLeftClickListener { finish() }
 
         rowReminder.setOnClickListener {
             TimerSettingActivity.start(
-                this@ScreenSettingActivity, TimerSettingType.REMINDER
+                this@ScreenSettingActivity, TimerSettingType.REMINDER, deviceSn
             )
         }
         rowTime.setOnClickListener { switchTime.toggle() }
@@ -96,11 +108,20 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
                 launch {
                     viewModel.commandEvents.collect { event ->
                         when (event) {
-                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (event.functionCode == CmdConstant.FunctionCode.CODE_C2)
+                            is DeviceCommandViewModel.CommandEvent.WriteSucceeded -> if (
+                                submitPending && event.functionCode == CmdConstant.FunctionCode.CODE_C2
+                            ) {
+                                submitPending = false
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.screen_send_success)
-                            is DeviceCommandViewModel.CommandEvent.WriteFailed,
-                            DeviceCommandViewModel.CommandEvent.Disconnected ->
+                            }
+                            is DeviceCommandViewModel.CommandEvent.WriteFailed -> if (submitPending) {
+                                submitPending = false
                                 com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+                            }
+                            DeviceCommandViewModel.CommandEvent.Disconnected -> {
+                                submitPending = false
+                                com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
+                            }
                             else -> Unit
                         }
                     }
@@ -111,6 +132,7 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
 
     private fun render(state: ScreenSettingUiData) = with(mBinding) {
         rendering = true
+        textReminderTime.text = formatReminderTime(state.reminderMinutes)
         switchTime.isChecked = state.showTime
         switchAchievement.isChecked = state.achievementInteraction
         if (editCustomText.text.toString() != state.customText) editCustomText.setText(state.customText)
@@ -127,8 +149,13 @@ class ScreenSettingActivity : BaseActivity<ActivityScreenSettingBinding>() {
         rendering = false
     }
 
+    private fun formatReminderTime(minutes: Int?): String =
+        minutes?.takeIf { it > 0 }?.let { "%02d:%02d".format(it / 60, it % 60) }.orEmpty()
+
     private fun submitSettings() {
+        ScreenWallpaperRepository.select(viewModel.uiState.value.wallpaper)
         val sent = viewModel.submit()
+        submitPending = sent
         if (!sent) com.blankj.utilcode.util.ToastUtils.showShort(R.string.power_command_failed)
     }
 

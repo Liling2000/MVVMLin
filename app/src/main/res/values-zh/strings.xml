@@ -120,6 +120,7 @@
     <string name="custom_mode_add">+ 自定义模式</string>
     <string name="custom_mode_select">选择自定义模式</string>
     <string name="custom_mode_channel_output">%1$s  OUT:%2$dW</string>
+    <string name="custom_mode_output_power">OUT:%1$dW</string>
     <string name="login_brand_name">Beillen</string>
     <string name="login_add_avatar">添加头像</string>
     <string name="login_name_hint">请输入您的名称</string>

@@ -87,6 +87,20 @@ class BatteryInfoProtocolTest {
         assertNull(protocol.state.totalDischargeMinutes)
     }
 
+    @Test
+    fun prepareRefreshDropsOnlyPartialFrameAndKeepsConfirmedValues() {
+        val protocol = BatteryInfoProtocol()
+        protocol.accept(frame(CmdConstant.FunctionCode.CODE_1C, littleEndian(2) + byteArrayOf(90)))
+        protocol.accept(frame(CmdConstant.FunctionCode.CODE_40, littleEndian(61)).take(8))
+
+        protocol.prepareRefresh()
+
+        assertEquals(2, protocol.state.cycleCount)
+        assertEquals(90, protocol.state.healthPercent)
+        assertNull(protocol.accept(frame(CmdConstant.FunctionCode.CODE_40, littleEndian(61)).drop(8)).totalDischargeMinutes)
+        assertEquals(2, protocol.state.cycleCount)
+    }
+
     private fun frame(code: String, data: ByteArray, command: Int = 2): String {
         val body = byteArrayOf(command.toByte(), code.toInt(16).toByte(), data.size.toByte()) + data
         val checksum = body.sumOf { it.toInt() and 0xFF }.toByte()

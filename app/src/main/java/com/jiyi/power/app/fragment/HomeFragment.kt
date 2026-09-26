@@ -89,8 +89,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun refreshHomeDevices() {
         val devices = BleDeviceStore.getDevices()
         BleConnectionCoordinator.refreshBoundDevices()
+        val states = BleConnectionCoordinator.connectionStates.value
+        val connectedSns = states
+            .filterValues { it == DeviceConnectionState.CONNECTED }
+            .keys
+        deviceBatteryState.updateConnectedDevices(connectedSns)
         // 返回首页时主动重建列表，避免依赖状态流是否产生了新值。
-        renderDevices(devices, BleConnectionCoordinator.connectionStates.value)
+        renderDevices(devices, states)
+        queryBatteryPercent(connectedSns)
         if (devices.isEmpty()) return
         if (BlePermissionManager.hasBluetoothPermissions()) {
             BleConnectionCoordinator.startAutoReconnect()
@@ -141,21 +147,23 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                                 .keys
                             val newConnections = deviceBatteryState.updateConnectedDevices(connectedSns)
                             renderDevices(devices, states)
-                            val command = MobilePowerProtocolManager.buildReadCommand(
-                                CmdConstant.FunctionCode.CODE_16,
-                            )
-                            if (command != null) {
-                                newConnections.forEach { sn ->
-                                    BleConnectionCoordinator.write(sn, BleUtils.hexStringToByte(command))
-                                }
-                            }
+                            queryBatteryPercent(newConnections)
                         }
                 } finally {
-                    // 页面重新可见时重新查询，避免展示离开期间断连前的旧电量。
-                    deviceBatteryState.clear()
+                    // 页面重新可见后会查询新电量；这里只丢弃通知半包，保留已显示的有效值。
+                    deviceBatteryState.prepareRefresh()
                 }
             }
         }
+    }
+
+    private fun queryBatteryPercent(deviceSns: Set<String>) {
+        if (deviceSns.isEmpty()) return
+        val command = MobilePowerProtocolManager.buildReadCommand(
+            CmdConstant.FunctionCode.CODE_16,
+        ) ?: return
+        val data = BleUtils.hexStringToByte(command)
+        deviceSns.forEach { sn -> BleConnectionCoordinator.write(sn, data) }
     }
 
     private fun renderDevices(

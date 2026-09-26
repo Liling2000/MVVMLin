@@ -29,6 +29,7 @@ class PowerChannelAdapter(private val onPowerChanged: (Int, Int) -> Unit) :
                 root.context.getString(R.string.custom_mode_channel_power_value, channel.power)
             textMinPower.text = channel.minPower.toString()
             textMaxPower.text = channel.maxPower.toString()
+            seekChannelPower.setOnSeekBarChangeListener(null)
             seekChannelPower.max = channel.maxPower - channel.minPower
             seekChannelPower.progress = channel.power - channel.minPower
             buttonDecrease.setOnClickListener { onPowerChanged(position, -1) }
@@ -37,13 +38,22 @@ class PowerChannelAdapter(private val onPowerChanged: (Int, Int) -> Unit) :
                 override fun onProgressChanged(
                     seekBar: SeekBar?, progress: Int, fromUser: Boolean
                 ) {
-                    if (fromUser) onPowerChanged(
+                    if (fromUser && !channel.discrete) onPowerChanged(
                         position, channel.minPower + progress - channel.power
                     )
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-                override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    if (!channel.discrete || seekBar == null) return
+                    val target = if (seekBar.progress > seekBar.max / 2f) {
+                        channel.maxPower
+                    } else {
+                        channel.minPower
+                    }
+                    seekBar.progress = target - channel.minPower
+                    onPowerChanged(position, target - channel.power)
+                }
             })
         }
     }

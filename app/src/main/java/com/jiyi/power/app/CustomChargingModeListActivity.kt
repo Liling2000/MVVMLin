@@ -36,17 +36,32 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
     }
 
     override fun onResume() {
-        super.onResume(); renderModes()
+        super.onResume()
+        refreshModes()
     }
 
     override fun initData() {
         viewModel.bindDevice(intent.getStringExtra(MobilePowerMainActivity.EXTRA_DEVICE_SN))
     }
 
-    private fun renderModes() = modeAdapter.submitList(
-        CustomChargingModeRepository.getAll(),
-        CustomChargingModeRepository.selectedId(),
-    )
+    private fun refreshModes() {
+        modeAdapter.submitList(CustomChargingModeRepository.getAll(), -1L)
+        lifecycleScope.launch {
+            val state = viewModel.readDeviceState()
+            val selected = if (state?.mode == ChargingPreferences.MODE_CUSTOM) {
+                state.customPower?.let {
+                    CustomChargingModeRepository.resolveSelected(it.c1Power, it.c2Power)
+                } ?: run {
+                    CustomChargingModeRepository.clearSelection()
+                    null
+                }
+            } else {
+                if (state?.mode != null) CustomChargingModeRepository.clearSelection()
+                null
+            }
+            modeAdapter.submitList(CustomChargingModeRepository.getAll(), selected?.id ?: -1L)
+        }
+    }
 
     private fun selectMode(id: Long) {
         if (viewModel.uiState.value.isBusy) return
@@ -61,7 +76,7 @@ class CustomChargingModeListActivity : BaseActivity<ActivityCustomChargingModeLi
             getSharedPreferences(ChargingPreferences.FILE_NAME, MODE_PRIVATE).edit()
                 .putInt(ChargingPreferences.KEY_MODE, ChargingPreferences.MODE_CUSTOM)
                 .putBoolean(ChargingPreferences.KEY_LEGACY_SMART_MODE, false).apply()
-            renderModes()
+            modeAdapter.submitList(CustomChargingModeRepository.getAll(), id)
         }
     }
 

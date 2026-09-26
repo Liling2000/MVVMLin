@@ -10,6 +10,7 @@ data class WallpaperItem(
 )
 
 data class ScreenSettingUiData(
+    val reminderMinutes: Int? = null,
     val showTime: Boolean = true,
     val achievementInteraction: Boolean = true,
     val textColor: ScreenTextColor = ScreenTextColor.WHITE,

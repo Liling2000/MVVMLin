@@ -5,6 +5,7 @@ data class PowerChannel(
     val power: Int,
     val minPower: Int,
     val maxPower: Int,
+    val discrete: Boolean = false,
 )
 
 data class CustomChargingMode(
