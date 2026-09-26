@@ -102,4 +102,28 @@
         <item name="left_text_color">@color/color_191c1e</item>
         <item name="right_text_color">@color/color_55596a</item>
     </style>
+
+    <style name="HelpStepRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">top</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="HelpStepNumber">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:textColor">@color/color_9295a2</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HelpStepText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:textColor">@color/color_666a7c</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

@@ -314,4 +314,17 @@
     <string name="language_back">Back</string>
     <string name="language_selected">%1$s, selected</string>
     <string name="language_not_selected">%1$s, not selected</string>
+    <string name="help_title">Help</string>
+    <string name="help_back">Back</string>
+    <string name="help_step_number_1" translatable="false">1.</string>
+    <string name="help_step_number_2" translatable="false">2.</string>
+    <string name="help_step_number_3" translatable="false">3.</string>
+    <string name="help_step_number_4" translatable="false">4.</string>
+    <string name="help_step_number_5" translatable="false">5.</string>
+    <string name="help_step_1">Keep the device nearby: Place the device within 1–2 meters of your phone.</string>
+    <string name="help_step_2">Check the status: Make sure the device is on, has sufficient power, and Bluetooth is in pairing mode (see the manual for pairing mode).</string>
+    <string name="help_step_3">Enable permissions: Turn on Bluetooth on your phone (some Android phones also require location permission).</string>
+    <string name="help_step_4">Check the network: Make sure your phone’s network connection is working.</string>
+    <string name="help_step_5">Restart and retry: If it still does not work, restart/reset the device and add it again (see the manual for restarting/resetting the device).</string>
+    <string name="help_note">Note: If you cannot find your device model in the device list, the device does not support app management.</string>
 </resources>

@@ -42,9 +42,9 @@ class BleDeviceScanActivity : BaseVMActivity<BleViewModel, ActivityBleDeviceScan
 
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.toolbar.setLeftClickListener { finish() }
+        mBinding.toolbar.getRightIconIv().contentDescription = getString(R.string.help_title)
         mBinding.toolbar.setRightIconClickListener {
-            viewModel.stopScan()
-            ToastUtils.showShort(R.string.scan_help_message)
+            ARouter.getInstance().build(RouterPath.PAGE_HELP).navigation(this)
         }
         mBinding.rvDevices.apply {
             layoutManager = LinearLayoutManager(this@BleDeviceScanActivity)

@@ -68,6 +68,9 @@
                 android:name=".app.BleDeviceScanActivity"
                 android:exported="false" />
         <activity
+                android:name=".app.ConnectHelpActivity"
+                android:exported="false" />
+        <activity
                 android:name=".app.MobilePowerMainActivity"
                 android:exported="false" />
         <activity

@@ -17,6 +17,7 @@ object RouterPath {
     const val PAGE_CUSTOM_TIME = "/mobilepower/custom_time"
     const val PAGE_DEVICE_HOME = "/device/home"
     const val PAGE_BLE_SCAN = "/ble/scan"
+    const val PAGE_HELP = "/ble/help"
     const val PAGE_MOBILE_POWER_MAIN = "/mobilepower/main"
     const val PAGE_DEVICE_SETTING = "/device/setting"
     const val PAGE_ROUTE_THEME = "/mobilepower/theme_choose"

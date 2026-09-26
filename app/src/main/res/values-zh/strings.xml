@@ -319,4 +319,12 @@
     <string name="language_back">返回</string>
     <string name="language_selected">%1$s，已选择</string>
     <string name="language_not_selected">%1$s，未选择</string>
+    <string name="help_title">查看帮助</string>
+    <string name="help_back">返回</string>
+    <string name="help_step_1">靠近设备：将设备放在手机旁边(1-2米内)</string>
+    <string name="help_step_2">确认状态：设备已开机、电量充足，且蓝牙处于可配对模式(配对模式-详见说明书)</string>
+    <string name="help_step_3">开启权限：打开手机蓝牙(部分安卓机还需开启定位权限)</string>
+    <string name="help_step_4">检查网络：确保手机网络正常</string>
+    <string name="help_step_5">重启重试：若仍无效需重启/重置设备，再重新添加(重启/重置设备-详见说明书)</string>
+    <string name="help_note">注：如果在设备列表中找不到您的设备型号，说明该设备暂不支持 APP 管理。</string>
 </resources>
