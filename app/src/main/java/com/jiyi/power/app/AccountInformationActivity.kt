@@ -18,6 +18,7 @@ import com.aleyn.mvvm.utils.MmkvManager
 import com.blankj.utilcode.util.ToastUtils
 import com.jiyi.power.R
 import com.jiyi.power.app.bean.LoginBean
+import com.jiyi.power.app.common.UserProfileStorage
 import com.jiyi.power.databinding.ActivityAccountInformationBinding
 
 @Route(path = RouterPath.PAGE_ACCOUNT_INFORMATION)
@@ -104,6 +105,7 @@ class AccountInformationActivity : BaseActivity<ActivityAccountInformationBindin
     }
 
     private fun cancelAccount() {
+        UserProfileStorage.deleteAvatar(applicationContext)
         MmkvManager.remove(LoginBean.LOGIN_INFO_KEY)
         MmkvManager.remove(KEY_PHONE)
         MmkvManager.remove(KEY_EMAIL)

@@ -40,6 +40,18 @@ object BleDeviceStore {
         updateDevices(devices)
     }
 
+    fun renameDevice(bluetoothSn: String?, name: String): Boolean {
+        if (bluetoothSn.isNullOrBlank()) return false
+        val devices = getDevices()
+        val index = devices.indexOfFirst {
+            it.bluetoothSn.equals(bluetoothSn, ignoreCase = true)
+        }
+        if (index < 0) return false
+        devices[index] = devices[index].copy(bluetoothName = name)
+        updateDevices(devices)
+        return true
+    }
+
     private fun updateDevices(devices: List<BleSavedDevice>) {
         val snapshot = devices.toList()
         MmkvManager.putList(KEY_DEVICE_LIST, snapshot)

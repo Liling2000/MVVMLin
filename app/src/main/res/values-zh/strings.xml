@@ -21,7 +21,7 @@
     <string name="scan_help_message">请打开设备并将手机靠近设备后重试</string>
     <string name="scan_connect_success">连接成功</string>
     <!-- Me -->
-    <string name="me_user_name">Alex River</string>
+    <string name="me_user_name">Beillen</string>
     <string name="me_user_email">support@beillen.com</string>
     <string name="me_switch_language">切换语言</string>
     <string name="me_language_simplified_chinese">简体中文</string>
@@ -126,8 +126,9 @@
     <string name="login_add_avatar">添加头像</string>
     <string name="login_name_hint">请输入您的名称</string>
     <string name="login_guest">访客登录</string>
-    <string name="login_default_guest_name">访客</string>
+    <string name="login_default_guest_name">Beillen</string>
     <string name="login_avatar_description">访客头像</string>
+    <string name="login_avatar_save_failed">头像保存失败，请重试</string>
     <string name="start_brand_slogan">智能充电</string>
     <string name="start_copyright">©Beillen 嘉德科技</string>
     <string name="statistics_detail_title">详细数据</string>

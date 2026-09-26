@@ -18,7 +18,7 @@
     <string name="scan_searching_hint">Scanning. Keep your phone close to the device</string>
     <string name="scan_help_message">Turn on the device, move your phone close to it, and try again</string>
     <string name="scan_connect_success">Connected</string>
-    <string name="me_user_name">Alex River</string>
+    <string name="me_user_name">Beillen</string>
     <string name="me_user_email">support@beillen.com</string>
     <string name="me_switch_language">Switch language</string>
     <string name="me_language_simplified_chinese">Simplified Chinese</string>
@@ -122,8 +122,9 @@
     <string name="login_add_avatar">Add avatar</string>
     <string name="login_name_hint">Enter your name</string>
     <string name="login_guest">Guest login</string>
-    <string name="login_default_guest_name">Guest</string>
+    <string name="login_default_guest_name">Beillen</string>
     <string name="login_avatar_description">Guest avatar</string>
+    <string name="login_avatar_save_failed">Unable to save the avatar. Please try again.</string>
     <string name="start_brand_slogan">Smart charging</string>
     <string name="start_copyright">&#169; Beillen Jiade Technology</string>
     <string name="statistics_detail_title">Detailed data</string>

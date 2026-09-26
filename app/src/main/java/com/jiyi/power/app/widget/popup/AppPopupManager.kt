@@ -52,6 +52,15 @@ object AppPopupManager {
         ),
     )
 
+    fun showRenameDevice(
+        context: Context,
+        currentName: String,
+        onConfirm: (String) -> Unit,
+    ): RenameDevicePopup = show(
+        context,
+        RenameDevicePopup(context, currentName, onConfirm),
+    )
+
     fun showPermissionRequest(
         context: Context,
         onAgree: () -> Unit,
