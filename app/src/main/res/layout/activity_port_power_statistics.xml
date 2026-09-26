@@ -123,32 +123,29 @@
                     android:textSize="21sp" />
 
             <LinearLayout
+                    android:id="@+id/layout_port"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
                     android:layout_marginTop="18dp"
-                    android:background="@drawable/bg_statistics_tabs"
+                    android:background="@drawable/bg_power_chip_normal"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="3dp">
+                    android:padding="5dp">
 
                 <TextView
                         android:id="@+id/tab_c1"
-                        style="@style/StatisticsPortTab"
-                        android:text="@string/statistics_port_c1" />
+                        style="@style/PowerPortTab"
+                        android:text="@string/power_port_c1" />
 
                 <TextView
                         android:id="@+id/tab_c2"
-                        style="@style/StatisticsPortTab"
-                        android:text="@string/statistics_port_c2" />
-
-                <TextView
-                        android:id="@+id/tab_c3"
-                        style="@style/StatisticsPortTab"
-                        android:text="@string/statistics_port_c3" />
+                        style="@style/PowerPortTab"
+                        android:text="@string/power_port_c2" />
 
                 <TextView
                         android:id="@+id/tab_a1"
-                        style="@style/StatisticsPortTab"
-                        android:text="@string/statistics_port_a1" />
+                        style="@style/PowerPortTab"
+                        android:text="@string/power_port_tab_a1" />
             </LinearLayout>
 
             <LinearLayout

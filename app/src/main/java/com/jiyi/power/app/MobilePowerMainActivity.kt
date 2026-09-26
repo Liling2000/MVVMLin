@@ -117,9 +117,10 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
             ARouter.getInstance().build(RouterPath.PAGE_DEVICE_SETTING)
                 .withString(EXTRA_DEVICE_SN, deviceSn).navigation(this@MobilePowerMainActivity)
         }
-        cardC1.root.setOnClickListener { selectPort(Port.C1) }
-        cardC2.root.setOnClickListener { selectPort(Port.C2) }
-        cardA1.root.setOnClickListener { selectPort(Port.A1) }
+        // 顶部端口卡片只负责进入统计页，不改变下方线材信息当前选项。
+        cardC1.root.setOnClickListener { openPowerStatistics(Port.C1) }
+        cardC2.root.setOnClickListener { openPowerStatistics(Port.C2) }
+        cardA1.root.setOnClickListener { openPowerStatistics(Port.A1) }
         tabC1.setOnClickListener { selectPort(Port.C1) }
         tabC2.setOnClickListener { selectPort(Port.C2) }
         tabA1.setOnClickListener { selectPort(Port.A1) }
@@ -192,6 +193,21 @@ class MobilePowerMainActivity : BaseActivity<ActivityMobilePowerMainBinding>() {
         selectedPort = port
         renderPortSelection()
         renderPortDetails(viewModel.homeInfo.value)
+    }
+
+    private fun openPowerStatistics(port: Port) {
+        val portType = when (port) {
+            Port.C1 -> MobilePowerPortType.C1
+            Port.C2 -> MobilePowerPortType.C2
+            Port.A1 -> MobilePowerPortType.USB_A
+        }
+        val portInfo = viewModel.homeInfo.value.port(portType) ?: return
+        if (portInfo.direction == PortDirection.NONE) return
+
+        ARouter.getInstance().build(RouterPath.PAGE_PORT_POWER_STATISTICS)
+            .withString(EXTRA_DEVICE_SN, deviceSn)
+            .withString(PortPowerStatisticsActivity.EXTRA_SELECTED_PORT, port.name)
+            .navigation(this)
     }
 
     private fun render(info: MobilePowerHomeInfoBean?) = with(mBinding) {
