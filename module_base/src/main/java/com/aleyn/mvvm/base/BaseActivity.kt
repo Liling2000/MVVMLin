@@ -1,12 +1,21 @@
 package com.aleyn.mvvm.base
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.insets.ColorProtection
+import androidx.core.view.insets.ProtectionLayout
 import androidx.viewbinding.ViewBinding
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -15,7 +24,6 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.aleyn.mvvm.R
 import com.aleyn.mvvm.event.Message
 import com.aleyn.mvvm.extend.flowLaunch
-import com.blankj.utilcode.util.BarUtils
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.ParameterizedType
 
@@ -28,10 +36,16 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     protected lateinit var mBinding: VB
 
     private var dialog: MaterialDialog? = null
+    private lateinit var edgeToEdgeContainer: ProtectionLayout
+    private var contentRoot: View? = null
+    private var initialContentPadding: Insets = Insets.NONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Android 16 always enforces edge-to-edge for apps targeting API 36.
+        // Enable the same behavior on older releases so every version follows one layout path.
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setContentView(initBinding())
+        setContentView(createEdgeToEdgeContent(initBinding()))
         initSystemBars()
         initView(savedInstanceState)
         initObserve()
@@ -44,16 +58,86 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     }
 
     /** 颜色参数为资源 ID；导航栏默认跟随状态栏，传 null 则保留原导航栏颜色。 */
+    @Suppress("DEPRECATION")
     protected fun setSystemBars(
         @ColorRes statusBarColorRes: Int = R.color.color_f6f7f9,
         statusBarLightMode: Boolean = true,
         @ColorRes navBarColorRes: Int? = statusBarColorRes
     ) {
-        BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, statusBarColorRes))
-        BarUtils.setStatusBarLightMode(this, statusBarLightMode)
-        navBarColorRes?.let {
-            BarUtils.setNavBarColor(this, ContextCompat.getColor(this, it))
+        val statusBarColor = ContextCompat.getColor(this, statusBarColorRes)
+        val protections = buildList {
+            add(ColorProtection(WindowInsetsCompat.Side.TOP, statusBarColor))
+            navBarColorRes?.let {
+                add(
+                    ColorProtection(
+                        WindowInsetsCompat.Side.BOTTOM,
+                        ContextCompat.getColor(this@BaseActivity, it)
+                    )
+                )
+            }
         }
+        edgeToEdgeContainer.setProtections(protections)
+
+        // These colors are used only by pre edge-to-edge platform versions.
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+            window.isNavigationBarContrastEnforced = false
+        }
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = statusBarLightMode
+            isAppearanceLightNavigationBars = true
+        }
+        applySystemBarInsets()
+    }
+
+    /**
+     * Splash and other deliberately immersive pages can draw behind the bars. Interactive pages
+     * keep controls clear of status bars, navigation bars, display cutouts, and landscape side bars.
+     */
+    protected open fun shouldApplySystemBarInsets(): Boolean = true
+
+    private fun createEdgeToEdgeContent(content: View): View {
+        contentRoot = content
+        initialContentPadding = Insets.of(
+            content.paddingLeft,
+            content.paddingTop,
+            content.paddingRight,
+            content.paddingBottom
+        )
+        return ProtectionLayout(this).also { container ->
+            edgeToEdgeContainer = container
+            container.addView(
+                content,
+                FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
+    }
+
+    private fun applySystemBarInsets() {
+        val root = contentRoot ?: return
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
+            val insets = if (shouldApplySystemBarInsets()) {
+                windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or
+                        WindowInsetsCompat.Type.displayCutout()
+                )
+            } else {
+                Insets.NONE
+            }
+            view.setPadding(
+                initialContentPadding.left + insets.left,
+                initialContentPadding.top + insets.top,
+                initialContentPadding.right + insets.right,
+                initialContentPadding.bottom + insets.bottom
+            )
+            windowInsets
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
     abstract fun initView(savedInstanceState: Bundle?)

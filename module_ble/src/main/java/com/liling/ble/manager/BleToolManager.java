@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.BluetoothStatusCodes;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
@@ -798,10 +799,9 @@ public class BleToolManager {
         if (!isOpenBluetoothConnectPermission()) {
             return;
         }
-        mWriteCharacteristic.setValue(data);
         try {
             LogUtils.e(TAG + "[writeBleData]---data:" + BleUtils.byte2hex(data) + "---sn:" + macAddress);
-            boolean result = mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
+            boolean result = writeCharacteristic(mBluetoothGatt, mWriteCharacteristic, data);
             LogUtils.e(TAG + "---sn:" + macAddress + "---数据写入状态:" + result);
             if (bleWriteDataListener != null) {
                 bleWriteDataListener.onWriteDataStatue(macAddress, result, data);
@@ -825,10 +825,9 @@ public class BleToolManager {
                 return;
             }
             mWriteCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-            mWriteCharacteristic.setValue(data);
             try {
                 LogUtils.e("[writeBleDataWithNoResponse]---data:" + BleUtils.byte2hex(data) + "---sn:" + macAddress);
-                mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
+                writeCharacteristic(mBluetoothGatt, mWriteCharacteristic, data);
             } catch (Exception e) {
                 LogUtils.e(TAG + "[method:writeBleData]---exception:" + e.getMessage());
             }
@@ -862,10 +861,9 @@ public class BleToolManager {
             LogUtils.e(TAG + "[writeBleData by uuid]---can not found BluetoothGattCharacteristic :---writeUuid:" + writeUuid);
             return;
         }
-        mWriteCharacteristic.setValue(data);
         try {
             LogUtils.e(TAG + "[writeBleData by uuid]---data:" + BleUtils.byte2hex(data) + "---sn:" + macAddress);
-            boolean result = mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
+            boolean result = writeCharacteristic(mBluetoothGatt, mWriteCharacteristic, data);
             LogUtils.e(TAG + "---sn:" + macAddress + "---数据写入状态:" + result);
             if (bleWriteDataListener != null) {
                 bleWriteDataListener.onWriteDataStatue(macAddress, result, data);
@@ -938,10 +936,11 @@ public class BleToolManager {
             List<BluetoothGattDescriptor> descriptorList = mNotifyCharacteristic.getDescriptors();
             for (BluetoothGattDescriptor descriptor : descriptorList) {
                 //为特征值中的描述对象设置广播监听
-                boolean enableNotify = descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                if (enableNotify) {
-                    mBluetoothGatt.writeDescriptor(descriptor);
-                }
+                writeDescriptor(
+                        mBluetoothGatt,
+                        descriptor,
+                        BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                );
             }
         }
     }
@@ -1160,12 +1159,31 @@ public class BleToolManager {
             List<BluetoothGattDescriptor> descriptorList = notifyCharacteristic.getDescriptors();
             for (BluetoothGattDescriptor descriptor : descriptorList) {
                 //为特征值中的描述对象设置广播监听
-                boolean enableNotify = descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                if (enableNotify) {
-                    gatt.writeDescriptor(descriptor);
-                }
+                writeDescriptor(gatt, descriptor, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             }
         }
+    }
+
+    /**
+     * Uses immutable write inputs on API 33+ and preserves the minSdk 26 path.
+     */
+    @SuppressWarnings("deprecation")
+    private boolean writeCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return gatt.writeCharacteristic(characteristic, value, characteristic.getWriteType()) == BluetoothStatusCodes.SUCCESS;
+        }
+        return characteristic.setValue(value) && gatt.writeCharacteristic(characteristic);
+    }
+
+    /**
+     * Uses the non-mutating descriptor write API introduced in Android 13.
+     */
+    @SuppressWarnings("deprecation")
+    private boolean writeDescriptor(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, byte[] value) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return gatt.writeDescriptor(descriptor, value) == BluetoothStatusCodes.SUCCESS;
+        }
+        return descriptor.setValue(value) && gatt.writeDescriptor(descriptor);
     }
 
     /**

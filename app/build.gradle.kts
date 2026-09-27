@@ -82,6 +82,12 @@ android {
             useLegacyPackaging = false
         }
     }
+
+    lint {
+        // utilcodex bundles NotificationUtils, but this app never posts notifications. Declaring
+        // POST_NOTIFICATIONS would expose an unused runtime permission solely for dead library API.
+        disable += "NotificationPermission"
+    }
 }
 
 // Keep the explicit English locale synchronized with the default catalog.

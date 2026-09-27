@@ -143,5 +143,9 @@ class PowerLineChartView @JvmOverloads constructor(
 
     private fun formatY(value: Float): String = if (value == 0f) "0" else "${value.toInt()}W"
     private fun dp(value: Float) = value * resources.displayMetrics.density
-    private fun sp(value: Float) = value * resources.displayMetrics.scaledDensity
+    private fun sp(value: Float) = android.util.TypedValue.applyDimension(
+        android.util.TypedValue.COMPLEX_UNIT_SP,
+        value,
+        resources.displayMetrics
+    )
 }

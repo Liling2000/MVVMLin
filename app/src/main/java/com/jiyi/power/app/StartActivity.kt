@@ -23,6 +23,8 @@ import com.jiyi.power.databinding.ActivityStartBinding
 
 @Route(path = RouterPath.PAGE_START)
 class StartActivity : BaseActivity<ActivityStartBinding>() {
+    override fun shouldApplySystemBarInsets(): Boolean = false
+
     private val handler = Handler(Looper.getMainLooper())
     private val routeTask = Runnable { routeToNextPage() }
     private var privacyPromptShown = false

@@ -1,17 +1,17 @@
 [versions]
-compileSdk = "35"
+compileSdk = "36"
 applicationId = "com.jiyi.power"
 minSdkVersion = "26"
-targetSdkVersion = "35"
+targetSdkVersion = "36"
 versionCode = "17"
 versionName = "1.0.0"
 
 kotlin = "2.1.10"
-androidGradlePlugin = "8.5.2"
+androidGradlePlugin = "8.10.1"
 
 retrofit = "2.11.0"
 appcompat = "1.7.0"
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 material = "1.9.0"
 lifecycleKtx = "2.8.7"
 junit = "4.13.2"

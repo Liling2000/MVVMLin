@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * @Date 2022/12/5
  */
 @IntDef({TaskPriority.DEFAULT_PRIORITY, TaskPriority.LOW_PRIORITY, TaskPriority.HIGH_PRIORITY})
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface TaskPriority {
     int HIGH_PRIORITY = 0; //高优先级任务
 

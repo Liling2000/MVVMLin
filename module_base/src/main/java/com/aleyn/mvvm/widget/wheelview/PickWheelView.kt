@@ -21,7 +21,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IntRange
 import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import com.aleyn.mvvm.R
 import kotlin.math.*
 
@@ -2143,7 +2142,7 @@ open class PickWheelView @JvmOverloads constructor(
                 }
 
                 invalidateIfYChanged()
-                ViewCompat.postOnAnimation(this, this)
+                postOnAnimation(this)
                 //回收 VelocityTracker
                 recycleVelocityTracker()
             }
@@ -2186,12 +2185,12 @@ open class PickWheelView @JvmOverloads constructor(
 
         if (scroller.computeScrollOffset()) {
             updateScrollOffsetY(scroller)
-            ViewCompat.postOnAnimation(this, this)
+            postOnAnimation(this)
         } else if (isFlingScroll) {
             //滚动完成后，根据是否为快速滚动处理是否需要调整最终位置
             isFlingScroll = false
             adjustScrollOffsetY(true)
-            ViewCompat.postOnAnimation(this, this)
+            postOnAnimation(this)
         }
     }
 
@@ -2919,7 +2918,7 @@ open class PickWheelView @JvmOverloads constructor(
                 if (smoothDuration > 0) smoothDuration else DEFAULT_SCROLL_DURATION
             )
             invalidateIfYChanged()
-            ViewCompat.postOnAnimation(this, this)
+            postOnAnimation(this)
         } else {
             if (isScrollYInvalid()) {
                 //没测量结束时，等待测量完成后再执行

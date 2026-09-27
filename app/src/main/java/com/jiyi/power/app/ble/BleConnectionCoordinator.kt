@@ -1,9 +1,13 @@
 package com.jiyi.power.app.ble
 
+import android.Manifest
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.jiyi.power.app.bean.BleDeviceStore
 import com.jiyi.power.app.bean.BleSavedDevice
 import com.jiyi.power.app.common.MobilePowerConfig
@@ -79,6 +83,7 @@ object BleConnectionCoordinator {
     val ioEvents: SharedFlow<BleIoEvent> = _ioEvents.asSharedFlow()
 
     private var initialized = false
+    private var applicationContext: Context? = null
     private var foreground = false
     private var autoReconnectEnabled = false
     private var scanRunning = false
@@ -87,7 +92,8 @@ object BleConnectionCoordinator {
     fun initialize(context: Context) {
         if (initialized) return
         initialized = true
-        bleApi.init(context.applicationContext)
+        applicationContext = context.applicationContext
+        bleApi.init(requireNotNull(applicationContext))
         bleApi.setOnBleScanResultCallBack(scanCallback)
         bleApi.setOnBleDataListener(dataListener)
         bleApi.setOnBleWriteDataListener(writeDataListener)
@@ -208,7 +214,7 @@ object BleConnectionCoordinator {
     private fun handleScanResult(result: ScanResult) {
         val device = result.device ?: return
         val name =
-            result.scanRecord?.deviceName ?: runCatching { device.name }.getOrNull() ?: return
+            result.scanRecord?.deviceName ?: getDeviceName(device) ?: return
         if (name != MobilePowerConfig.BLUETOOTH_DEVICE_NAME) return
         val item = BleScanDevice(name, device.address, result.rssi, result)
         _scanDevices.update { current ->
@@ -304,7 +310,7 @@ object BleConnectionCoordinator {
                     setConnectionState(sn, DeviceConnectionState.CONNECTING)
                     val model = BleDeviceStore.getDevices().firstOrNull {
                         it.bluetoothSn.equals(sn, ignoreCase = true)
-                    }?.bluetoothName ?: runCatching { device.name }.getOrNull().orEmpty()
+                    }?.bluetoothName ?: getDeviceName(device).orEmpty()
                     startConnectTimeout(sn, model)
                 }
 
@@ -318,7 +324,7 @@ object BleConnectionCoordinator {
                         it.bluetoothSn.equals(sn, ignoreCase = true)
                     }
                     val saved = existing ?: BleSavedDevice(
-                        bluetoothName = runCatching { device.name }.getOrNull().orEmpty(),
+                        bluetoothName = getDeviceName(device).orEmpty(),
                         bluetoothSn = sn,
                     )
                     if (userInitiated && existing == null) {
@@ -345,6 +351,16 @@ object BleConnectionCoordinator {
         override fun onRssiResponse(sn: String, model: String, rssi: Int) {
             _ioEvents.tryEmit(BleIoEvent.RssiResult(sn, model, rssi))
         }
+    }
+
+    private fun getDeviceName(device: BluetoothDevice): String? {
+        val canReadName = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || applicationContext?.let {
+            ContextCompat.checkSelfPermission(
+                it,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        } == true
+        return if (canReadName) runCatching { device.name }.getOrNull() else null
     }
 
     private val writeDataListener = BleWriteDataStatueListener { sn, success, data ->
