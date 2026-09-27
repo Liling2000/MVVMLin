@@ -30,7 +30,7 @@ class LanguageAdapter(
             textLanguage.setTypeface(null, if (selected) Typeface.BOLD else Typeface.NORMAL)
             selectedDot.visibility = if (selected) View.VISIBLE else View.INVISIBLE
             selectionIndicator.isSelected = selected
-            selectionIndicator.setImageResource(if (selected) R.mipmap.ic_check_light else 0)
+            selectionIndicator.setImageResource(if (selected) R.mipmap.ic_check_pre else R.mipmap.ic_check_nor)
             divider.visibility = if (position == itemCount - 1) View.GONE else View.VISIBLE
             root.isSelected = selected
             root.contentDescription = root.context.getString(

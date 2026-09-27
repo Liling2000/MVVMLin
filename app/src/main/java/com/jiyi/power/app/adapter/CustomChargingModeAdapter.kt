@@ -65,7 +65,7 @@ class CustomChargingModeAdapter(
         fun bindSelection(mode: CustomChargingMode) {
             binding.checkMode.setImageResource(
                 if (mode.id == selectedId) R.mipmap.ic_check_pre
-                else R.drawable.bg_charge_unselected,
+                else R.mipmap.ic_check_nor,
             )
         }
     }

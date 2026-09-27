@@ -83,7 +83,7 @@ class ChargingModeAdapter(
             textTagSecond.setText(mode.secondTag)
             val selected = mode.id == selectedMode
 
-            indicatorMode.setImageResource(if (selected) R.mipmap.ic_check_pre else R.drawable.bg_charge_unselected)
+            indicatorMode.setImageResource(if (selected) R.mipmap.ic_check_pre else R.mipmap.ic_check_nor)
             root.isEnabled = interactionEnabled
             root.setOnClickListener { if (interactionEnabled) onSelect(mode.id) }
         }
