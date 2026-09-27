@@ -61,7 +61,8 @@ class MeFragment : BaseVMFragment<MeViewModel, MeFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
-        val language = AppLanguages.items.first { it.tag == LanguageManager.selectedTag }
+        val language = AppLanguages.items.firstOrNull { it.tag == LanguageManager.selectedTag }
+            ?: AppLanguages.items.first()
         mBinding.itemLanguage.setRightTextValue(getString(language.label))
         renderProfile()
     }

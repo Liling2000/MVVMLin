@@ -1,5 +1,6 @@
 package com.jiyi.power.app
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Build
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,21 +24,49 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) = with(mBinding) {
-        toolbar.setLeftClickListener { finish() }
-        toolbar.getLeftIconIv().contentDescription = getString(R.string.language_back)
         languageList.layoutManager = LinearLayoutManager(this@LanguageActivity)
         languageList.itemAnimator = null
-        languageList.adapter = LanguageAdapter(requireNotNull(LanguageManager.selectedTag)) { item ->
-            disableWindowTransitions()
-            LanguageManager.select(this@LanguageActivity, item.tag)
-        }
+        renderLanguage(requireNotNull(LanguageManager.selectedTag))
     }
 
     override fun initData() = Unit
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Keep the Activity window and its edge-to-edge protection alive. Replacing only the
+        // binding hierarchy updates localized resources without exposing the window background.
+        rebindContent()
+        initSystemBars()
+        initView(null)
+    }
+
     override fun onStart() {
         super.onStart()
         disableWindowTransitions()
+    }
+
+    override fun finish() {
+        if (isFinishing) return
+        disableWindowTransitions()
+        super.finish()
+        // LocaleManager dispatches an app-wide configuration change on Android 13+. Commit only
+        // after this picker has begun closing so a selection cannot send the user back to Me.
+        LanguageManager.applySelectedLocale(this)
+    }
+
+    private fun renderLanguage(tag: String): Unit {
+        with(mBinding) {
+            val localized = LanguageManager.localizedContext(this@LanguageActivity, tag)
+            toolbar.setLeftClickListener { finish() }
+            toolbar.setTitStr(localized.getString(R.string.me_switch_language))
+            toolbar.getLeftIconIv().contentDescription = localized.getString(R.string.language_back)
+            languageHint.text = localized.getString(R.string.language_choose_hint)
+            languageList.adapter = LanguageAdapter(tag, localized) { item ->
+                disableWindowTransitions()
+                LanguageManager.selectWhilePickerIsOpen(item.tag)
+                renderLanguage(item.tag)
+            }
+        }
     }
 
     @Suppress("DEPRECATION")

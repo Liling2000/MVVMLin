@@ -98,7 +98,27 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      */
     protected open fun shouldApplySystemBarInsets(): Boolean = true
 
+    /**
+     * Re-inflates the ViewBinding hierarchy inside the existing window container. This is useful
+     * for handled configuration changes (for example, an in-place locale switch) because replacing
+     * the Activity window would briefly expose its background and cause a visible flash.
+     */
+    protected fun rebindContent() {
+        val content = initBinding()
+        captureContentRoot(content)
+        edgeToEdgeContainer.removeAllViews()
+        edgeToEdgeContainer.addView(content, matchParentLayoutParams())
+    }
+
     private fun createEdgeToEdgeContent(content: View): View {
+        captureContentRoot(content)
+        return ProtectionLayout(this).also { container ->
+            edgeToEdgeContainer = container
+            container.addView(content, matchParentLayoutParams())
+        }
+    }
+
+    private fun captureContentRoot(content: View) {
         contentRoot = content
         initialContentPadding = Insets.of(
             content.paddingLeft,
@@ -106,17 +126,12 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             content.paddingRight,
             content.paddingBottom
         )
-        return ProtectionLayout(this).also { container ->
-            edgeToEdgeContainer = container
-            container.addView(
-                content,
-                FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-            )
-        }
     }
+
+    private fun matchParentLayoutParams() = FrameLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
 
     private fun applySystemBarInsets() {
         val root = contentRoot ?: return

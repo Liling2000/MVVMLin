@@ -1,5 +1,6 @@
 package com.jiyi.power.app.adapter
 
+import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.jiyi.power.databinding.ItemLanguageBinding
 
 class LanguageAdapter(
     private var selectedTag: String,
+    private val localizedContext: Context,
     private val onSelect: (LanguageOption) -> Unit,
 ) : RecyclerView.Adapter<LanguageAdapter.Holder>() {
     override fun getItemCount() = AppLanguages.items.size
@@ -24,7 +26,7 @@ class LanguageAdapter(
     inner class Holder(private val binding: ItemLanguageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LanguageOption, position: Int) = with(binding) {
             val selected = item.tag == selectedTag
-            textLanguage.setText(item.label)
+            textLanguage.text = localizedContext.getString(item.label)
             textLanguage.setTextColor(ContextCompat.getColor(root.context,
                 if (selected) R.color.color_191c1e else R.color.color_454558))
             textLanguage.setTypeface(null, if (selected) Typeface.BOLD else Typeface.NORMAL)
@@ -33,9 +35,9 @@ class LanguageAdapter(
             selectionIndicator.setImageResource(if (selected) R.mipmap.ic_check_pre else R.mipmap.ic_check_nor)
             divider.visibility = if (position == itemCount - 1) View.GONE else View.VISIBLE
             root.isSelected = selected
-            root.contentDescription = root.context.getString(
+            root.contentDescription = localizedContext.getString(
                 if (selected) R.string.language_selected else R.string.language_not_selected,
-                root.context.getString(item.label),
+                localizedContext.getString(item.label),
             )
             root.setOnClickListener {
                 if (item.tag != selectedTag) {
