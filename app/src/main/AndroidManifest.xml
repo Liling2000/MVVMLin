@@ -21,10 +21,10 @@
     <application
             android:name=".app.MyApplication"
             android:enableOnBackInvokedCallback="true"
-            android:icon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/ic_logo"
             android:intentMatchingFlags="enforceIntentFilter"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/ic_logo"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
@@ -47,16 +47,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.LoginActivity" android:exported="false" />
-        <activity android:name=".app.MainActivity" android:exported="false" />
-        <activity android:name=".app.AboutActivity" android:exported="false" />
+        <activity
+                android:name=".app.LoginActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.MainActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.AboutActivity"
+                android:exported="false" />
         <activity
                 android:name=".app.LanguageActivity"
                 android:configChanges="locale|layoutDirection"
                 android:exported="false" />
-        <activity android:name=".app.CertificationActivity" android:exported="false" />
-        <activity android:name=".app.CertificationDetailActivity" android:exported="false" />
-        <activity android:name=".app.AccountInformationActivity" android:exported="false" />
+        <activity
+                android:name=".app.CertificationActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.CertificationDetailActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.AccountInformationActivity"
+                android:exported="false" />
 
         <activity
                 android:name=".app.BleDeviceScanActivity"
@@ -70,15 +82,33 @@
         <activity
                 android:name=".app.DeviceSettingActivity"
                 android:exported="false" />
-        <activity android:name=".app.ChargingModeActivity" android:exported="false" />
-        <activity android:name=".app.CustomChargingModeActivity" android:exported="false" />
-        <activity android:name=".app.CustomChargingModeListActivity" android:exported="false" />
-        <activity android:name=".app.PortPowerStatisticsActivity" android:exported="false" />
-        <activity android:name=".app.ScreenSettingActivity" android:exported="false" />
-        <activity android:name=".app.BatteryInfoActivity" android:exported="false" />
-        <activity android:name=".app.TimerSettingActivity" android:exported="false" />
-        <activity android:name=".app.CustomTimeActivity" android:exported="false" />
-        <activity android:name=".app.DeviceExceptionRecordActivity" android:exported="false" />
+        <activity
+                android:name=".app.ChargingModeActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.CustomChargingModeActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.CustomChargingModeListActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.PortPowerStatisticsActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.ScreenSettingActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.BatteryInfoActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.TimerSettingActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.CustomTimeActivity"
+                android:exported="false" />
+        <activity
+                android:name=".app.DeviceExceptionRecordActivity"
+                android:exported="false" />
     </application>
 
 
