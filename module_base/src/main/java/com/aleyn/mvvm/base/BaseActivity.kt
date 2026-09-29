@@ -104,10 +104,14 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      * the Activity window would briefly expose its background and cause a visible flash.
      */
     protected fun rebindContent() {
+        val previousContent = contentRoot
         val content = initBinding()
+        previousContent?.let(edgeToEdgeContainer::removeView)
         captureContentRoot(content)
-        edgeToEdgeContainer.removeAllViews()
-        edgeToEdgeContainer.addView(content, matchParentLayoutParams())
+        // ProtectionLayout owns additional child views for the system-bar protections. Keep those
+        // children intact and insert app content below them; removeAllViews() corrupts its internal
+        // ProtectionGroup state and crashes the next setProtections() call.
+        edgeToEdgeContainer.addView(content, 0, matchParentLayoutParams())
     }
 
     private fun createEdgeToEdgeContent(content: View): View {

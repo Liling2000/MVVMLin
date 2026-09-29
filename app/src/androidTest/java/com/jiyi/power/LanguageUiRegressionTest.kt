@@ -44,6 +44,11 @@ class LanguageUiRegressionTest {
     fun localeSwitchKeepsLanguageWindowAndRecreatesMainContent() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val originalTag = requireNotNull(LanguageManager.selectedTag)
+        val switchTags = if (originalTag == "zh") {
+            listOf("en", "zh", "en", "zh")
+        } else {
+            listOf("zh", "en", "zh", "en")
+        }
         try {
             launch(MainActivity::class.java).use { scenario ->
                 lateinit var initialMain: MainActivity
@@ -57,7 +62,7 @@ class LanguageUiRegressionTest {
                         .currentSelectedTab = 1
                 }
 
-                for (tag in listOf("zh", "en", "zh", "en")) {
+                for (tag in switchTags) {
                     val beforeSwitch = resumedActivity(MainActivity::class.java)
                     instrumentation.runOnMainSync {
                         beforeSwitch.findViewById<android.view.View>(R.id.item_language).performClick()
@@ -102,7 +107,7 @@ class LanguageUiRegressionTest {
             launch(MainActivity::class.java).use { scenario ->
                 scenario.onActivity { activity ->
                     assertEquals(
-                        "Primary devices",
+                        if (switchTags.last() == "en") "Primary devices" else "主要设备",
                         activity.findViewById<android.widget.TextView>(R.id.text_primary_devices).text.toString(),
                     )
                 }
